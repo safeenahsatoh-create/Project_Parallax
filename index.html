@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONOS - Advanced Parallax Eras</title>
+
+    <!-- Google Fonts: Cinzel for headings, Inter for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS Linking -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <!-- Left Side: Logo -->
+        <div class="nav-left">
+            <a href="#" class="logo" id="nav-logo">CHRONOS</a>
+        </div>
+
+        <!-- Right Side: Links & Controls -->
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="#" class="active" id="nav-eras">Eras</a></li>
+                <li><a href="#" id="nav-about">About</a></li>
+            </ul>
+            <!-- Language Switcher -->
+            <button id="lang-toggle" class="control-btn" aria-label="Toggle Language">
+                <span id="lang-text">TH</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- App Container for Global Scroll Translate -->
+    <div id="app-container" class="app-container">
+
+        <!-- Hero Section -->
+        <header class="hero-section" id="hero">
+            <div class="hero-overlay"></div>
+
+            <!-- Light Effect Layer -->
+            <div class="light-container">
+                <img src="assets/img/light.png" class="light-layer" alt="light">
+            </div>
+
+            <div class="hero-content">
+                <h1 class="hero-title" id="hero-title">The Evolution of Technology</h1>
+                <p class="hero-subtitle" id="hero-subtitle">A Journey Through Time</p>
+            </div>
+        </header>
+
+        <!-- Main Split-Screen Layout -->
+        <main class="split-layout">
+
+            <!-- Left Side: Dynamic Text Content -->
+            <section class="content-left">
+                <div class="text-container" id="text-container">
+                    <h3 class="era-category" id="era-category"></h3>
+                    <h1 class="era-title" id="era-title"></h1>
+                    <p class="era-description" id="era-description"></p>
+                    <a href="#" class="btn-primary" id="era-link">
+                        <span>Enter Chapter</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Right Side: Scrollable Image Slider Container -->
+            <section class="content-right" id="slider-container">
+                <div class="slider-track" id="slider-track">
+                    <!-- Images will be dynamically injected here via JavaScript -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JS Linking -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

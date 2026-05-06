@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+:root {
+    /* Color Palette - Permanent Dark Mode */
+    --bg-color: #050505;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a5;
+    
+    /* Dynamic Era Theme Color */
+    --era-color: #d4af37; /* Default Gold */
+    --accent-color: var(--era-color);
+    --accent-hover: #f3e5ab;
+    
+    --nav-bg: rgba(5, 5, 5, 0.9);
+
+    /* Typography */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Layout */
+    --nav-height: 80px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    overflow: hidden;
+    /* Prevent body scroll entirely */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Minimal Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    z-index: 100;
+    background: transparent;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 3rem;
+}
+
+/* Navbar Controls (Theme, Lang) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.control-btn {
+    background: none;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#lang-toggle {
+    min-width: 50px;
+    /* Lock width for TH/EN switch */
+}
+
+.control-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.control-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 5px;
+
+    /* Layout Lock */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 80px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--accent-color);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}

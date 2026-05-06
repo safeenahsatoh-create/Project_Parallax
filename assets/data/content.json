@@ -1,0 +1,100 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "th": {
+        "title": "ยุคก่อนประวัติศาสตร์",
+        "subtitle": "GENESIS ERA",
+        "description": "ลองจินตนาการถึงโลกที่ไม่มีเทคโนโลยี ไม่มีไฟฟ้า ไม่มีแม้แต่เสื้อผ้าที่คุณสวมใส่... นี่คือโลกเมื่อสองล้านปีก่อน",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "PREHISTORIC",
+        "subtitle": "GENESIS ERA",
+        "description": "Imagine a world without technology, no electricity, not even the clothes you wear... this was the world two million years ago.",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter1.html"
+    },
+    {
+      "id": 2,
+      "th": {
+        "title": "ยุคอารยธรรมโบราณ",
+        "subtitle": "ANCIENT CIVILIZATION",
+        "description": "มนุษย์ไม่ได้หยุดอยู่แค่ปากถ้ำและกองไฟ เมื่อมีน้ำและอาหารอุดมสมบูรณ์ พวกเขาเริ่มฝันใหญ่ขึ้น...",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "ANCIENT CIVILIZATION",
+        "subtitle": "ANCIENT CIVILIZATION",
+        "description": "Humans didn't stop at cave entrances and campfires. With abundant food and water, they started to dream bigger...",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter2.html"
+    },
+    {
+      "id": 3,
+      "th": {
+        "title": "ยุคกลาง",
+        "subtitle": "MIDDLE AGES",
+        "description": "เมื่ออาณาจักรโรมันที่ยิ่งใหญ่ล่มสลาย โลกก็เข้าสู่ยุคที่วุ่นวายและหนาวเหน็บ ผู้คนหวาดกลัวและหันหน้าเข้าหาศาสนจักร...",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "MIDDLE AGES",
+        "subtitle": "MIDDLE AGES",
+        "description": "When the great Roman Empire fell, the world entered a chaotic and cold era. Frightened people turned to the Church...",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter3.html"
+    },
+    {
+      "id": 4,
+      "th": {
+        "title": "ยุคปฏิวัติอุตสาหกรรม",
+        "subtitle": "INDUSTRIAL REVOLUTION",
+        "description": "โลกไม่ได้หมุนด้วยความเร็วเท่าเดิมอีกต่อไป... ท้องฟ้าสีครามเริ่มถูกแทนที่ด้วยกลุ่มควันสีเทา",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "INDUSTRIAL REVOLUTION",
+        "subtitle": "INDUSTRIAL REVOLUTION",
+        "description": "The world no longer spins at the same speed... the blue sky began to be replaced by gray smoke clouds.",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter4.html"
+    },
+    {
+      "id": 5,
+      "th": {
+        "title": "ยุคไฟฟ้าและอิเล็กทรอนิกส์",
+        "subtitle": "ELECTRICAL & ELECTRONIC AGE",
+        "description": "นับพันปีที่มนุษย์ต้องยอมจำนนต่อความมืดมิด จนกระทั่งมีการสร้างเวทมนตร์ที่กักขังแสงสว่างไว้ในหลอดแก้วเล็กๆ ได้สำเร็จ",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "ELECTRICAL & ELECTRONIC AGE",
+        "subtitle": "ELECTRICAL & ELECTRONIC AGE",
+        "description": "For thousands of years, humans had to surrender to the darkness, until magic was created that captured light in a small glass bulb.",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter5.html"
+    },
+    {
+      "id": 6,
+      "th": {
+        "title": "ยุคดิจิทัล",
+        "subtitle": "DIGITAL AGE",
+        "description": "โลกไม่ได้ต้องการเครื่องจักรที่ใช้กำลังอีกต่อไป... แต่เราต้องการเครื่องจักรที่ใช้ความคิด",
+        "button": "เข้าสู่เนื้อหา"
+      },
+      "en": {
+        "title": "DIGITAL AGE",
+        "subtitle": "DIGITAL AGE",
+        "description": "The world no longer needed machines of force... but machines of thought.",
+        "button": "ENTER CHAPTER"
+      },
+      "link": "chapter6.html"
+    }
+  ]
+}
