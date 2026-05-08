@@ -1,1 +1,80 @@
-# หน้าเนื้อหา Chapter 1: ยุคก่อนประวัติศาสตร์
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONOS - Chapter 1: Stone Age</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/chapter1.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo" id="nav-logo">CHRONOS</a>
+        </div>
+        <div class="nav-right">
+            <ul class="nav-links">
+                <li><a href="index.html?era=0" id="nav-back">Back to Eras</a></li>
+            </ul>
+            <!-- Language Switcher -->
+            <button id="lang-toggle" class="control-btn" aria-label="Toggle Language">
+                <span id="lang-text">TH</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Scroll Spacer -->
+    <div class="scroll-container"></div>
+
+    <!-- Parallax Viewport -->
+    <div class="parallax-viewport">
+        <!-- Z-Index Matrix layers -->
+        <img src="assets/img/sky-base.PNG" class="layer layer-sky" alt="Sky">
+        
+        <img src="assets/img/sun-rising.PNG" class="layer layer-sun" id="layer-sun" alt="Sun">
+        
+        <img src="assets/img/clouds-bg.PNG" class="layer layer-clouds-bg" id="layer-clouds-bg" alt="Clouds Background">
+
+        <img src="assets/img/clouds-fg.PNG" class="layer layer-clouds-fg" id="layer-clouds-fg" alt="Clouds Foreground">
+        
+        <img src="assets/img/savanna-ground.PNG" class="layer layer-ground" alt="Savanna Ground">
+        
+        <img src="assets/img/Lion.png" class="layer layer-lion" id="layer-lion" alt="Lion">
+
+        <img src="assets/img/deer.PNG" class="layer layer-deer" id="layer-deer" alt="Deer">
+
+        <img src="assets/img/bird.png" class="layer layer-bird" id="layer-bird" alt="bird">
+
+        <img src="assets/img/cave-entrance.PNG" class="layer layer-cave-entrance" id="layer-cave-entrance" alt="Cave Entrance">
+
+        <img src="assets/img/cave-midground.PNG" class="layer layer-cave-mid" id="layer-cave-mid" alt="Cave Midground">
+
+        <img src="assets/img/cave-foreground.PNG" class="layer layer-cave-front" id="layer-cave-front" alt="Cave Foreground">
+
+        <!-- Phase 0: Prologue Overlay --> 
+        <div class="black-overlay" id="black-overlay"></div>
+        <div class="prologue-container" id="prologue-container">
+            <p class="prologue-text" id="prologue-1"></p>
+            <p class="prologue-text" id="prologue-2"></p>
+            <p class="prologue-text" id="prologue-3"></p>
+            <p class="prologue-text" id="prologue-4"></p>
+        </div>
+
+        <!-- Phase 4: Savanna Text Overlay -->
+        <div class="savanna-text-container" id="savanna-text-container">
+            <p id="savanna-text"></p>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="js/chapter1.js"></script>
+</body>
+</html>

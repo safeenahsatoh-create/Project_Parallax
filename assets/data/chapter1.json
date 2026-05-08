@@ -1,0 +1,93 @@
+{
+    "chapter_id": 1,
+    "scenes": [
+        {
+            "scene_id": "1.1",
+            "main_text": {
+                "th": [
+                    "ลองจินตนาการถึงโลกที่ไม่มีเทคโนโลยี",
+                    "ไม่มีไฟฟ้า",
+                    "ไม่มีแม้แต่เสื้อผ้าที่คุณสวมใส่",
+                    "นี่คือโลกเมื่อสองล้านปีก่อน..."
+                ],
+                "en": [
+                    "Imagine a world without technology",
+                    "No electricity",
+                    "Not even the clothes you wear",
+                    "This was the world two million years ago..."
+                ]
+            },
+            "additional_info": []
+        },
+        {
+            "scene_id": "1.2",
+            "main_text": {
+                "th": [
+                    "บนทุ่งหญ้าแอฟริกาที่ร้อนระอุ สัตว์ใหญ่เอาชนะด้วยพละกำลัง สัตว์เล็กเอาชีวิตรอดด้วยความเร็ว"
+                ],
+                "en": [
+                    "On the scorching African savanna, large animals conquered with sheer strength, while smaller ones survived with speed."
+                ]
+            },
+            "additional_info": []
+        },
+        {
+            "scene_id": "1.3",
+            "main_text": {
+                "th": "แต่มีสิ่งมีชีวิตสายพันธุ์หนึ่งที่ไร้เขี้ยวเล็บแหลมคม ไม่ได้วิ่งเร็ว และไม่มีขนหนาคอยกันหนาว พวกเขาดูเหมือนจะสูญพันธุ์ได้ง่ายๆ... ถ้าไม่ใช่เพราะสิ่งเดียวที่ซ่อนอยู่ในกะโหลกของพวกเขา",
+                "en": "But there was one species without sharp fangs or claws, they couldn't run fast, and lacked thick fur for warmth. They seemed destined for extinction... If not for the one thing hidden in their skulls."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ตัวละครมนุษย์ยุคแรกตัวแรก",
+                    "type": "popup",
+                    "text": {
+                        "th": "บรรพบุรุษนักประดิษฐ์: รู้จักกับ โฮโม ฮาบิลิส (Homo Habilis) ที่แปลว่า \"มนุษย์ผู้ชำนาญ\" พวกเขาคือกลุ่มแรกๆ ที่เริ่มเอาก้อนหินมากะเทาะทำเป็นมีด",
+                        "en": "The Inventor Ancestors: Meet Homo Habilis, meaning \"Handy Man\". They were among the first to chip stones to make knives."
+                    }
+                },
+                {
+                    "trigger": "ตัวละครมนุษย์ยุคแรกตัวที่ 2",
+                    "type": "popup",
+                    "text": {
+                        "th": "โฮโม อีเร็กตัส (Homo Erectus) มนุษย์กลุ่มแรกที่ยืนตัวตรง ทำให้สองมือว่างพอที่จะเริ่มหยิบจับและสร้างเครื่องมือ!",
+                        "en": "Homo Erectus, the first group of humans to stand upright, freeing their hands to grasp and create tools!"
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "1.4",
+            "main_text": {
+                "th": "เมื่อมือประสานกับสมอง เวทมนตร์บทแรกของมนุษย์ก็เริ่มขึ้น ลับหินให้แหลมคมเพื่อชำแหละเนื้อ ขัดสีไม้จนเกิดเปลวไฟเพื่อขับไล่ความมืด เอาหนังสัตว์และกิ่งไม้มาทำที่พักพิง นี่ไม่ใช่แค่การเอาชีวิตรอด แต่นี่คือ \"เทคโนโลยี\" ชิ้นแรกของมนุษยชาติ",
+                "en": "When hands coordinated with the brain, humanity's first magic began. Sharpening stones to butcher meat, rubbing wood to spark fire against the dark, and using animal hides and branches for shelter. This wasn't just survival; it was humanity's first \"Technology.\""
+            },
+            "additional_info": [
+                {
+                    "trigger": "ก้อนหิน",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "มีดเล่มแรกของโลก: เครื่องมือยุคหินเก่า (Oldowan) ไม่ได้ซับซ้อนเลย แค่เอาก้อนหินสองก้อนมากระแทกกันให้เกิดรอยแตกที่แหลมคม แต่นวัตกรรมง่ายๆ นี้แหละที่เปลี่ยนมนุษย์ให้กลายเป็นนักล่าอันดับหนึ่ง",
+                        "en": "The World's First Knife: Oldowan stone tools weren't complex. Just striking two stones together to create a sharp edge. But this simple innovation turned humans into apex predators."
+                    }
+                },
+                {
+                    "trigger": "เปลวไฟ",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "การทำเนื้อให้สุกด้วยไฟ ทำให้โปรตีนย่อยง่ายขึ้นมาก ผลคือร่างกายดูดซึมสารอาหารได้ดีสุดๆ จนส่งผลให้ \"สมอง\" ของมนุษย์ยุคแรกขยายขนาดขึ้นอย่างก้าวกระโดด",
+                        "en": "Cooking meat with fire made proteins much easier to digest. As a result, the body absorbed nutrients incredibly well, leading to a massive leap in the brain size of early humans."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "1.5",
+            "main_text": {
+                "th": "รอบกองไฟนั้น พวกเขาเริ่มรวมเผ่าพันธุ์และถ่ายทอดความรู้ มนุษย์เอาชนะธรรมชาติป่าเถื่อนมาได้ด้วยก้อนหินและเปลวไฟ แต่ถ้าเราหยุดอยู่แค่นี้… เราคงไม่มีพีระมิดตั้งตระหง่านบนผืนทราย",
+                "en": "Around that campfire, they began to unite as a species and pass on knowledge. Humans conquered wild nature with stones and flames. But if we stopped there... we wouldn't have pyramids towering over the sand."
+            },
+            "additional_info": []
+        }
+    ]
+}

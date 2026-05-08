@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Static Image URLs mapping
     const eraImages = [
-        "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop", // 1
+        "assets/img/Homo habilis.PNG", // 1
         "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop", // 2
         "https://images.unsplash.com/photo-1505501861961-d6f78fcd4703?q=80&w=2000&auto=format&fit=crop", // 3
         "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2000&auto=format&fit=crop", // 4
@@ -127,11 +127,31 @@ document.addEventListener('DOMContentLoaded', () => {
         // Trigger Light Effect (White out)
         document.getElementById('hero').classList.add('light-transition');
         
+        // Prepare Split Layout to be white
+        const splitLayout = document.querySelector('.split-layout');
+        splitLayout.classList.add('flash-active');
+        
         // Wait for white flash to fill screen before translating layout
         setTimeout(() => {
             currentView = 'main';
-            document.getElementById('app-container').style.transform = `translateY(-100vh)`;
+            const appContainer = document.getElementById('app-container');
+            
+            // Disable transition for an instant cut
+            appContainer.style.transition = 'none';
+            appContainer.style.transform = `translateY(-100vh)`;
+            
+            // Force reflow
+            void appContainer.offsetHeight;
+            
+            // Re-enable transition
+            appContainer.style.transition = '';
+            
             document.getElementById('nav-eras').classList.add('active');
+            
+            // Now start fading out the white flash
+            setTimeout(() => { 
+                splitLayout.classList.remove('flash-active');
+            }, 50);
             
             setTimeout(() => { isScrolling = false; }, 1200); // Cooldown for translating
         }, 1500); // Wait for the light flash
@@ -260,6 +280,29 @@ document.addEventListener('DOMContentLoaded', () => {
             erasData = data.chapters;
             
             initSlider();
+
+            // Check URL for era parameter to snap back to a specific era
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetEra = urlParams.get('era');
+            if (targetEra !== null) {
+                const eraIndex = parseInt(targetEra, 10);
+                if (!isNaN(eraIndex) && eraIndex >= 0 && eraIndex < erasData.length) {
+                    currentIndex = eraIndex;
+                    updateSliderPosition();
+                    updateTextContent(currentIndex);
+                    
+                    // Instantly snap to main layout
+                    currentView = 'main';
+                    document.getElementById('app-container').style.transition = 'none';
+                    document.getElementById('app-container').style.transform = `translateY(-100vh)`;
+                    document.getElementById('nav-eras').classList.add('active');
+                    
+                    // Re-enable transition after a short delay
+                    setTimeout(() => {
+                        document.getElementById('app-container').style.transition = '';
+                    }, 50);
+                }
+            }
         } catch (error) {
             console.error('Error loading data:', error);
             // Fallback gracefully or show error UI if necessary
