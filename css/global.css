@@ -1,21 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
+@font-face {
+    font-family: 'Andreas';
+    src: url('../Font/Font_Eng/ANDRT___.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'TorsilpDeMak';
+    src: url('../Font/Font_Thai/TorsilpDeMak.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'TorsilpDeMak';
+    src: url('../Font/Font_Thai/TorsilpDeMakBold.ttf') format('truetype');
+    font-weight: bold;
+}
+
 :root {
     /* Color Palette - Permanent Dark Mode */
     --bg-color: #050505;
     --text-primary: #ffffff;
     --text-secondary: #a0a0a5;
-    
+
     /* Dynamic Era Theme Color */
-    --era-color: #d4af37; /* Default Gold */
+    --era-color: #d4af37;
+    /* Default Gold */
     --accent-color: var(--era-color);
     --accent-hover: #f3e5ab;
-    
+
     --nav-bg: rgba(5, 5, 5, 0.9);
 
     /* Typography */
-    --font-heading: 'Cinzel', serif;
-    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Andreas', 'TorsilpDeMak', serif;
+    --font-body: 'Andreas', 'TorsilpDeMak', sans-serif;
 
     /* Layout */
     --nav-height: 80px;
@@ -27,6 +45,8 @@
     box-sizing: border-box;
 }
 
+
+
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
@@ -35,6 +55,9 @@ body {
     /* Prevent body scroll entirely */
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "mark" 1, "mkmk" 1, "ccmp" 1, "liga" 1;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 

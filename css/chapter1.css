@@ -8,7 +8,7 @@ body {
 
 /* Scroll spacer creates the scrollable area */
 .scroll-container {
-    height: 400vh;
+    height: 1200vh;
     width: 100%;
     position: absolute;
     top: 0;
@@ -206,8 +206,8 @@ body {
 
 .savanna-text-container {
     position: absolute;
-    top: 20%;
-    left: 9%;
+    top: 18%;
+    left: 8%;
     max-width: 800px;
     z-index: 90;
     opacity: 0;
@@ -217,10 +217,185 @@ body {
 
 .savanna-text-container p {
     font-family: var(--font-body);
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    color: #a30000;
+    font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+    color: #000000;
     line-height: 1.6;
     letter-spacing: 1px;
+    white-space: pre-line;
+}
+
+:lang(th) .prologue-text,
+:lang(th) .savanna-text-container p {
+    font-weight: bold;
+}
+
+/* Phase 5 Layers */
+.layer-phase5 {
+    opacity: 0;
+    will-change: transform, opacity;
+}
+
+.layer-bg3 {
+    z-index: 100;
+}
+
+.layer-sun4 {
+    z-index: 101;
+    transform-origin: center bottom;
+}
+
+.layer-shadow-habilis {
+    z-index: 105;
+    transform-origin: bottom center;
+    object-fit: contain;
+    object-position: 80% bottom;
+    pointer-events: auto;
+    transition: filter 0.3s ease;
+}
+
+.layer-shadow-habilis.clickable {
+    cursor: pointer;
+}
+
+.layer-shadow-habilis.clickable:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)) drop-shadow(0 0 35px rgba(255, 255, 150, 0.8));
+}
+
+.layer-shadow-erectus {
+    z-index: 106;
+    transform-origin: bottom center;
+    object-fit: contain;
+    object-position: -20% bottom;
+    pointer-events: auto;
+    transition: filter 0.3s ease;
+}
+
+.layer-shadow-erectus.clickable {
+    cursor: pointer;
+}
+
+.layer-shadow-erectus.clickable:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1)) drop-shadow(0 0 35px rgba(255, 255, 150, 0.8));
+}
+
+.layer-grass {
+    z-index: 104;
+}
+
+.footprints-container {
+    position: absolute;
+    bottom: 5%;
+    left: -110vw;
+    /* Container starts entirely off-screen to the left */
+    width: 110vw;
+    /* Wide enough to hold all footprints */
+    height: 15vh;
+    z-index: 150;
+    display: flex;
+    flex-direction: row-reverse;
+    /* Footprint 1 is on the rightmost edge */
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footprint {
+    width: clamp(120px, 25vw, 350px);
+    height: auto;
+    opacity: 1;
+    /* Always visible */
+    will-change: transform;
+}
+
+/* Stagger them to look like walking */
+.footprint:nth-child(even) {
+    transform: translateY(30px) rotate(15deg);
+}
+
+.footprint:nth-child(odd) {
+    transform: translateY(-15px) rotate(-10deg);
+}
+
+.character-popup {
+    position: absolute;
+    width: 30vw;
+    min-width: 250px;
+    max-width: 400px;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    white-space: pre-line;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.2vw, 1.3rem);
+    line-height: 1.6;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 130;
+    text-align: center;
+}
+
+#popup-habilis {
+    bottom: 25%;
+    left: 20%;
+    transform: translateY(20px);
+}
+
+#popup-habilis.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#popup-erectus {
+    bottom: 25%;
+    right: 20%;
+    transform: translateY(20px);
+}
+
+#popup-erectus.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-transition-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    /* Pitch black for maximum darkness */
+    z-index: 120;
+    /* Cover everything to hide the crossfade */
+    opacity: 0;
+    will-change: opacity;
+    pointer-events: none;
+}
+
+.scene3-text-container {
+    position: absolute;
+    top: 34%;
+    left: 51.1%;
+    transform: translate(-50%, 100vh);
+    width: 80%;
+    max-width: 900px;
+    z-index: 110;
+    opacity: 0;
+    text-align: center;
+}
+
+.scene3-text-container p {
+    font-family: var(--font-body);
+    font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+    color: #000;
+    line-height: 2;
+    white-space: pre-line;
+}
+
+:lang(th) .scene3-text-container p {
+    font-weight: bold;
 }
 
 /* =========================================

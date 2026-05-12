@@ -58,10 +58,48 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('lang', currentLang);
             applyLang(currentLang);
         });
+
+        // Click to reveal translated shadows
+        const shadowHabilis = document.getElementById('layer-shadow-habilis');
+        const shadowErectus = document.getElementById('layer-shadow-erectus');
+        const popupHabilis = document.getElementById('popup-habilis');
+        const popupErectus = document.getElementById('popup-erectus');
+
+        if (shadowHabilis) {
+            shadowHabilis.addEventListener('click', () => {
+                const progress = window.scrollY / (3 * window.innerHeight);
+                if (progress < 1.8) return;
+                if (shadowHabilis.src.includes('Shadow_hibilis.PNG')) {
+                    shadowHabilis.src = 'assets/img/Translation_Habilis.PNG';
+                    if (popupHabilis) popupHabilis.classList.add('show');
+                } else {
+                    shadowHabilis.src = 'assets/img/Shadow_hibilis.PNG';
+                    if (popupHabilis) popupHabilis.classList.remove('show');
+                }
+            });
+        }
+        if (shadowErectus) {
+            shadowErectus.addEventListener('click', () => {
+                const progress = window.scrollY / (3 * window.innerHeight);
+                if (progress < 1.8) return;
+                if (shadowErectus.src.includes('Shadow_erectus.PNG')) {
+                    shadowErectus.src = 'assets/img/Translation_Erectus.PNG';
+                    if (popupErectus) popupErectus.classList.add('show');
+                } else {
+                    shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
+                    if (popupErectus) popupErectus.classList.remove('show');
+                }
+            });
+        }
     }
 
     function applyLang(lang) {
-        langTextSpan.textContent = lang.toUpperCase();
+        document.documentElement.lang = lang;
+        if (lang === 'th') {
+            langTextSpan.textContent = 'EN';
+        } else {
+            langTextSpan.textContent = 'TH';
+        }
 
         if (!chapterData) return;
 
@@ -78,6 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (scene2) {
             savannaText.textContent = scene2.main_text[lang][0];
         }
+
+        // Apply text to scene 3
+        const scene3 = chapterData.scenes.find(s => s.scene_id === "1.3");
+        if (scene3) {
+            document.getElementById('scene3-text').textContent = scene3.main_text[lang];
+            if (scene3.additional_info && scene3.additional_info.length >= 2) {
+                document.getElementById('text-popup-habilis').textContent = scene3.additional_info[0].text[lang];
+                document.getElementById('text-popup-erectus').textContent = scene3.additional_info[1].text[lang];
+            }
+        }
     }
 
     function onScroll() {
@@ -87,6 +135,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 ticking = false;
             });
             ticking = true;
+        }
+
+        // Hide popups when user scrolls
+        const popupHabilis = document.getElementById('popup-habilis');
+        const popupErectus = document.getElementById('popup-erectus');
+        const shadowHabilis = document.getElementById('layer-shadow-habilis');
+        const shadowErectus = document.getElementById('layer-shadow-erectus');
+
+        if (popupHabilis && popupHabilis.classList.contains('show')) {
+            popupHabilis.classList.remove('show');
+            if (shadowHabilis) shadowHabilis.src = 'assets/img/Shadow_hibilis.PNG';
+        }
+        if (popupErectus && popupErectus.classList.contains('show')) {
+            popupErectus.classList.remove('show');
+            if (shadowErectus) shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
         }
     }
 
@@ -127,12 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateParallax() {
         const scrollY = window.scrollY;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
+        // Old scale was 400vh total, maxScroll 300vh (3 * vh). We keep progress 0-1 mapped to the first 300vh.
+        const vh = window.innerHeight;
+        const progress = scrollY / (3 * vh);
 
         // Phase 1: Waking Up (0% - 10%)
         // Black overlay fades out
-        blackOverlay.style.opacity = mapRange(progress, 0.0, 0.10, 1, 0);
+        if (blackOverlay) {
+            blackOverlay.style.opacity = mapRange(progress, 0.0, 0.10, 1, 0);
+        }
 
         // Blur (Starts blurry, resolves at 10%)
         const blurVal = mapRange(progress, 0.0, 0.10, 20, 0);
@@ -173,5 +239,90 @@ document.addEventListener('DOMContentLoaded', () => {
         const savannaY = mapRange(progress, 0.80, 0.95, 20, 0);
         savannaTextContainer.style.opacity = savannaOpacity;
         savannaTextContainer.style.transform = `translateY(${savannaY}px)`;
+
+        // Phase 5: Story Continuation
+        // Phase 5: Story Continuation
+        // Fade in Phase 5 layers while screen is black (1.25 - 1.35)
+        const phase5Opacity = mapRange(progress, 1.25, 1.35, 0, 1);
+        document.querySelectorAll('.layer-phase5').forEach(el => {
+            el.style.opacity = phase5Opacity;
+        });
+
+        // Sun4 moves up
+        const layerSun4 = document.getElementById('layer-sun4');
+        const sun4Y_phase5 = mapRange(progress, 1.4, 1.8, 60, 4);
+        if (layerSun4) layerSun4.style.transform = `translateY(${sun4Y_phase5}%)`;
+
+        // Shadows start near the center and separate outwards to the edges
+        const layerShadowHabilis = document.getElementById('layer-shadow-habilis');
+        const layerShadowErectus = document.getElementById('layer-shadow-erectus');
+
+        // Starts at 0 (center) and moves to -30vw (left) and 30vw (right)
+        const habilisX = mapRange(progress, 1.4, 1.7, 0, -30);
+        const erectusX = mapRange(progress, 1.4, 1.7, 0, 30);
+
+        if (layerShadowHabilis) {
+            layerShadowHabilis.style.transform = `translateX(${habilisX}vw)`;
+            if (progress >= 1.8) {
+                layerShadowHabilis.classList.add('clickable');
+            } else {
+                layerShadowHabilis.classList.remove('clickable');
+            }
+        }
+        if (layerShadowErectus) {
+            layerShadowErectus.style.transform = `translateX(${erectusX}vw)`;
+            if (progress >= 1.8) {
+                layerShadowErectus.classList.add('clickable');
+            } else {
+                layerShadowErectus.classList.remove('clickable');
+            }
+        }
+
+        // Story Text slides up to center
+        const scene3TextContainer = document.getElementById('scene3-text-container');
+        const text3Y = mapRange(progress, 1.5, 1.8, 150, -50);
+        const text3Opacity = mapRange(progress, 1.5, 1.7, 0, 1);
+        if (scene3TextContainer) {
+            scene3TextContainer.style.transform = `translate(-50%, ${text3Y}%)`;
+            scene3TextContainer.style.opacity = text3Opacity;
+        }
+
+        // Section Transition: Full-frame black silhouette mask
+        const sectionTransitionMask = document.getElementById('section-transition-mask');
+        if (sectionTransitionMask) {
+            let maskOpacity = 0;
+            // Hold Savanna scene until progress 1.15, then fade to black
+            if (progress >= 1.15 && progress < 1.25) {
+                maskOpacity = mapRange(progress, 1.15, 1.25, 0, 1);
+            } else if (progress >= 1.25 && progress <= 1.35) {
+                // Hold solid pitch black
+                maskOpacity = 1;
+            } else if (progress > 1.35 && progress <= 1.55) {
+                // Fade out slower to reveal Phase 5
+                maskOpacity = mapRange(progress, 1.35, 1.55, 1, 0);
+            }
+            sectionTransitionMask.style.opacity = maskOpacity;
+        }
+
+        // Footprints slide in from left to right as user scrolls (1.8 - 3.5)
+        const footprintsContainer = document.getElementById('footprints-container');
+        if (footprintsContainer) {
+            const footX = mapRange(progress, 1.8, 3.5, 0, 220); // Move entirely off screen to the right
+            footprintsContainer.style.transform = `translateX(${footX}vw)`;
+
+            // Wiggle individual footprints left and right to look like walking
+            const footprints = document.querySelectorAll('.footprint');
+            footprints.forEach((foot, index) => {
+                const isEven = index % 2 === 1; // nth-child is 1-indexed, index is 0-indexed
+                const baseRotate = isEven ? 15 : -10;
+                const baseY = isEven ? 30 : -15;
+
+                // Sine wave based on progress to create back-and-forth movement
+                const wiggleX = Math.sin(progress * 20 + index) * 20;
+                const wiggleRotate = Math.sin(progress * 20 + index) * 45; // Tilt by +/- 45 degrees dynamically
+
+                foot.style.transform = `translate(${wiggleX}px, ${baseY}px) rotate(${baseRotate + wiggleRotate}deg)`;
+            });
+        }
     }
 });

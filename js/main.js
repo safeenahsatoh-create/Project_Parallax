@@ -41,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const slide = document.createElement('div');
             slide.classList.add('slide');
             if (index === 0) slide.classList.add('active'); // First slide is active initially
-            
+
             const img = document.createElement('img');
             img.src = eraImages[index] || eraImages[0];
             img.alt = era[currentLang].title;
-            
+
             slide.appendChild(img);
             sliderTrack.appendChild(slide);
         });
@@ -57,18 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Sync Logic: Instant Text Update with Language Support
     function updateTextContent(index) {
         if (!erasData || erasData.length === 0) return;
-        
+
         const data = erasData[index];
         const langData = data[currentLang];
-        
+
         // Update DOM Elements with new data immediately
         eraCategory.textContent = langData.subtitle;
         eraTitle.textContent = langData.title;
         eraDescription.textContent = langData.description;
-        
+
         const btnSpan = eraLink.querySelector('span');
         if (btnSpan) btnSpan.textContent = langData.button;
-        
+
         eraLink.href = data.link;
     }
 
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Scroll & Swipe Engine (Universal Support)
-    
+
     // Core Scroll Logic (Hero to Main, No Loop)
     function processScroll(delta) {
         if (isScrolling) return;
@@ -123,36 +123,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scrollToMain() {
         isScrolling = true;
-        
+
         // Trigger Light Effect (White out)
         document.getElementById('hero').classList.add('light-transition');
-        
+
         // Prepare Split Layout to be white
         const splitLayout = document.querySelector('.split-layout');
         splitLayout.classList.add('flash-active');
-        
+
         // Wait for white flash to fill screen before translating layout
         setTimeout(() => {
             currentView = 'main';
             const appContainer = document.getElementById('app-container');
-            
+
             // Disable transition for an instant cut
             appContainer.style.transition = 'none';
             appContainer.style.transform = `translateY(-100vh)`;
-            
+
             // Force reflow
             void appContainer.offsetHeight;
-            
+
             // Re-enable transition
             appContainer.style.transition = '';
-            
+
             document.getElementById('nav-eras').classList.add('active');
-            
+
             // Now start fading out the white flash
-            setTimeout(() => { 
+            setTimeout(() => {
                 splitLayout.classList.remove('flash-active');
             }, 50);
-            
+
             setTimeout(() => { isScrolling = false; }, 1200); // Cooldown for translating
         }, 1500); // Wait for the light flash
     }
@@ -162,11 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentView = 'hero';
         document.getElementById('app-container').style.transform = `translateY(0)`;
         document.getElementById('nav-eras').classList.remove('active');
-        
+
         // Wait for translate to finish, then clear light effect
-        setTimeout(() => { 
+        setTimeout(() => {
             document.getElementById('hero').classList.remove('light-transition');
-            isScrolling = false; 
+            isScrolling = false;
         }, 1200);
     }
 
@@ -181,12 +181,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nav-logo').addEventListener('click', (e) => {
         e.preventDefault();
         if (isScrolling || currentView === 'hero') return;
-        
+
         // Reset to first slide automatically when returning to hero
         currentIndex = 0;
         updateSliderPosition();
         updateTextContent(currentIndex);
-        
+
         scrollToHero();
     });
 
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function triggerUpdate() {
         isScrolling = true;
-        
+
         // Sync both visuals and text
         updateSliderPosition();
         updateTextContent(currentIndex);
@@ -245,8 +245,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Language Switcher Logic
     function applyLang(lang) {
-        langText.textContent = lang.toUpperCase();
-        
+        document.documentElement.lang = lang;
+        if (lang === 'th') {
+            langText.textContent = 'EN';
+        } else {
+            langText.textContent = 'TH';
+        }
+
         // Update Hero and Nav text
         document.getElementById('hero-title').textContent = heroContent[lang].title;
         document.getElementById('hero-subtitle').textContent = heroContent[lang].subtitle;
@@ -278,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error("Failed to fetch content.json");
             const data = await response.json();
             erasData = data.chapters;
-            
+
             initSlider();
 
             // Check URL for era parameter to snap back to a specific era
@@ -290,13 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentIndex = eraIndex;
                     updateSliderPosition();
                     updateTextContent(currentIndex);
-                    
+
                     // Instantly snap to main layout
                     currentView = 'main';
                     document.getElementById('app-container').style.transition = 'none';
                     document.getElementById('app-container').style.transform = `translateY(-100vh)`;
                     document.getElementById('nav-eras').classList.add('active');
-                    
+
                     // Re-enable transition after a short delay
                     setTimeout(() => {
                         document.getElementById('app-container').style.transition = '';

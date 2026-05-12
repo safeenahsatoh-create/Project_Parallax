@@ -14,8 +14,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: flex-end;
-    padding-left: 10%;
-    padding-bottom: 15vh;
+    padding-left: 8%;
+    padding-bottom: 23vh;
     background-image: url('../assets/img/earth1.png');
     background-size: cover;
     background-position: center right;
@@ -131,8 +131,10 @@
 .split-layout::after {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: #ffffff;
     opacity: 0;
     pointer-events: none;
@@ -182,6 +184,7 @@
     font-weight: 700;
     letter-spacing: 1px;
     text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
 }
 
 .era-description {
@@ -190,6 +193,10 @@
     margin-bottom: 3.5rem;
     font-weight: 300;
     max-width: 90%;
+}
+
+:lang(th) .era-description {
+    font-weight: bold;
 }
 
 /* Call to Action Button */
