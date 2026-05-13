@@ -497,192 +497,187 @@ body {
 .layer-tool {
     z-index: 205;
     top: auto;
+    bottom: -2%;
+    left: -9%;
+    width: 100vw;
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: filter 0.35s ease;
+}
 
-    .layer-tool {
-        z-index: 205;
-        top: auto;
-        bottom: -2%;
-        left: -9%;
-        width: 100vw;
-        height: auto;
-        object-fit: contain;
-        cursor: pointer;
-        transition: filter 0.35s ease;
+.layer-tool:hover {
+    filter: drop-shadow(0 0 12px rgba(255, 180, 60, 0.9)) drop-shadow(0 0 30px rgba(255, 120, 0, 0.6));
+}
+
+/* Tool 2 — second instance, same position (adjust bottom/left to move) */
+/* ✏️ ปรับตำแหน่งได้ที่ bottom / left และขนาดที่ width */
+.layer-tool-2 {
+    z-index: 207;
+    top: auto;
+    bottom: -2%;
+    /* ← ปรับขึ้น-ลง */
+    left: -9%;
+    /* ← ปรับซ้าย-ขวา */
+    width: 100vw;
+    /* ← ปรับขนาด */
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: filter 0.35s ease;
+}
+
+.layer-tool-2:hover {
+    filter: drop-shadow(0 0 12px rgba(255, 180, 60, 0.9)) drop-shadow(0 0 30px rgba(255, 120, 0, 0.6));
+}
+
+/* Fire — on top of Cavefinal, bottom-center-right (campfire position) */
+/* ✏️ ปรับตำแหน่งได้ที่ bottom / right และขนาดที่ width */
+.layer-fire {
+    z-index: 206;
+    top: auto;
+    bottom: -5.5%;
+    right: -0.2%;
+    left: auto;
+    width: 100vw;
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: filter 0.35s ease;
+}
+
+.layer-fire:hover {
+    filter: drop-shadow(0 0 14px rgba(255, 120, 0, 0.95)) drop-shadow(0 0 38px rgba(255, 60, 0, 0.7));
+}
+
+/* Cave Prop Popups */
+.cave-popup {
+    position: absolute;
+    width: 32vw;
+    min-width: 260px;
+    max-width: 440px;
+    background: rgba(20, 10, 0, 0.82);
+    padding: 1.4rem 1.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 180, 60, 0.35);
+    backdrop-filter: blur(6px);
+    white-space: pre-line;
+    color: #f5deb3;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.1vw, 1.2rem);
+    line-height: 1.7;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 220;
+    text-align: left;
+}
+
+.cave-popup.show {
+    opacity: 1;
+}
+
+/* Tool popup — appears top-right of tool image */
+#popup-tool {
+    bottom: 40%;
+    left: 10%;
+    transform: translateY(15px);
+}
+
+#popup-tool.show {
+    transform: translateY(0);
+}
+
+/* Tool 2 popup */
+#popup-tool-2 {
+    bottom: 40%;
+    left: 10%;
+    transform: translateY(15px);
+}
+
+#popup-tool-2.show {
+    transform: translateY(0);
+}
+
+/* Fire popup — appears top-left of fire image */
+#popup-fire {
+    bottom: 45%;
+    right: 4%;
+    transform: translateY(15px);
+}
+
+#popup-fire.show {
+    transform: translateY(0);
+}
+
+:lang(th) .cave-popup {
+    font-weight: bold;
+}
+
+/* Scene 1.4 Text */
+.scene4-text-container {
+    position: absolute;
+    bottom: 6%;
+    /* ✏️ ตำแหน่งแนวตั้ง — เพิ่มเพื่อขึ้นบน, ลดเพื่อลงล่าง */
+    left: 35%;
+    transform: translateX(-50%) translateY(40px);
+    width: 80%;
+    max-width: 900px;
+    z-index: 210;
+    opacity: 0;
+    text-align: center;
+    /* ✏️ เปลี่ยนเป็น left หรือ right ได้ */
+    will-change: opacity, transform;
+    /* กรอบดำถูกลบออกแล้ว */
+}
+
+.scene4-text-container p {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.6vw, 1.8rem);
+    color: #f5deb3;
+    line-height: 2;
+    white-space: pre-line;
+    letter-spacing: 0.5px;
+}
+
+:lang(th) .scene4-text-container p {
+    font-weight: bold;
+}
+
+/* =========================================
+Responsive Design (iPad & Tablets)
+========================================= */
+
+@media (max-width: 1024px) {
+
+    /* Adjust Prologue Text */
+    .prologue-text {
+        font-size: clamp(1rem, 4vw, 1.8rem);
+        width: 90%;
+        line-height: 1.4;
     }
 
-    .layer-tool:hover {
-        filter: drop-shadow(0 0 12px rgba(255, 180, 60, 0.9)) drop-shadow(0 0 30px rgba(255, 120, 0, 0.6));
+    /* Adjust Savanna Text */
+    .savanna-text-container {
+        left: 5%;
+        bottom: 12%;
+        max-width: 90%;
     }
 
-    /* Tool 2 — second instance, same position (adjust bottom/left to move) */
-    /* ✏️ ปรับตำแหน่งได้ที่ bottom / left และขนาดที่ width */
-    .layer-tool-2 {
-        z-index: 207;
-        top: auto;
-        bottom: -2%;
-        /* ← ปรับขึ้น-ลง */
-        left: -9%;
-        /* ← ปรับซ้าย-ขวา */
-        width: 100vw;
-        /* ← ปรับขนาด */
-        height: auto;
-        object-fit: contain;
-        cursor: pointer;
-        transition: filter 0.35s ease;
+    .savanna-text-container p {
+        font-size: clamp(1.1rem, 3vw, 1.5rem);
+    }
+}
+
+/* Handle portrait/squarish screens specifically (like iPad in portrait mode) */
+@media (max-aspect-ratio: 4/3) {
+    .layer-cave-mid {
+        transform-origin: center 45%;
+        /* Shift zoom origin slightly down for taller screens */
     }
 
-    .layer-tool-2:hover {
-        filter: drop-shadow(0 0 12px rgba(255, 180, 60, 0.9)) drop-shadow(0 0 30px rgba(255, 120, 0, 0.6));
+    .layer-ground {
+        /* Don't push down as far on taller screens to prevent empty gaps */
+        transform: scale(1.1) translateY(10%);
     }
-
-    /* Fire — on top of Cavefinal, bottom-center-right (campfire position) */
-    /* ✏️ ปรับตำแหน่งได้ที่ bottom / right และขนาดที่ width */
-    .layer-fire {
-        z-index: 206;
-        top: auto;
-        bottom: -5.5%;
-        right: -0.2%;
-        left: auto;
-        width: 100vw;
-        height: auto;
-        object-fit: contain;
-        cursor: pointer;
-        transition: filter 0.35s ease;
-    }
-
-    .layer-fire:hover {
-        filter: drop-shadow(0 0 14px rgba(255, 120, 0, 0.95)) drop-shadow(0 0 38px rgba(255, 60, 0, 0.7));
-    }
-
-    /* Cave Prop Popups */
-    .cave-popup {
-        position: absolute;
-        width: 32vw;
-        min-width: 260px;
-        max-width: 440px;
-        background: rgba(20, 10, 0, 0.82);
-        padding: 1.4rem 1.8rem;
-        border-radius: 10px;
-        border: 1px solid rgba(255, 180, 60, 0.35);
-        backdrop-filter: blur(6px);
-        white-space: pre-line;
-        color: #f5deb3;
-        font-family: var(--font-body);
-        font-size: clamp(0.9rem, 1.1vw, 1.2rem);
-        line-height: 1.7;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s ease, transform 0.4s ease;
-        z-index: 220;
-        text-align: left;
-    }
-
-    .cave-popup.show {
-        opacity: 1;
-    }
-
-    /* Tool popup — appears top-right of tool image */
-    #popup-tool {
-        bottom: 40%;
-        left: 10%;
-        transform: translateY(15px);
-    }
-
-    #popup-tool.show {
-        transform: translateY(0);
-    }
-
-    /* Tool 2 popup */
-    #popup-tool-2 {
-        bottom: 40%;
-        left: 10%;
-        transform: translateY(15px);
-    }
-
-    #popup-tool-2.show {
-        transform: translateY(0);
-    }
-
-    /* Fire popup — appears top-left of fire image */
-    #popup-fire {
-        bottom: 45%;
-        right: 4%;
-        transform: translateY(15px);
-    }
-
-    #popup-fire.show {
-        transform: translateY(0);
-    }
-
-    :lang(th) .cave-popup {
-        font-weight: bold;
-    }
-
-    /* Scene 1.4 Text */
-    .scene4-text-container {
-        position: absolute;
-        bottom: 6%;
-        /* ✏️ ตำแหน่งแนวตั้ง — เพิ่มเพื่อขึ้นบน, ลดเพื่อลงล่าง */
-        left: 35%;
-        transform: translateX(-50%) translateY(40px);
-        width: 80%;
-        max-width: 900px;
-        z-index: 210;
-        opacity: 0;
-        text-align: center;
-        /* ✏️ เปลี่ยนเป็น left หรือ right ได้ */
-        will-change: opacity, transform;
-        /* กรอบดำถูกลบออกแล้ว */
-    }
-
-
-    .scene4-text-container p {
-        font-family: var(--font-body);
-        font-size: clamp(1rem, 1.6vw, 1.8rem);
-        color: #f5deb3;
-        line-height: 2;
-        white-space: pre-line;
-        letter-spacing: 0.5px;
-    }
-
-    :lang(th) .scene4-text-container p {
-        font-weight: bold;
-    }
-
-    /* =========================================
-   Responsive Design (iPad & Tablets)
-   ========================================= */
-
-    @media (max-width: 1024px) {
-
-        /* Adjust Prologue Text */
-        .prologue-text {
-            font-size: clamp(1rem, 4vw, 1.8rem);
-            width: 90%;
-            line-height: 1.4;
-        }
-
-        /* Adjust Savanna Text */
-        .savanna-text-container {
-            left: 5%;
-            bottom: 12%;
-            max-width: 90%;
-        }
-
-        .savanna-text-container p {
-            font-size: clamp(1.1rem, 3vw, 1.5rem);
-        }
-    }
-
-    /* Handle portrait/squarish screens specifically (like iPad in portrait mode) */
-    @media (max-aspect-ratio: 4/3) {
-        .layer-cave-mid {
-            transform-origin: center 45%;
-            /* Shift zoom origin slightly down for taller screens */
-        }
-
-        .layer-ground {
-            /* Don't push down as far on taller screens to prevent empty gaps */
-            transform: scale(1.1) translateY(10%);
-        }
-    }
+}
