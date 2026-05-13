@@ -35,7 +35,7 @@
     position: relative;
     z-index: 5;
     text-align: left;
-    max-width: 600px;
+    max-width: 800px;
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
@@ -97,13 +97,14 @@
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(1.5rem, 3vw, 2.8rem);
     font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 0.5rem;
     text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.8);
     line-height: 1.1;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .hero-subtitle {

@@ -59,7 +59,7 @@
         {
             "scene_id": "1.4",
             "main_text": {
-                "th": "เมื่อมือประสานกับสมอง เวทมนตร์บทแรกของมนุษย์ก็เริ่มขึ้น ลับหินให้แหลมคมเพื่อชำแหละเนื้อ ขัดสีไม้จนเกิดเปลวไฟเพื่อขับไล่ความมืด เอาหนังสัตว์และกิ่งไม้มาทำที่พักพิง นี่ไม่ใช่แค่การเอาชีวิตรอด แต่นี่คือ \"เทคโนโลยี\" ชิ้นแรกของมนุษยชาติ",
+                "th": "เมื่อมือประสานกับสมอง เวทมนตร์บทแรกของมนุษย์ก็เริ่มขึ้น \nลับหินให้แหลมคมเพื่อชำแหละเนื้อ ขัดสีไม้จนเกิดเปลวไฟเพื่อขับไล่ความมืด\nเอาหนังสัตว์และกิ่งไม้มาทำที่พักพิง นี่ไม่ใช่แค่การเอาชีวิตรอด\nแต่นี่คือ \"เทคโนโลยี\" ชิ้นแรกของมนุษยชาติ",
                 "en": "When hands coordinated with the brain, humanity's first magic began. Sharpening stones to butcher meat, rubbing wood to spark fire against the dark, and using animal hides and branches for shelter. This wasn't just survival; it was humanity's first \"Technology.\""
             },
             "additional_info": [
@@ -84,7 +84,7 @@
         {
             "scene_id": "1.5",
             "main_text": {
-                "th": "รอบกองไฟนั้น พวกเขาเริ่มรวมเผ่าพันธุ์และถ่ายทอดความรู้ มนุษย์เอาชนะธรรมชาติป่าเถื่อนมาได้ด้วยก้อนหินและเปลวไฟ แต่ถ้าเราหยุดอยู่แค่นี้… เราคงไม่มีพีระมิดตั้งตระหง่านบนผืนทราย",
+                "th": "รอบกองไฟนั้น พวกเขาเริ่มรวมเผ่าพันธุ์และถ่ายทอดความรู้\nมนุษย์เอาชนะธรรมชาติป่าเถื่อนมาได้ด้วยก้อนหินและเปลวไฟ \nแต่ถ้าเราหยุดอยู่แค่นี้…\nเราคงไม่มีพีระมิดตั้งตระหง่านบนผืนทราย",
                 "en": "Around that campfire, they began to unite as a species and pass on knowledge. Humans conquered wild nature with stones and flames. But if we stopped there... we wouldn't have pyramids towering over the sand."
             },
             "additional_info": []

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=Krub:wght@300;400;500;600;700&display=swap');
 
 @font-face {
     font-family: 'Andreas';
@@ -32,8 +32,8 @@
     --nav-bg: rgba(5, 5, 5, 0.9);
 
     /* Typography */
-    --font-heading: 'Andreas', 'TorsilpDeMak', serif;
-    --font-body: 'Andreas', 'TorsilpDeMak', sans-serif;
+    --font-heading: 'Andreas', 'Krub', 'TorsilpDeMak', serif;
+    --font-body: 'Andreas', 'Krub', 'TorsilpDeMak', sans-serif;
 
     /* Layout */
     --nav-height: 80px;
@@ -44,8 +44,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-
 
 body {
     background-color: var(--bg-color);
@@ -59,6 +57,11 @@ body {
     text-rendering: optimizeLegibility;
     font-feature-settings: "mark" 1, "mkmk" 1, "ccmp" 1, "liga" 1;
     transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Global Thai Typography override to be thin */
+:lang(th) {
+    font-weight: 300;
 }
 
 /* Minimal Navbar */

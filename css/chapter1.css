@@ -99,31 +99,23 @@ body {
 }
 
 .layer-deer {
-    z-index: 45;
+    z-index: 46;
     top: auto;
-    bottom: 4%;
-    left: 3%;
-    width: 75vw;
-    height: auto;
-    object-fit: contain;
-}
-
-.layer-zebra {
-    z-index: 44;
-    top: auto;
-    bottom: 3%;
-    left: 8%;
+    bottom: -2%;
+    left: 18%;
     width: 60vw;
     height: auto;
     object-fit: contain;
 }
 
+
+
 .layer-elephant {
-    z-index: 46;
+    z-index: 45;
     top: auto;
-    bottom: 5%;
-    left: 8%;
-    width: 73vw;
+    bottom: 1.5%;
+    left: -4%;
+    width: 70vw;
     height: auto;
     object-fit: contain;
 }
@@ -248,7 +240,7 @@ body {
 
 :lang(th) .prologue-text,
 :lang(th) .savanna-text-container p {
-    font-weight: bold;
+    font-weight: 300;
 }
 
 /* Phase 5 Layers */
@@ -413,7 +405,7 @@ body {
 }
 
 :lang(th) .scene3-text-container p {
-    font-weight: bold;
+    font-weight: 300;
 }
 
 /* =========================================
@@ -611,7 +603,7 @@ body {
 }
 
 :lang(th) .cave-popup {
-    font-weight: bold;
+    font-weight: 300;
 }
 
 /* Scene 1.4 Text */
@@ -641,7 +633,7 @@ body {
 }
 
 :lang(th) .scene4-text-container p {
-    font-weight: bold;
+    font-weight: 300;
 }
 
 /* =========================================
@@ -684,7 +676,7 @@ body {
 }
 
 :lang(th) .scene5-text-container p {
-    font-weight: bold;
+    font-weight: 300;
 }
 
 /* =========================================

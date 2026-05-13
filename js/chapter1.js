@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const layerDeer = document.getElementById('layer-deer');
     const layerBird = document.getElementById('layer-bird');
     const layerLion = document.getElementById('layer-lion');
+    const layerElephant = document.getElementById('layer-elephant');
 
     const blackOverlay = document.getElementById('black-overlay');
 
@@ -301,9 +302,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const birdX = mapRange(progress, 0.65, 0.90, 60, 0);
         layerBird.style.transform = `translateX(${birdX}vw)`;
 
-        // กวางเดินเข้ามาจากด้านซ้าย (ตามมาทีหลัง ช่วง 75% - 100%)
-        const deerX = mapRange(progress, 0.75, 1.0, -60, 0);
-        layerDeer.style.transform = `translateX(${deerX}vw)`;
+        // ช้างเดินเข้ามาจากด้านซ้าย (มาก่อนกวาง ช่วง 70% - 95%)
+        if (layerElephant) {
+            const elephantX = mapRange(progress, 0.70, 0.95, -60, 0);
+            layerElephant.style.transform = `translateX(${elephantX}vw)`;
+        }
+
+        // กวางเดินเข้ามาจากด้านซ้าย (ช้าลงและมาทีหลัง ช่วง 75% - 1.05)
+        if (layerDeer) {
+            const deerX = mapRange(progress, 0.75, 1.05, -40, 0);
+            layerDeer.style.transform = `translateX(${deerX}vw)`;
+        }
 
         // สิงโตเดินเข้ามาจากด้านขวา (พร้อมกวาง ช่วง 75% - 100%)
         const lionX = mapRange(progress, 0.75, 1.0, 60, 0);
