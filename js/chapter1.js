@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const layerCaveFront = document.getElementById('layer-cave-front');
     const layerDeer = document.getElementById('layer-deer');
     const layerBird = document.getElementById('layer-bird');
+    const layerLion = document.getElementById('layer-lion');
 
     const blackOverlay = document.getElementById('black-overlay');
 
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shadowHabilis) {
             shadowHabilis.addEventListener('click', () => {
                 const progress = window.scrollY / (3 * window.innerHeight);
-                if (progress < 1.8) return;
+                if (progress < 1.5) return;
                 if (shadowHabilis.src.includes('Shadow_hibilis.PNG')) {
                     shadowHabilis.src = 'assets/img/Translation_Habilis.PNG';
                     if (popupHabilis) popupHabilis.classList.add('show');
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (shadowErectus) {
             shadowErectus.addEventListener('click', () => {
                 const progress = window.scrollY / (3 * window.innerHeight);
-                if (progress < 1.8) return;
+                if (progress < 1.5) return;
                 if (shadowErectus.src.includes('Shadow_erectus.PNG')) {
                     shadowErectus.src = 'assets/img/Translation_Erectus.PNG';
                     if (popupErectus) popupErectus.classList.add('show');
@@ -89,6 +90,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
                     if (popupErectus) popupErectus.classList.remove('show');
                 }
+            });
+        }
+
+        // Click handlers for Tool and Fire cave props
+        const layerToolEl = document.getElementById('layer-tool');
+        const layerTool2El = document.getElementById('layer-tool-2');
+        const layerFireEl = document.getElementById('layer-fire');
+        const popupToolEl = document.getElementById('popup-tool');
+        const popupTool2El = document.getElementById('popup-tool-2');
+        const popupFireEl = document.getElementById('popup-fire');
+
+        const closeAllCavePopups = () => {
+            if (popupToolEl) popupToolEl.classList.remove('show');
+            if (popupTool2El) popupTool2El.classList.remove('show');
+            if (popupFireEl) popupFireEl.classList.remove('show');
+        };
+
+        if (layerToolEl) {
+            layerToolEl.addEventListener('click', () => {
+                const progress = window.scrollY / (3 * window.innerHeight);
+                if (progress < 4.6) return;
+                const isOpen = popupToolEl && popupToolEl.classList.contains('show');
+                closeAllCavePopups();
+                if (!isOpen && popupToolEl) popupToolEl.classList.add('show');
+            });
+        }
+        if (layerTool2El) {
+            layerTool2El.addEventListener('click', () => {
+                const progress = window.scrollY / (3 * window.innerHeight);
+                if (progress < 4.6) return;
+                const isOpen = popupTool2El && popupTool2El.classList.contains('show');
+                closeAllCavePopups();
+                if (!isOpen && popupTool2El) popupTool2El.classList.add('show');
+            });
+        }
+        if (layerFireEl) {
+            layerFireEl.addEventListener('click', () => {
+                const progress = window.scrollY / (3 * window.innerHeight);
+                if (progress < 4.6) return;
+                const isOpen = popupFireEl && popupFireEl.classList.contains('show');
+                closeAllCavePopups();
+                if (!isOpen && popupFireEl) popupFireEl.classList.add('show');
             });
         }
     }
@@ -126,6 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('text-popup-erectus').textContent = scene3.additional_info[1].text[lang];
             }
         }
+
+        // Apply text to scene 4
+        const scene4 = chapterData.scenes.find(s => s.scene_id === "1.4");
+        if (scene4) {
+            document.getElementById('scene4-text').textContent = scene4.main_text[lang];
+            // Load cave prop popup texts from scene 1.4 additional_info
+            if (scene4.additional_info && scene4.additional_info.length >= 2) {
+                const toolEl = document.getElementById('text-popup-tool');
+                const tool2El = document.getElementById('text-popup-tool-2');
+                const fireEl = document.getElementById('text-popup-fire');
+                if (toolEl) toolEl.textContent = scene4.additional_info[0].text[lang];
+                if (tool2El) tool2El.textContent = scene4.additional_info[0].text[lang]; // same as tool
+                if (fireEl) fireEl.textContent = scene4.additional_info[1].text[lang];
+            }
+        }
     }
 
     function onScroll() {
@@ -151,6 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
             popupErectus.classList.remove('show');
             if (shadowErectus) shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
         }
+
+        // Dismiss cave prop popups on scroll
+        const popupTool = document.getElementById('popup-tool');
+        const popupTool2 = document.getElementById('popup-tool-2');
+        const popupFire = document.getElementById('popup-fire');
+        if (popupTool) popupTool.classList.remove('show');
+        if (popupTool2) popupTool2.classList.remove('show');
+        if (popupFire) popupFire.classList.remove('show');
     }
 
     // Auto-play Prologue Sequence
@@ -224,15 +290,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // ทำให้พระอาทิตย์เล็กลงโดยเพิ่ม scale(0.6)
         layerSun.style.transform = `translateY(${sunY}%) translateX(-5%) scale(0.6)`;
 
-        // กวางเดินเข้ามาจากด้านซ้าย (เชื่อมกับช่วงพระอาทิตย์ขึ้น 70% - 100%)
-        // เริ่มที่ -60vw (ซ่อนอยู่ซ้ายสุด) แล้วค่อยๆ เลื่อนมาที่ 0 พร้อมกับที่พระอาทิตย์ขึ้นสุด
-        const deerX = mapRange(progress, 0.70, 1.0, -60, 0);
+        // นกบินเข้ามาจากด้านขวาก่อน (ช่วง 65% - 90%)
+        const birdX = mapRange(progress, 0.65, 0.90, 60, 0);
+        layerBird.style.transform = `translateX(${birdX}vw)`;
+
+        // กวางเดินเข้ามาจากด้านซ้าย (ตามมาทีหลัง ช่วง 75% - 100%)
+        const deerX = mapRange(progress, 0.75, 1.0, -60, 0);
         layerDeer.style.transform = `translateX(${deerX}vw)`;
 
-        // นกบินเข้ามาจากด้านขวา (เชื่อมกับช่วงพระอาทิตย์ขึ้น 70% - 100%)
-        // เริ่มที่ 60vw (ซ่อนอยู่ขวาสุด) แล้วค่อยๆ เลื่อนมาที่ 0 พร้อมกับกวางและพระอาทิตย์
-        const birdX = mapRange(progress, 0.70, 1.0, 60, 0);
-        layerBird.style.transform = `translateX(${birdX}vw)`;
+        // สิงโตเดินเข้ามาจากด้านขวา (พร้อมกวาง ช่วง 75% - 100%)
+        const lionX = mapRange(progress, 0.75, 1.0, 60, 0);
+        if (layerLion) layerLion.style.transform = `translateX(${lionX}vw)`;
 
         // Savanna Text (80% - 95%)
         const savannaOpacity = mapRange(progress, 0.80, 0.95, 0, 1);
@@ -263,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (layerShadowHabilis) {
             layerShadowHabilis.style.transform = `translateX(${habilisX}vw)`;
-            if (progress >= 1.8) {
+            if (progress >= 1.5) {
                 layerShadowHabilis.classList.add('clickable');
             } else {
                 layerShadowHabilis.classList.remove('clickable');
@@ -271,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (layerShadowErectus) {
             layerShadowErectus.style.transform = `translateX(${erectusX}vw)`;
-            if (progress >= 1.8) {
+            if (progress >= 1.5) {
                 layerShadowErectus.classList.add('clickable');
             } else {
                 layerShadowErectus.classList.remove('clickable');
@@ -323,6 +391,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 foot.style.transform = `translate(${wiggleX}px, ${baseY}px) rotate(${baseRotate + wiggleRotate}deg)`;
             });
+        }
+
+        // Phase 6: Night Sky (3.5 - 4.0)
+        const layerBgDark = document.getElementById('layer-bg-dark');
+        const layerStar = document.getElementById('layer-star');
+        const layerMoon = document.getElementById('layer-moon');
+
+        const phase6Opacity = mapRange(progress, 3.5, 4.0, 0, 1);
+
+        if (layerBgDark) layerBgDark.style.opacity = phase6Opacity;
+        if (layerStar) layerStar.style.opacity = phase6Opacity;
+        if (layerMoon) {
+            layerMoon.style.opacity = phase6Opacity;
+            // Moon rises from below screen up — same window as Rock zoom
+            const moonY = mapRange(progress, 3.5, 4.2, 120, 14);
+            layerMoon.style.transform = `translateY(${moonY}vh)`;
+        }
+
+        // Phase 7a: Rock — appears after Moon lands, zooms IN (4.2 - 5.8)
+        const layerRock = document.getElementById('layer-rock');
+        if (layerRock) {
+            const rockOpacity = progress >= 4.2 ? 1 : 0;           // snap visible after moon done
+            const rockScale = mapRange(progress, 4.2, 5.8, 1, 2); // zoom IN slowly
+            layerRock.style.opacity = rockOpacity;
+            layerRock.style.transform = `scale(${rockScale})`;
+        }
+
+        // Phase 7b: Cave Final + Tool + Fire — fade in together (4.2 - 4.6)
+        const layerCaveFinal = document.getElementById('layer-cave-final');
+        const layerTool = document.getElementById('layer-tool');
+        const layerTool2 = document.getElementById('layer-tool-2');
+        const layerFire = document.getElementById('layer-fire');
+        const caveGroupOpacity = mapRange(progress, 4.2, 4.6, 0, 1);
+
+        if (layerCaveFinal) {
+            layerCaveFinal.style.opacity = caveGroupOpacity;
+            layerCaveFinal.style.transform = `scale(1)`;
+        }
+        if (layerTool) layerTool.style.opacity = caveGroupOpacity;
+        if (layerTool2) layerTool2.style.opacity = caveGroupOpacity;
+        if (layerFire) layerFire.style.opacity = caveGroupOpacity;
+
+
+        // Phase 7c: Scene 1.4 text — appears after cave is established (5.0 - 5.4)
+        const scene4TextContainer = document.getElementById('scene4-text-container');
+        if (scene4TextContainer) {
+            const text4Opacity = mapRange(progress, 5.0, 5.4, 0, 1);
+            const text4Y = mapRange(progress, 5.0, 5.4, 40, 0);
+            scene4TextContainer.style.opacity = text4Opacity;
+            scene4TextContainer.style.transform = `translateX(-50%) translateY(${text4Y}px)`;
         }
     }
 });
