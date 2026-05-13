@@ -331,19 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (layerShadowHabilis) {
             layerShadowHabilis.style.transform = `translateX(${habilisX}vw)`;
-            if (progress >= 1.5) {
-                layerShadowHabilis.classList.add('clickable');
-            } else {
-                layerShadowHabilis.classList.remove('clickable');
-            }
         }
         if (layerShadowErectus) {
             layerShadowErectus.style.transform = `translateX(${erectusX}vw)`;
-            if (progress >= 1.5) {
-                layerShadowErectus.classList.add('clickable');
-            } else {
-                layerShadowErectus.classList.remove('clickable');
-            }
         }
 
         // Story Text slides up to center
@@ -429,9 +419,18 @@ document.addEventListener('DOMContentLoaded', () => {
             layerCaveFinal.style.opacity = caveGroupOpacity;
             layerCaveFinal.style.transform = `scale(1)`;
         }
-        if (layerTool) layerTool.style.opacity = caveGroupOpacity;
-        if (layerTool2) layerTool2.style.opacity = caveGroupOpacity;
-        if (layerFire) layerFire.style.opacity = caveGroupOpacity;
+        if (layerTool) {
+            layerTool.style.opacity = caveGroupOpacity;
+            layerTool.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+        }
+        if (layerTool2) {
+            layerTool2.style.opacity = caveGroupOpacity;
+            layerTool2.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+        }
+        if (layerFire) {
+            layerFire.style.opacity = caveGroupOpacity;
+            layerFire.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+        }
 
 
         // Phase 7c: Scene 1.4 text — appears after cave is established (5.0 - 5.4)
