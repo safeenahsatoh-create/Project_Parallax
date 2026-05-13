@@ -184,6 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (fireEl) fireEl.textContent = scene4.additional_info[1].text[lang];
             }
         }
+
+        // Apply text to scene 5 (Ending)
+        const scene5 = chapterData.scenes.find(s => s.scene_id === "1.5");
+        if (scene5) {
+            const scene5Text = document.getElementById('scene5-text');
+            if (scene5Text) scene5Text.textContent = scene5.main_text[lang];
+        }
     }
 
     function onScroll() {
@@ -440,6 +447,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const text4Y = mapRange(progress, 5.0, 5.4, 40, 0);
             scene4TextContainer.style.opacity = text4Opacity;
             scene4TextContainer.style.transform = `translateX(-50%) translateY(${text4Y}px)`;
+        }
+
+        // Phase 8: Scene 1.5 Ending Fade to Black (5.6 - 6.0)
+        const endingBlackMask = document.getElementById('ending-black-mask');
+        if (endingBlackMask) {
+            const maskOpacity = mapRange(progress, 5.6, 6.0, 0, 1);
+            endingBlackMask.style.opacity = maskOpacity;
+        }
+
+        // Scene 1.5 Ending Text floats up (6.0 - 6.5)
+        const scene5TextContainer = document.getElementById('scene5-text-container');
+        if (scene5TextContainer) {
+            const text5Opacity = mapRange(progress, 6.0, 6.4, 0, 1);
+            const text5Y = mapRange(progress, 6.0, 6.5, 50, -100);
+            scene5TextContainer.style.opacity = text5Opacity;
+            scene5TextContainer.style.transform = `translate(-50%, ${text5Y}px)`;
         }
     }
 });

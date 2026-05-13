@@ -8,7 +8,7 @@ body {
 
 /* Scroll spacer creates the scrollable area */
 .scroll-container {
-    height: 1800vh;
+    height: 2200vh;
     width: 100%;
     position: absolute;
     top: 0;
@@ -641,6 +641,49 @@ body {
 }
 
 :lang(th) .scene4-text-container p {
+    font-weight: bold;
+}
+
+/* =========================================
+   Scene 1.5 (Ending)
+   ========================================= */
+
+.ending-black-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    z-index: 300;
+    opacity: 0;
+    will-change: opacity;
+    pointer-events: none;
+}
+
+.scene5-text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50px);
+    width: 80%;
+    max-width: 900px;
+    z-index: 310;
+    opacity: 0;
+    text-align: center;
+    will-change: opacity, transform;
+}
+
+.scene5-text-container p {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.8vw, 2rem);
+    color: #f5deb3;
+    line-height: 2;
+    white-space: pre-line;
+    letter-spacing: 0.5px;
+}
+
+:lang(th) .scene5-text-container p {
     font-weight: bold;
 }
 
