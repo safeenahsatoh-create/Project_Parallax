@@ -1,0 +1,64 @@
+{
+    "chapter_id": 6,
+    "scenes": [
+        {
+            "scene_id": "6.1",
+            "main_text": {
+                "th": "วิทยุทำให้เราส่งข่าวถึงกันได้เร็วขึ้น... แต่ในยามสงคราม ศัตรูก็แอบฟังเราได้เช่นกัน โลกไม่ได้ต้องการเครื่องจักรที่ใช้กำลังอีกต่อไป... แต่เราต้องการเครื่องจักรที่ใช้ความคิด",
+                "en": "Radio allowed us to send news to each other faster... but in times of war, enemies could also eavesdrop on us. The world no longer needed a machine that used physical force... but we needed a machine that could think."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ตัวอักษรเข้ารหัส",
+                    "type": "popup",
+                    "text": {
+                        "th": "ข้อมูลข่าวสารจึงถูกนำไปเข้ารหัส ซ่อนไว้ในกลไกที่ซับซ้อนเกินกว่าสมองมนุษย์จะไขออก",
+                        "en": "Information was therefore encrypted, hidden in mechanisms too complex for the human brain to decode."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "6.2",
+            "main_text": {
+                "th": "ในห้องลับที่อังกฤษ ชายชื่อ แอลัน ทัวริง ได้สร้างสมองกลขึ้นมา เครื่องจักรของเขาไม่ได้มีไว้ทอผ้าหรือลากรถไฟ แต่มันถูกสร้างมาเพื่อคำนวณและแก้ปัญหา",
+                "en": "In a secret room in England, a man named Alan Turing created an artificial brain. His machine wasn't meant to weave fabric or pull trains, but was built to calculate and solve problems."
+            },
+            "additional_info": [
+                {
+                    "trigger": "แอลัน ทัวริง",
+                    "type": "popup",
+                    "text": {
+                        "th": "ทันทีที่ฟันเฟืองของทัวริงถอดรหัสลับได้สำเร็จ... โลกก็ได้ก้าวเท้าเข้าสู่ยุคของคอมพิวเตอร์อย่างเป็นทางการ (เมื่อผู้ใช้คลิกที่ทัวริง จะแสดงประวัติของบิดาแห่งคอมพิวเตอร์และบทบาทในสงครามโลก )",
+                        "en": "As soon as Turing's gears successfully cracked the secret code... the world officially stepped into the computer age. (Clicking on Turing reveals the history of the father of computing and his role in the World War.)"
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "6.3",
+            "main_text": {
+                "th": "สมองกลยุคแรกนั้นยิ่งใหญ่... แต่ก็ใหญ่เกินไป มันกินพื้นที่กว้างเท่าตึกหนึ่งหลังเพียงเพื่อบวกลบเลข แต่จินตนาการของมนุษย์ไม่เคยหยุดนิ่ง เราจับยักษ์ใหญ่ในตึก มาบีบอัดและย่อส่วนลงบนแผงวงจรเล็กๆ",
+                "en": "The first artificial brains were grand... but also too large. They took up the space of an entire building just to add and subtract numbers. But human imagination never stands still. We took the giants in buildings and compressed them down onto tiny circuit boards."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ชิปวงจร",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "เปลี่ยนหลอดแก้วเปราะบางให้กลายเป็นชิปสี่เหลี่ยมที่แข็งแกร่ง เพราะเป้าหมายต่อไปของเรา... ไม่ใช่แค่การคำนวณบนพื้นโลกอีกต่อไป",
+                        "en": "Transforming fragile glass tubes into sturdy square chips, because our next goal... wasn't just calculations on earth anymore."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "6.4",
+            "main_text": {
+                "th": "หลายล้านปีก่อน... บรรพบุรุษของเราเริ่มต้นบนทุ่งหญ้าแอฟริกา ด้วยการหยิบ \"ก้อนหิน\" ขึ้นมา แต่วันนี้... ด้วยพลังของ \"สมองกล\" ขนาดเล็กที่มนุษย์สร้างขึ้น เราได้พาร่างกายที่ครั้งหนึ่งเคยอ่อนแอที่สุดในป่า ทะยานหลุดพ้นจากแรงโน้มถ่วงของโลก และไปทิ้งรอยเท้าไว้บนดวงจันทร์ คอมพิวเตอร์ที่พามนุษย์ไปดวงจันทร์ในวันนั้น... ยังมีพลังประมวลผลน้อยกว่า \"สมาร์ทโฟน\" ที่คุณกำลังถืออ่านเว็บนี้อยู่เสียอีก... แล้วคุณล่ะ... จะใช้เทคโนโลยีในมือคุณ สร้างอารยธรรมต่อไปในทิศทางไหน?",
+                "en": "Millions of years ago... our ancestors started on the African savanna by picking up a \"stone\". But today... with the power of tiny \"artificial brains\" that humans have created, we have taken bodies that were once the weakest in the jungle, soared free from Earth's gravity, and left footprints on the moon. The computer that took humans to the moon that day... had less processing power than the \"smartphone\" you're holding to read this website... And you... in what direction will you use the technology in your hands to build the next civilization?"
+            },
+            "additional_info": []
+        }
+    ]
+}

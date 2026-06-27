@@ -1,0 +1,64 @@
+{
+    "chapter_id": 5,
+    "scenes": [
+        {
+            "scene_id": "5.1",
+            "main_text": {
+                "th": "นับพันปีที่มนุษย์ต้องยอมจำนนต่อความมืดมิดเมื่อดวงอาทิตย์ตกดิน จนกระทั่งช่วงปลายศตวรรษที่ 19 ชายผู้นี้ได้สร้างเวทมนตร์ที่เปลี่ยนโลกไปตลอดกาล เขาไม่ได้สร้างดวงอาทิตย์ดวงใหม่ แต่เขากักขังแสงสว่างไว้ในหลอดแก้วเล็กๆ ได้สำเร็จ",
+                "en": "For thousands of years, humans had to surrender to the darkness when the sun set. Until the late 19th century, this man created magic that changed the world forever. He didn't create a new sun, but he successfully trapped light within a small glass bulb."
+            },
+            "additional_info": [
+                {
+                    "trigger": "โทมัส เอดิสัน",
+                    "type": "popup",
+                    "text": {
+                        "th": "หลอดไฟดวงแรกถูกจุดขึ้น... และมันคือจุดจบของยุคมืดอย่างแท้จริง (เมื่อผู้ใช้คลิกที่เอดิสัน จะแสดงหน้าต่างประวัติการทดลองนับพันครั้งก่อนจะสำเร็จ )",
+                        "en": "The first light bulb was lit... and it was truly the end of the dark ages. (Clicking on Edison reveals the history of his thousands of experiments before succeeding.)"
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "5.2",
+            "main_text": {
+                "th": "เอดิสันจุดไฟในห้องเล็กๆ ได้สำเร็จ... แต่ชายที่ชื่อ \"นิโคลา เทสลา\" คือคนที่ทำให้ไฟสว่างไปทั้งโลก โลกต้องการพลังงานที่เดินทางได้ไกล เทสลาจึงนำเสนอ \"ไฟฟ้ากระแสสลับ\" (AC)",
+                "en": "Edison successfully lit a small room... but a man named \"Nikola Tesla\" was the one who illuminated the entire world. The world needed energy that could travel far. Tesla thus introduced \"Alternating Current\" (AC)."
+            },
+            "additional_info": [
+                {
+                    "trigger": "นิโคลา เทสลา",
+                    "type": "popup",
+                    "text": {
+                        "th": "กระแสไฟฟ้าที่มองไม่เห็นพุ่งทะยานไปตามเส้นลวด ข้ามภูเขาและแม่น้ำ ปลุกเมืองทั้งเมืองให้ตื่นขึ้นจากการหลับใหล... พลังงานสายพันธุ์ใหม่นี้ได้เชื่อมต่อโลกเข้าด้วยกันอย่างสมบูรณ์ (เมื่อผู้ใช้คลิกที่เทสลา จะแสดงหน้าต่างประวัติความเป็นอัจฉริยะและสงครามกระแสไฟฟ้า )",
+                        "en": "Invisible electric currents surged along wires, crossing mountains and rivers, waking entire cities from their slumber... This new breed of energy perfectly connected the world. (Clicking on Tesla reveals his genius and the War of the Currents.)"
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "5.3",
+            "main_text": {
+                "th": "ไฟฟ้าไม่ได้ทำได้แค่ให้แสงสว่าง หรือหมุนมอเตอร์ในโรงงาน แต่มันสามารถ \"ส่งเสียง\" ลอยข้ามอากาศได้ ในช่วงสงครามโลก เทคโนโลยี \"วิทยุโทรเลข\" กลายเป็นอาวุธที่มองไม่เห็น",
+                "en": "Electricity wasn't just for providing light or spinning motors in factories. It could \"send sound\" floating through the air. During the World War, \"Radiotelegraphy\" technology became an invisible weapon."
+            },
+            "additional_info": [
+                {
+                    "trigger": "คลื่นวิทยุ",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "มนุษย์ไม่ต้องพึ่งพานกพิราบหรือจดหมายที่ใช้เวลาเดินทางเป็นเดือนอีกต่อไป คำสั่ง ข่าวสาร และเสียงกระซิบ สามารถพุ่งข้ามมหาสมุทรได้ในเสี้ยววินาที",
+                        "en": "Humans no longer had to rely on pigeons or letters that took months to travel. Orders, news, and whispers could shoot across the ocean in a fraction of a second."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "5.4",
+            "main_text": {
+                "th": "เมื่อไฟฟ้าและคลื่นวิทยุเชื่อมเราไว้ด้วยกัน โลกใบใหญ่ก็ถูกย่อให้เล็กลงในพริบตา เราสื่อสารกันได้ไกลขึ้นและสะดวกขึ้นอย่างที่บรรพบุรุษไม่เคยจินตนาการถึง แต่เมื่อทุกคนบนโลกส่งข้อมูลหากันได้... ปริมาณข่าวสารก็มหาศาลเกินกว่าที่ สมองมนุษย์จัดการไหว โลกกำลังร้องขอเครื่องจักรสายพันธุ์ใหม่ ที่ไม่ได้ทำหน้าที่ใช้แรงงาน... แต่ทำหน้าที่คิดแทนเรา",
+                "en": "When electricity and radio waves connected us together, the huge world shrank in the blink of an eye. We communicated further and more conveniently than our ancestors could ever imagine. But when everyone on earth could send data to each other... the volume of information became too massive for the human brain to handle. The world was crying out for a new breed of machine, one that wouldn't do physical labor... but would do the thinking for us."
+            },
+            "additional_info": []
+        }
+    ]
+}

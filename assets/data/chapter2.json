@@ -1,0 +1,81 @@
+{
+    "chapter_id": 2,
+    "scenes": [
+        {
+            "scene_id": "2.1",
+            "main_text": {
+                "th": "มนุษย์ไม่ได้หยุดอยู่แค่ปากถ้ำและกองไฟ เมื่อมีน้ำและอาหารอุดมสมบูรณ์ พวกเขาเริ่มฝันใหญ่ขึ้น ชายชื่อ \"อิมโฮเตป\" ได้เปลี่ยนจินตนาการให้กลายเป็นก้อนหิน เขาสร้าง \"พีระมิด\" สถาปัตยกรรมที่ตั้งตระหง่านท้าทายกาลเวลา",
+                "en": "Humans didn't stop at the cave entrance and the campfire. With abundant water and food, they began to dream bigger. A man named \"Imhotep\" turned imagination into stone. He built the \"Pyramid\", an architecture that stands tall defying time."
+            },
+            "additional_info": [
+                {
+                    "trigger": "อิมโฮเตป",
+                    "type": "popup",
+                    "text": {
+                        "th": "ชายผู้อยู่เบื้องหลัง: ในยุคอียิปต์โบราณ อิมโฮเตปคือมือขวาของฟาโรห์ ผู้รับหน้าที่เป็นหัวเรือใหญ่ในการคุมการก่อสร้างสถาปัตยกรรมสุดยิ่งใหญ่นี้",
+                        "en": "The man behind it all: In ancient Egypt, Imhotep was the Pharaoh's right hand, the mastermind tasked with overseeing the construction of this magnificent architecture."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "2.2",
+            "main_text": {
+                "th": "แต่หินหนักหลายตัน จะขนย้ายอย่างไรในยุคที่ไม่มีเครื่องจักร? คำตอบไม่ใช่เวทมนตร์ แต่เป็นความเข้าใจธรรมชาติ นี่คือเทคโนโลยีวิศวกรรมที่สร้างสิ่งมหัศจรรย์ของโลก",
+                "en": "But how were multi-ton stones transported in an era without machines? The answer isn't magic, but an understanding of nature. This is the engineering technology that built the wonders of the world."
+            },
+            "additional_info": [
+                {
+                    "trigger": "คนงานลากหิน",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "พวกเขาใช้แคร่เลื่อนไม้ และให้คนคอย \"เทน้ำลงบนทราย\" ในปริมาณที่พอดี น้ำทำให้เม็ดทรายจับตัวแน่น ลดแรงเสียดทานลงจนลากหินยักษ์ได้ลื่นไหล",
+                        "en": "They used wooden sledges and had people \"pour water on the sand\" in just the right amount. The water made the sand compact, reducing friction so the giant stones could be dragged smoothly."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "2.3",
+            "main_text": {
+                "th": "เมื่อเวลาผ่านไป อาณาจักรต่างๆ ขยายใหญ่ขึ้น เมื่อคนนับหมื่นนับแสนมาอยู่รวมกัน ความวุ่นวายจึงเกิดขึ้น กษัตริย์แห่งอาณาจักรบาบิโลน จึงต้องสร้างสิ่งประดิษฐ์ใหม่ มันไม่ได้ทำจากหินหรือไม้ แต่มันคือ \"เทคโนโลยีทางสังคม\"",
+                "en": "As time passed, kingdoms expanded. When tens and hundreds of thousands of people gathered, chaos ensued. The King of Babylon had to create a new invention. It wasn't made of stone or wood, but it was a \"social technology\"."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ตัวละครกษัตริย์",
+                    "type": "popup",
+                    "text": {
+                        "th": "กษัตริย์ \"ฮัมมูราบี\" คือผู้ที่ลุกขึ้นมาสร้างเทคโนโลยีทางสังคมนี้ เพื่อรับมือกับความวุ่นวายเมื่อเมืองขยายตัว",
+                        "en": "King \"Hammurabi\" was the one who rose to create this social technology to handle the chaos as the city expanded."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "2.4",
+            "main_text": {
+                "th": "สิ่งนั้นคือ \"กฎหมาย\" ฮัมมูราบีสลักกติกาของเมืองลงบนศิลาดำขนาดยักษ์ แต่มันหนักและส่งต่อไปไหนไม่ได้ มนุษย์จึงต้องการที่เก็บข้อมูลที่พกพาได้... \"กระดาษปาปิรุส\" จึงกลายเป็นคำตอบ",
+                "en": "That thing was \"Law\". Hammurabi carved the rules of the city onto a giant black stele. But it was heavy and couldn't be passed around. Humans needed portable data storage... \"Papyrus\" became the answer."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ม้วนกระดาษปาปิรุส",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "ฮัมมูราบีสลักกฎหมายบนศิลาเพื่อให้ทุกคนอยู่ภายใต้ความยุติธรรมเดียวกัน แต่จากกฎหมายบนแท่นหิน กลายเป็นตัวอักษรบนแผ่นกระดาษ ความรู้ คำสั่ง และเรื่องราว จึงถูกม้วนส่งต่อข้ามดินแดนได้อย่างไร้พรมแดน",
+                        "en": "Hammurabi carved laws on stone so everyone lived under the same justice. But from laws on a stone pedestal, they became letters on paper. Knowledge, commands, and stories could thus be rolled up and passed across lands without borders."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "2.5",
+            "main_text": {
+                "th": "\"อารยธรรมมนุษย์ดูเหมือนจะพุ่งทะยานไปข้างหน้าอย่างไร้ขีดจำกัด แต่เมื่ออาณาจักรใหญ่ล่มสลาย แสงสว่างของความรู้ก็ดับวูบลง... โลกกำลังก้าวเข้าสู่ยุคที่เทคโนโลยีไม่ได้มีไว้เพื่อสร้างสรรค์ แต่มีไว้เพื่อ 'ทำสงคราม' \"",
+                "en": "\"Human civilization seemed to soar forward limitlessly. But when the great empires fell, the light of knowledge was extinguished... The world was entering an era where technology wasn't meant for creation, but for 'war'.\""
+            },
+            "additional_info": []
+        }
+    ]
+}

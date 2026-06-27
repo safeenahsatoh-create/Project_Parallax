@@ -1,0 +1,64 @@
+{
+    "chapter_id": 3,
+    "scenes": [
+        {
+            "scene_id": "3.1",
+            "main_text": {
+                "th": "เมื่ออาณาจักรโรมันที่ยิ่งใหญ่ล่มสลาย โลกก็เข้าสู่ยุคที่วุ่นวายและหนาวเหน็บ ผู้คนหวาดกลัวและหันหน้าเข้าหา \"ศาสนจักร\" เพื่อเป็นที่พึ่งพิง ความรู้และวิทยาการจากยุคโบราณถูกแช่แข็ง",
+                "en": "When the great Roman Empire collapsed, the world entered a chaotic and cold era. Terrified people turned to the \"Church\" for refuge. Knowledge and science from the ancient era were frozen."
+            },
+            "additional_info": [
+                {
+                    "trigger": "นักบวชคัดลอกหนังสือ",
+                    "type": "popup",
+                    "text": {
+                        "th": "หนังสือทุกเล่มถูกเก็บซ่อนไว้หลังกำแพงโบสถ์ มีเพียงนักบวชที่นั่งคัดลอกมันด้วยมือ ทีละตัวอักษร ทีละหน้า ในแสงเทียนสลัว... ความจริงทั้งหมดบนโลก ถูกผูกขาดไว้ที่คนเพียงกลุ่มเดียว",
+                        "en": "Every book was hidden behind church walls. Only monks sat copying them by hand, letter by letter, page by page, in dim candlelight... All truth in the world was monopolized by a single group of people."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "3.2",
+            "main_text": {
+                "th": "แต่กฎระเบียบของโบสถ์นั้นเคร่งครัด นักบวชจำเป็นต้องทำพิธีให้ตรงเวลาทุกวัน พวกเขาไม่อาจพึ่งพาแค่แสงอาทิตย์ที่เอาแน่เอานอนไม่ได้อีกต่อไป ภายใต้ความมืดมิดนั้น \"นักบวชและช่างฝีมือนิรนาม\" ได้ประดิษฐ์ \"นาฬิกากลไก\" ขึ้นมาซ่อนไว้บนหอระฆัง",
+                "en": "But the church's rules were strict. Monks needed to perform daily rituals exactly on time. They could no longer rely solely on the unpredictable sunlight. In the darkness, \"anonymous monks and craftsmen\" invented the \"mechanical clock\", hiding it in the bell tower."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ฟันเฟืองนาฬิกา",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "ทันทีที่ฟันเฟืองเคลี่ยนไหว วิถีชีวิตของมนุษย์ก็ถูกกำหนดใหม่ เราเลิกตื่นและนอนตามแสงตะวัน แต่เริ่มใช้ชีวิตตามจังหวะของเครื่องจักรแทน",
+                        "en": "As soon as the gears moved, human lifestyle was redefined. We stopped waking and sleeping according to the sun, and began living to the rhythm of machines instead."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "3.3",
+            "main_text": {
+                "th": "แม้เวลาจะเดินหน้าอย่างเที่ยงตรง แต่ความรู้ยังคงถูกขัง จนกระทั่งชายชาวเยอรมันชื่อ \"โยฮันเนส กูเทนแบร์ก\" ปรากฏตัว เขาไม่ได้สร้างดาบเพื่อทำสงคราม แต่เขาสร้างสิ่งประดิษฐ์ที่เล็กกว่านั้น... \"ตัวพิมพ์โลหะ\"",
+                "en": "Though time moved forward accurately, knowledge remained imprisoned. Until a German man named \"Johannes Gutenberg\" appeared. He didn't forge a sword for war, but created something much smaller... \"Metal movable type.\""
+            },
+            "additional_info": [
+                {
+                    "trigger": "แท่นพิมพ์กูเทนแบร์ก",
+                    "type": "popup",
+                    "text": {
+                        "th": "กูเทนแบร์กจับอักษรทีละตัวมาเรียงต่อกัน ทาหมึก และนำไปกดทับลงบนกระดาษด้วยแท่นพิมพ์ของเขา",
+                        "en": "Gutenberg arranged letters one by one, applied ink, and pressed them onto paper with his printing press."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "3.4",
+            "main_text": {
+                "th": "จากที่ต้องใช้เวลาคัดลอกเป็นปี... แท่นพิมพ์สามารถผลิตหนังสือได้นับพันเล่มในไม่กี่วัน! ความรู้หลุดลอยออกจากกำแพงโบสถ์ ไปสู่มือคนธรรมดา ยุคมืดได้สิ้นสุดลงแล้ว แท่นพิมพ์ได้ปลดล็อก \"ความคิด\" ของมนุษย์ให้เป็นอิสระอีกครั้ง... แต่จินตนาการที่ยิ่งใหญ่เหล่านั้นจะถูกสร้างจริงได้อย่างไร ในเมื่อโลกยังคงมีแค่หยาดเหงื่อและแรงงานสัตว์?",
+                "en": "From taking years to copy... the printing press could produce thousands of books in a few days! Knowledge escaped the church walls into the hands of ordinary people. The dark ages had ended. The printing press unlocked human \"thought\" to be free once again... But how could those grand imaginations become reality when the world still only ran on sweat and animal labor?"
+            },
+            "additional_info": []
+        }
+    ]
+}
