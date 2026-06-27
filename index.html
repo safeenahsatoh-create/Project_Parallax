@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,6 +15,13 @@
     <!-- CSS Linking -->
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/index.css">
+
+    <!-- Handle returning from chapter seamlessly -->
+    <script>
+        if (window.location.search.includes('return=true')) {
+            document.documentElement.classList.add('returning');
+        }
+    </script>
 </head>
 
 <body>
@@ -47,7 +54,7 @@
 
             <!-- Light Effect Layer -->
             <div class="light-container">
-                <img src="assets/img/light.png" class="light-layer" alt="light">
+                <img src="assets/img/hero/Light.png" class="light-layer" alt="light">
             </div>
 
             <div class="hero-content">
