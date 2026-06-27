@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const layerSun = document.getElementById('layer-sun');
     const layerCloudsBg = document.getElementById('layer-clouds-bg');
@@ -47,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set up scroll listener
             window.addEventListener('scroll', onScroll, { passive: true });
 
-            // Start Prologue auto-play sequence
-            playPrologueSequence();
+            // Start Prologue manual sequence
+            initManualPrologue();
 
         } catch (error) {
             console.error('Error loading chapter data:', error);
@@ -61,6 +61,39 @@ document.addEventListener('DOMContentLoaded', () => {
             applyLang(currentLang);
         });
 
+        // Logo click to flash and return to index
+        const navLogo = document.getElementById('nav-logo');
+        if (navLogo) {
+            navLogo.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Create Light layer to instantly flash bright
+                const lightImg = document.createElement('img');
+                lightImg.src = 'assets/img/hero/Light.png';
+                lightImg.style.position = 'fixed';
+                lightImg.style.top = '25%';
+                lightImg.style.right = '27%';
+                lightImg.style.width = '300px';
+                lightImg.style.height = '300px';
+                lightImg.style.objectFit = 'contain';
+                lightImg.style.mixBlendMode = 'screen';
+                lightImg.style.transform = 'translate(50%, -50%) scale(40)'; // Start massive!
+                lightImg.style.opacity = '0';
+                lightImg.style.zIndex = '9999';
+                lightImg.style.transition = 'opacity 0.3s ease'; // Only fade in
+                lightImg.style.pointerEvents = 'none';
+                document.body.appendChild(lightImg);
+                
+                void lightImg.offsetWidth;
+                lightImg.style.opacity = '1';
+                
+                // Wait for fade in (0.3s)
+                setTimeout(() => {
+                    window.location.href = 'index.html?return=true';
+                }, 350);
+            });
+        }
+
         // Click to reveal translated shadows
         const shadowHabilis = document.getElementById('layer-shadow-habilis');
         const shadowErectus = document.getElementById('layer-shadow-erectus');
@@ -72,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progress = window.scrollY / (3 * window.innerHeight);
                 if (progress < 1.5) return;
                 if (shadowHabilis.src.includes('Shadow_hibilis.PNG')) {
-                    shadowHabilis.src = 'assets/img/Translation_Habilis.PNG';
+                    shadowHabilis.src = 'assets/img/chapter1/Translation_Habilis.PNG';
                     if (popupHabilis) popupHabilis.classList.add('show');
                 } else {
-                    shadowHabilis.src = 'assets/img/Shadow_hibilis.PNG';
+                    shadowHabilis.src = 'assets/img/chapter1/Shadow_hibilis.PNG';
                     if (popupHabilis) popupHabilis.classList.remove('show');
                 }
             });
@@ -85,21 +118,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progress = window.scrollY / (3 * window.innerHeight);
                 if (progress < 1.5) return;
                 if (shadowErectus.src.includes('Shadow_erectus.PNG')) {
-                    shadowErectus.src = 'assets/img/Translation_Erectus.PNG';
+                    shadowErectus.src = 'assets/img/chapter1/Translation_Erectus.PNG';
                     if (popupErectus) popupErectus.classList.add('show');
                 } else {
-                    shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
+                    shadowErectus.src = 'assets/img/chapter1/Shadow_erectus.PNG';
                     if (popupErectus) popupErectus.classList.remove('show');
                 }
             });
         }
 
-        // Click handlers for Tool and Fire cave props
-        const layerToolEl = document.getElementById('layer-tool');
-        const layerTool2El = document.getElementById('layer-tool-2');
-        const layerFireEl = document.getElementById('layer-fire');
+        // Click handlers for Tool and Fire cave props using hitboxes
+        const hitboxTool = document.getElementById('hitbox-tool');
+        const hitboxFire = document.getElementById('hitbox-fire');
+        // Fallbacks if hitboxes aren't there
+        const layerToolEl = hitboxTool || document.getElementById('layer-tool');
+        const layerFireEl = hitboxFire || document.getElementById('layer-fire');
+
         const popupToolEl = document.getElementById('popup-tool');
-        const popupTool2El = document.getElementById('popup-tool-2');
+        const popupTool2El = document.getElementById('popup-tool-2'); // Optional secondary popup
         const popupFireEl = document.getElementById('popup-fire');
 
         const closeAllCavePopups = () => {
@@ -115,14 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isOpen = popupToolEl && popupToolEl.classList.contains('show');
                 closeAllCavePopups();
                 if (!isOpen && popupToolEl) popupToolEl.classList.add('show');
-            });
-        }
-        if (layerTool2El) {
-            layerTool2El.addEventListener('click', () => {
-                const progress = window.scrollY / (3 * window.innerHeight);
-                if (progress < 4.6) return;
-                const isOpen = popupTool2El && popupTool2El.classList.contains('show');
-                closeAllCavePopups();
                 if (!isOpen && popupTool2El) popupTool2El.classList.add('show');
             });
         }
@@ -211,11 +239,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (popupHabilis && popupHabilis.classList.contains('show')) {
             popupHabilis.classList.remove('show');
-            if (shadowHabilis) shadowHabilis.src = 'assets/img/Shadow_hibilis.PNG';
+            if (shadowHabilis) shadowHabilis.src = 'assets/img/chapter1/Shadow_hibilis.PNG';
         }
         if (popupErectus && popupErectus.classList.contains('show')) {
             popupErectus.classList.remove('show');
-            if (shadowErectus) shadowErectus.src = 'assets/img/Shadow_erectus.PNG';
+            if (shadowErectus) shadowErectus.src = 'assets/img/chapter1/Shadow_erectus.PNG';
         }
 
         // Dismiss cave prop popups on scroll
@@ -227,33 +255,154 @@ document.addEventListener('DOMContentLoaded', () => {
         if (popupFire) popupFire.classList.remove('show');
     }
 
-    // Auto-play Prologue Sequence
-    async function playPrologueSequence() {
+    // Manual Prologue Sequence
+    let currentPrologueIndex = -1;
+    let isPrologueTransitioning = false;
+    let prologueFinished = false;
+    let touchStartY = 0;
+
+    function initManualPrologue() {
+        // Force scroll to top to prevent browser scroll restoration from revealing the scene
+        window.scrollTo(0, 0);
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+
+        window.addEventListener('wheel', handlePrologueScroll, { passive: false });
+        window.addEventListener('keydown', handlePrologueKey);
+        window.addEventListener('touchstart', handlePrologueTouchStart, { passive: false });
+        window.addEventListener('touchend', handlePrologueTouchEnd, { passive: false });
+
+        // Show the first text after a small delay
+        setTimeout(nextPrologueStep, 500);
+    }
+
+    function handlePrologueScroll(e) {
+        if (!prologueFinished) {
+            e.preventDefault(); // Stop page from scrolling in the background
+            if (e.deltaY > 0) nextPrologueStep();
+            else if (e.deltaY < 0) prevPrologueStep();
+        } else {
+            // If main scroll is at top and user scrolls up, re-enter prologue
+            if (window.scrollY <= 0 && e.deltaY < 0) {
+                e.preventDefault();
+                enterPrologueReverse();
+            }
+        }
+    }
+
+    function handlePrologueKey(e) {
+        if (prologueFinished) return;
+        if (['ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) {
+            e.preventDefault();
+            nextPrologueStep();
+        } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            prevPrologueStep();
+        }
+    }
+
+    function handlePrologueTouchStart(e) {
+        if (prologueFinished) return;
+        touchStartY = e.touches[0].clientY;
+    }
+
+    function handlePrologueTouchEnd(e) {
+        if (prologueFinished) return;
+        e.preventDefault(); // Stop page scroll
+        const touchEndY = e.changedTouches[0].clientY;
+        if (touchStartY - touchEndY > 30) {
+            nextPrologueStep();
+        } else if (touchEndY - touchStartY > 30) {
+            prevPrologueStep();
+        }
+    }
+
+    async function prevPrologueStep() {
+        if (isPrologueTransitioning || prologueFinished) return;
+        isPrologueTransitioning = true;
         const delay = ms => new Promise(res => setTimeout(res, ms));
 
-        // Wait a little before starting the first text
-        await delay(500);
-
-        for (let i = 0; i < prologueTexts.length; i++) {
-            // Fade in and slide up to center
-            prologueTexts[i].classList.add('active');
-
-            // Wait for reading time
-            await delay(2500);
-
-            // Fade out and slide up further
-            prologueTexts[i].classList.remove('active');
-            prologueTexts[i].classList.add('exit');
-
-            // Small gap before the next sentence appears
-            await delay(800);
+        if (currentPrologueIndex >= 0 && currentPrologueIndex < prologueTexts.length) {
+            prologueTexts[currentPrologueIndex].classList.remove('active');
+            prologueTexts[currentPrologueIndex].classList.remove('exit');
+            await delay(600);
         }
 
-        // Prologue finished, unlock scrolling
-        document.body.style.overflow = 'auto';
+        currentPrologueIndex--;
 
-        // Force an initial update for the parallax engine
-        requestAnimationFrame(updateParallax);
+        if (currentPrologueIndex >= 0) {
+            prologueTexts[currentPrologueIndex].classList.remove('exit');
+            prologueTexts[currentPrologueIndex].classList.add('active');
+            await delay(800);
+            isPrologueTransitioning = false;
+        } else {
+            currentPrologueIndex = 0;
+            prologueTexts[0].classList.add('active');
+            isPrologueTransitioning = false;
+        }
+    }
+
+    function enterPrologueReverse() {
+        prologueFinished = false;
+        isPrologueTransitioning = false; // Fix: Reset transition state
+        window.scrollTo(0, 0); // Ensure we are at top
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        currentPrologueIndex = prologueTexts.length - 1;
+        
+        // Set all texts to .exit (above) state initially
+        prologueTexts.forEach(t => { 
+            t.classList.remove('active'); 
+            t.classList.add('exit'); 
+        });
+        
+        void document.body.offsetWidth; // Force reflow
+
+        if (currentPrologueIndex >= 0) {
+            // Move the last text down into view
+            prologueTexts[currentPrologueIndex].classList.remove('exit');
+            prologueTexts[currentPrologueIndex].classList.add('active');
+        }
+
+        // Add back listeners for touch and key since they were removed
+        window.addEventListener('keydown', handlePrologueKey);
+        window.addEventListener('touchstart', handlePrologueTouchStart, { passive: false });
+        window.addEventListener('touchend', handlePrologueTouchEnd, { passive: false });
+    }
+
+    async function nextPrologueStep() {
+        if (isPrologueTransitioning || prologueFinished) return;
+        isPrologueTransitioning = true;
+
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+
+        if (currentPrologueIndex >= 0 && currentPrologueIndex < prologueTexts.length) {
+            // Fade out current text
+            prologueTexts[currentPrologueIndex].classList.remove('active');
+            prologueTexts[currentPrologueIndex].classList.add('exit');
+            await delay(600);
+        }
+
+        currentPrologueIndex++;
+
+        if (currentPrologueIndex < prologueTexts.length) {
+            // Fade in next text
+            prologueTexts[currentPrologueIndex].classList.remove('exit');
+            prologueTexts[currentPrologueIndex].classList.add('active');
+            await delay(800); // Cooldown to prevent double triggers
+            isPrologueTransitioning = false;
+        } else {
+            // Finished
+            prologueFinished = true;
+            isPrologueTransitioning = false; // Fix: Ensure state is reset when finishing
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+            // We do NOT remove wheel listener because we need it to detect scrolling up at the top
+            window.removeEventListener('keydown', handlePrologueKey);
+            window.removeEventListener('touchstart', handlePrologueTouchStart);
+            window.removeEventListener('touchend', handlePrologueTouchEnd);
+            requestAnimationFrame(updateParallax);
+        }
     }
 
     // Helper: Map a value from one range to another, clamped to [0, 1] usually
@@ -437,15 +586,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (layerTool) {
             layerTool.style.opacity = caveGroupOpacity;
-            layerTool.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+            layerTool.style.pointerEvents = 'none'; // hitboxes handle pointer events
         }
         if (layerTool2) {
             layerTool2.style.opacity = caveGroupOpacity;
-            layerTool2.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+            layerTool2.style.pointerEvents = 'none';
         }
         if (layerFire) {
             layerFire.style.opacity = caveGroupOpacity;
-            layerFire.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+            layerFire.style.pointerEvents = 'none';
+        }
+
+        // Manage hitboxes pointer events and opacity (for debugging borders)
+        const hitboxTool = document.getElementById('hitbox-tool');
+        const hitboxFire = document.getElementById('hitbox-fire');
+        if (hitboxTool) {
+            hitboxTool.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+            hitboxTool.style.opacity = progress >= 4.6 ? 1 : 0;
+        }
+        if (hitboxFire) {
+            hitboxFire.style.pointerEvents = progress >= 4.6 ? 'auto' : 'none';
+            hitboxFire.style.opacity = progress >= 4.6 ? 1 : 0;
         }
 
 
