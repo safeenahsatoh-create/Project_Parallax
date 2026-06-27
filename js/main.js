@@ -1,11 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // 1. Data Management
     let erasData = [];
     let currentLang = localStorage.getItem('lang') || 'th';
 
+    // Handle Return Transition
+    if (document.documentElement.classList.contains('returning')) {
+        setTimeout(() => {
+            document.documentElement.classList.add('loaded');
+        }, 50);
+    }
+
     // Static Image URLs mapping
     const eraImages = [
-        "assets/img/Homo habilis.PNG", // 1
+        "assets/img/hero/Homo habilis.PNG", // 1
         "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop", // 2
         "https://images.unsplash.com/photo-1505501861961-d6f78fcd4703?q=80&w=2000&auto=format&fit=crop", // 3
         "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2000&auto=format&fit=crop", // 4
@@ -159,15 +166,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scrollToHero() {
         isScrolling = true;
-        currentView = 'hero';
-        document.getElementById('app-container').style.transform = `translateY(0)`;
-        document.getElementById('nav-eras').classList.remove('active');
-
-        // Wait for translate to finish, then clear light effect
+        
+        const hero = document.getElementById('hero');
+        const splitLayout = document.querySelector('.split-layout');
+        
+        // 1. Prepare hero section in the background by setting it to massive light state
+        // Its white overlay will fade in over 1.5s
+        hero.classList.add('light-transition');
+        
+        // 2. Fade split layout to solid white over 1.5s
+        splitLayout.classList.add('flash-out');
+        
+        // Wait for both to turn solid white
         setTimeout(() => {
-            document.getElementById('hero').classList.remove('light-transition');
-            isScrolling = false;
-        }, 1200);
+            currentView = 'hero';
+            const appContainer = document.getElementById('app-container');
+            
+            // Snap to hero section instantly
+            appContainer.style.transition = 'none';
+            appContainer.style.transform = `translateY(0)`;
+            
+            void appContainer.offsetHeight; // Force reflow
+            appContainer.style.transition = '';
+            
+            document.getElementById('nav-eras').classList.remove('active');
+            splitLayout.classList.remove('flash-out');
+            
+            // Now that we are on hero section (which is white), we remove light-transition
+            // This triggers the light to shrink from scale(40) to scale(1) over 2s
+            // And the white overlay will fade out over 1.5s (after a 0.5s delay)
+            setTimeout(() => {
+                hero.classList.remove('light-transition');
+                
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 2000);
+            }, 50);
+            
+        }, 1500); // Wait 1.5s for flash to cover screen
     }
 
     // Desktop: Mouse Wheel (Global)
