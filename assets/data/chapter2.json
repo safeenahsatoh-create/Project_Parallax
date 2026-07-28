@@ -3,6 +3,10 @@
     "scenes": [
         {
             "scene_id": "2.1",
+            "title": {
+                "th": "จากถ้ำสู่สถาปัตยกรรม",
+                "en": "From Cave to Architecture"
+            },
             "main_text": {
                 "th": "มนุษย์ไม่ได้หยุดอยู่แค่ปากถ้ำและกองไฟ เมื่อมีน้ำและอาหารอุดมสมบูรณ์ พวกเขาเริ่มฝันใหญ่ขึ้น ชายชื่อ \"อิมโฮเตป\" ได้เปลี่ยนจินตนาการให้กลายเป็นก้อนหิน เขาสร้าง \"พีระมิด\" สถาปัตยกรรมที่ตั้งตระหง่านท้าทายกาลเวลา",
                 "en": "Humans didn't stop at the cave entrance and the campfire. With abundant water and food, they began to dream bigger. A man named \"Imhotep\" turned imagination into stone. He built the \"Pyramid\", an architecture that stands tall defying time."
@@ -11,8 +15,12 @@
                 {
                     "trigger": "อิมโฮเตป",
                     "type": "popup",
+                    "title": {
+                        "th": "อิมโฮเตป",
+                        "en": "IMHOTEP"
+                    },
                     "text": {
-                        "th": "ชายผู้อยู่เบื้องหลัง: ในยุคอียิปต์โบราณ อิมโฮเตปคือมือขวาของฟาโรห์ ผู้รับหน้าที่เป็นหัวเรือใหญ่ในการคุมการก่อสร้างสถาปัตยกรรมสุดยิ่งใหญ่นี้",
+                        "th": "ชายผู้อยู่เบื้องหลัง: ในยุคอียิปต์โบราณ อิมโฮเตป คือมือขวาของฟาโรห์ ผู้รับหน้าที่เป็นหัวเรือใหญ่ในการคุมการก่อสร้างสถาปัตยกรรมสุดยิ่งใหญ่นี้",
                         "en": "The man behind it all: In ancient Egypt, Imhotep was the Pharaoh's right hand, the mastermind tasked with overseeing the construction of this magnificent architecture."
                     }
                 }
@@ -74,6 +82,30 @@
             "main_text": {
                 "th": "\"อารยธรรมมนุษย์ดูเหมือนจะพุ่งทะยานไปข้างหน้าอย่างไร้ขีดจำกัด แต่เมื่ออาณาจักรใหญ่ล่มสลาย แสงสว่างของความรู้ก็ดับวูบลง... โลกกำลังก้าวเข้าสู่ยุคที่เทคโนโลยีไม่ได้มีไว้เพื่อสร้างสรรค์ แต่มีไว้เพื่อ 'ทำสงคราม' \"",
                 "en": "\"Human civilization seemed to soar forward limitlessly. But when the great empires fell, the light of knowledge was extinguished... The world was entering an era where technology wasn't meant for creation, but for 'war'.\""
+            },
+            "additional_info": []
+        },
+        {
+            "scene_id": "2.6",
+            "title": {
+                "th": "Giza Pyramid Complex",
+                "en": "GIZA PYRAMID COMPLEX"
+            },
+            "main_text": {
+                "th": "สร้างเมื่อ: ประมาณ 2,580–2,500 ปีก่อนคริสตกาล (ยุคราชวงศ์ที่ 4 ของอียิปต์โบราณ)",
+                "en": "Built c. 2,580–2,500 BCE (Fourth Dynasty of Ancient Egypt)."
+            },
+            "additional_info": []
+        },
+        {
+            "scene_id": "2.7",
+            "title": {
+                "th": "El Castillo",
+                "en": "EL CASTILLO"
+            },
+            "main_text": {
+                "th": "สร้างขึ้นโดยอารยธรรมมายา (Maya civilization)\nในช่วงคริสต์ศตวรรษที่ 8 ถึง 12\nประมาณ ปี ค.ศ. 900 - 1300\n(ราวๆ 1,000 กว่าปีที่ผ่านมา)",
+                "en": "Built by the Maya civilization\nbetween the 8th and 12th centuries CE,\nroughly 900–1300 CE\n(over 1,000 years ago)."
             },
             "additional_info": []
         }

@@ -19,20 +19,8 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="index.html" class="logo" id="nav-logo">CHRONOS</a>
-        </div>
-        <div class="nav-right">
-            <ul class="nav-links">
-                <li><a href="index.html?era=0" id="nav-back">Back to Eras</a></li>
-            </ul>
-            <!-- Language Switcher -->
-            <button id="lang-toggle" class="control-btn" aria-label="Toggle Language">
-                <span id="lang-text">TH</span>
-            </button>
-        </div>
-    </nav>
+    <div id="navbar-root" data-era="0"></div>
+    <script src="js/navbar.js"></script>
 
     <!-- Scroll Spacer -->
     <div class="scroll-container"></div>
