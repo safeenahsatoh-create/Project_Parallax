@@ -1,3 +1,5 @@
 *.md
 .claude/
 launch.json
+SKILL/
+.vscode/settings.json

@@ -108,6 +108,60 @@
                 "en": "Built by the Maya civilization\nbetween the 8th and 12th centuries CE,\nroughly 900–1300 CE\n(over 1,000 years ago)."
             },
             "additional_info": []
+        },
+        {
+            "scene_id": "2.8",
+            "title": {
+                "th": "ฮัมมูราบี",
+                "en": "HAMMURABI"
+            },
+            "main_text": {
+                "th": "กษัตริย์ \"ฮัมมูราบี\" คือผู้ที่ลุกขึ้นมาสร้างเทคโนโลยีทางสังคมนี้ เพื่อรับมือกับความวุ่นวายเมื่อเมืองขยายตัว",
+                "en": "King \"Hammurabi\" was the one who rose to create this social technology to handle the chaos as the city expanded."
+            },
+            "additional_info": [
+                {
+                    "trigger": "scroll-tablet",
+                    "text": {
+                        "th": "แผ่นดินเหนียวจารึกอักษรรูปลิ่ม",
+                        "en": "Clay Tablet Inscribed with Cuneiform Script"
+                    }
+                },
+                {
+                    "trigger": "scroll-bronze",
+                    "text": {
+                        "th": "ศีรษะสัมฤทธิ์ของกษัตริย์แห่งอัคคาด",
+                        "en": "Bronze Head of the King of Akkad"
+                    }
+                },
+                {
+                    "trigger": "sphinx-caption",
+                    "text": {
+                        "th": "มหาสฟิงซ์แห่งกีซา",
+                        "en": "The Great Sphinx of Giza"
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "2.9",
+            "title": {
+                "th": "กฎหมายบนศิลา สู่ กระดาษปาปิรุส",
+                "en": "Law on Stone to Papyrus"
+            },
+            "main_text": {
+                "th": "สิ่งนั้นคือ \"กฎหมาย\" ฮัมมูราบีสลักกติกาของเมืองลงบนศิลาดำขนาดยักษ์\nแต่มันหนักและส่งต่อไปไหนไม่ได้",
+                "en": "That thing was \"Law\". Hammurabi carved the rules of the city onto a giant black stele.\nBut it was heavy and couldn't be passed around."
+            },
+            "additional_info": [
+                {
+                    "trigger": "stone_inscription",
+                    "text": {
+                        "th": "ศิลาจารึก",
+                        "en": "Stone Inscription"
+                    }
+                }
+            ]
         }
     ]
 }

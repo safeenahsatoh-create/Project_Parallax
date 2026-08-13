@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scene = data.scenes.find(s => s.scene_id === '2.1');
     const scene22 = data.scenes.find(s => s.scene_id === '2.2');
     const scene23 = data.scenes.find(s => s.scene_id === '2.3');
+    const scene24 = data.scenes.find(s => s.scene_id === '2.4');
+    const scene25 = data.scenes.find(s => s.scene_id === '2.5');
+    const scene28 = data.scenes.find(s => s.scene_id === '2.8');
+    const scene29 = data.scenes.find(s => s.scene_id === '2.9');
 
     const textEl = document.querySelector('.scene2-text');
     const titleEl = document.querySelector('.scene2-title');
@@ -66,6 +70,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scene7TitleWord2El = document.querySelector('.scene7-title-word2');
     const scene7CaptionEl = document.querySelector('.scene7-statue-caption');
     const scene7TextEl = document.querySelector('.scene7-text');
+
+    const scene8TitleEl = document.querySelector('.scene8-title');
+    const scene8TextEl = document.querySelector('.scene8-text');
+    const scene8ScrollTabletTextEl = document.querySelector('.scene8-scroll-tablet-text');
+    const scene8ScrollBronzeTextEl = document.querySelector('.scene8-scroll-bronze-text');
+    const scene8SphinxCaptionEl = document.querySelector('.scene8-sphinx-caption-left');
+
+    const scene9TitleEl = document.querySelector('.scene9-title');
+    const scene9TextEl = document.querySelector('.scene9-text');
+    const scene9ScrollTextEl = document.querySelector('.scene9-scroll-text');
+
+    const scene10TitleEl = document.querySelector('.scene10-title');
+    const scene10TextEl = document.querySelector('.scene10-text');
+
+    const scene11TextEl = document.querySelector('.scene11-text');
 
     let scene3Lang = localStorage.getItem('lang') || 'th';
     let scene3SlideIndex = 0; // 0 = Giza, 1 = El Castillo
@@ -162,6 +181,51 @@ document.addEventListener('DOMContentLoaded', async () => {
         }).join(' ');
     }
 
+    function renderScene8(lang) {
+        if (!scene28) return;
+        scene8TitleEl.dataset.lang = lang; // keeps .scene8-title[data-lang="en"]'s uppercase/letter-spacing styling working
+        scene8TitleEl.textContent = scene28.title[lang];
+        
+        const tabletInfo = scene28.additional_info.find(i => i.trigger === 'scroll-tablet');
+        if (tabletInfo) scene8ScrollTabletTextEl.textContent = tabletInfo.text[lang];
+        
+        const bronzeInfo = scene28.additional_info.find(i => i.trigger === 'scroll-bronze');
+        if (bronzeInfo) scene8ScrollBronzeTextEl.textContent = bronzeInfo.text[lang];
+        
+        const sphinxInfo = scene28.additional_info.find(i => i.trigger === 'sphinx-caption');
+        if (sphinxInfo && scene8SphinxCaptionEl) scene8SphinxCaptionEl.textContent = sphinxInfo.text[lang];
+        
+        scene8TextEl.dataset.lang = lang;
+        scene8TextEl.innerHTML = scene28.main_text[lang].replace(/"([^"]+)"/g, '<span class="highlight">$1</span>');
+    }
+
+    function renderScene9(lang) {
+        if (!scene29) return;
+        if (scene9TitleEl) scene9TitleEl.textContent = scene29.title[lang];
+        if (scene9TextEl) {
+            scene9TextEl.innerHTML = scene29.main_text[lang]
+                .replace(/\"([^\"]+)\"/g, '<span class="highlight">$1</span>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        const scrollInfo = scene29.additional_info.find(i => i.trigger === 'stone_inscription');
+        if (scrollInfo && scene9ScrollTextEl) scene9ScrollTextEl.textContent = scrollInfo.text[lang];
+    }
+
+    function renderScene10(lang) {
+        scene10TitleEl.dataset.lang = lang;
+        scene10TitleEl.textContent = scene10TitleEl.dataset[lang];
+
+        if (!scene24) return;
+        const papyrusInfo = scene24.additional_info.find(i => i.trigger === 'ม้วนกระดาษปาปิรุส');
+        if (papyrusInfo) scene10TextEl.textContent = papyrusInfo.text[lang];
+    }
+
+    function renderScene11(lang) {
+        if (!scene25) return;
+        scene11TextEl.textContent = scene25.main_text[lang];
+    }
+
     function render(lang) {
         renderScene1(lang);
         renderScene2(lang);
@@ -170,6 +234,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderScene5(lang);
         renderScene6(lang);
         renderScene7(lang);
+        renderScene8(lang);
+        renderScene9(lang);
+        renderScene10(lang);
+        renderScene11(lang);
     }
 
     render(localStorage.getItem('lang') || 'th');
@@ -188,11 +256,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         const nemesLeftEl = document.querySelector('.layer-pharaoh-left-2');
         const nemesRightEl = document.querySelector('.layer-pharaoh-right-2');
         const scene6ArmEl = document.querySelector('.layer-orator-arm');
-        const scene6Liver2El = document.querySelector('.layer-liver-2');
         const scene6HitboxSledgeEl = document.getElementById('hitbox-sledge');
         const scene6PopupSledgeEl = document.getElementById('popup-sledge');
+        const scene8SphinxLeftEl = document.querySelector('.layer-sphinx-left');
+        const scene8SphinxRightEl = document.querySelector('.layer-sphinx-right');
 
-        const SCENE_COUNT = 7;
+        // dir: +1 = translateY positive (down), -1 = translateY negative (up)
+        // restVh: rest top-edge Y coordinate in vh, treating .scene-10 as a 100vh-tall
+        // coordinate space (matches the wrap's own CSS top/bottom % — see
+        // .scene10-disc-wrap.disc-N rules in chapter2.css); used by applyScene10DiscMove's
+        // loop-wrap math below.
+        // idleAmplitudeVh/idlePeriodMs: per-disc idle-sway config used when scrolling
+        // pauses mid-gesture (see startScene10DiscIdleSway below) — bumped stronger/slower
+        // per user request; the resume-scroll snap grows a bit bigger as a result (see
+        // that same tradeoff note near applyScene10DiscMove), accepted like every other
+        // snap-over-seamless tradeoff already made in this feature.
+        const scene10DiscEls = [
+            { el: document.querySelector('.scene10-disc-wrap.disc-1'), dir: 1, restVh: -2, idleAmplitudeVh: 3.8, idlePeriodMs: 5400 },  // down
+            { el: document.querySelector('.scene10-disc-wrap.disc-2'), dir: -1, restVh: -1, idleAmplitudeVh: 4.6, idlePeriodMs: 4600 }, // up
+            { el: document.querySelector('.scene10-disc-wrap.disc-3'), dir: 1, restVh: 55, idleAmplitudeVh: 4.0, idlePeriodMs: 6000 },  // down
+            { el: document.querySelector('.scene10-disc-wrap.disc-4'), dir: -1, restVh: 30, idleAmplitudeVh: 5.0, idlePeriodMs: 4400 }, // up
+            { el: document.querySelector('.scene10-disc-wrap.disc-5'), dir: 1, restVh: 87, idleAmplitudeVh: 3.6, idlePeriodMs: 5600 },  // down
+            { el: document.querySelector('.scene10-disc-wrap.disc-6'), dir: -1, restVh: 88, idleAmplitudeVh: 4.4, idlePeriodMs: 5000 }, // up
+            { el: document.querySelector('.scene10-disc-wrap.disc-7'), dir: -1, restVh: 30, idleAmplitudeVh: 3.8, idlePeriodMs: 4800 }, // up
+        ];
+
+        const SCENE_COUNT = 11;
         const SCENE_TRANSITION_MS = 700; // keep in sync with .chapter2-track's CSS transition-duration
         const SUB_ADVANCE_DISTANCE = window.innerHeight; // must scroll ~1 full viewport height to trigger the Scene 3 sub-slide
         const SUB_TRANSITION_MS = 700; // keep in sync with .scene3-track's CSS transition-duration
@@ -208,6 +297,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                             // Scene 2/3 boundary left it manually disabled
             if (newIndex === 3 && sceneIndex === 2) enterScene4Forward();
             if (newIndex === 3 && sceneIndex === 4) enterScene4Backward();
+            if (newIndex === 10 && sceneIndex === 9) enterScene11Forward();
+            if (newIndex === 9 && sceneIndex === 10) enterScene11Backward();
             sceneTransitioning = true;
             sceneIndex = newIndex;
             trackEl.style.transform = `translateY(-${sceneIndex * 100}vh)`;
@@ -227,6 +318,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE1_COIN_TURNS = 2;
 
         function applyScene1CoinRotation() {
+            updateScrollDebug('scene1-coin', scene1CoinProgress, SCENE1_COIN_THRESHOLD);
             const t = scene1CoinProgress / SCENE1_COIN_THRESHOLD;
             coin1El.style.transform = `rotate(${COIN1_REST_DEG + t * 360 * SCENE1_COIN_TURNS}deg)`;
             coin2El.style.transform = `rotate(${COIN2_REST_DEG - t * 360 * SCENE1_COIN_TURNS}deg)`;
@@ -246,6 +338,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE1_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 2
 
         function applyScene1Exit() {
+            updateScrollDebug('scene1-exit', scene1ExitProgress, SCENE1_EXIT_THRESHOLD);
             const liftT = scene1ExitProgress / SCENE1_EXIT_THRESHOLD;
             trackEl.style.transition = liftT > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${liftT * 100}vh)`; // 0vh = Scene 1's own resting position (sceneIndex 0 * 100vh)
@@ -270,6 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const GLYPH_SPIN_DEG = 1080; // 3 turns, clockwise (rolling right)
 
         function applyScene2GlyphTransform() {
+            updateScrollDebug('scene2-glyph', scene2GlyphProgress, SCENE2_GLYPH_THRESHOLD);
             const t = scene2GlyphProgress / SCENE2_GLYPH_THRESHOLD;
             const x = GLYPH_START_X + t * (GLYPH_END_X - GLYPH_START_X);
             const liftT = t < GLYPH_LIFT_START_T ? 0 : (t - GLYPH_LIFT_START_T) / (1 - GLYPH_LIFT_START_T);
@@ -293,6 +387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE3_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 4
 
         function applyScene3Exit() {
+            updateScrollDebug('scene3-exit', scene3ExitProgress, SCENE3_EXIT_THRESHOLD);
             const liftT = scene3ExitProgress / SCENE3_EXIT_THRESHOLD;
             trackEl.style.transition = liftT > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${200 + liftT * 100}vh)`; // 200vh = Scene 3's own resting position (sceneIndex 2 * 100vh)
@@ -315,6 +410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE4_SPHINX_HIDDEN_VW = 60; // matches the -60vw baked into .layer-sphinx's default (hidden) transform
 
         function applyScene4SphinxTransform() {
+            updateScrollDebug('scene4-sphinx', scene4SphinxProgress, SCENE4_SPHINX_THRESHOLD);
             const t = scene4SphinxProgress / SCENE4_SPHINX_THRESHOLD;
             const offsetVw = (1 - t) * SCENE4_SPHINX_HIDDEN_VW;
             scene4SphinxEl.style.transform = `translate(calc(-50% - ${offsetVw}vw), -50%) scale(2.87)`;
@@ -327,6 +423,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE4_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 5
 
         function applyScene4Exit() {
+            updateScrollDebug('scene4-exit', scene4ExitProgress, SCENE4_EXIT_THRESHOLD);
             const liftT = scene4ExitProgress / SCENE4_EXIT_THRESHOLD;
             trackEl.style.transition = liftT > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${300 + liftT * 100}vh)`; // 300vh = Scene 4's own resting position (sceneIndex 3 * 100vh)
@@ -348,6 +445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     // positions (left: 5%, right: 10%)
 
         function applyScene5PharaohSlide(t) {
+            updateScrollDebug('scene5-pharaoh', scene5PharaohProgress, SCENE5_PHARAOH_THRESHOLD);
             const offsetVw = (1 - t) * NEMES_SLIDE_VW;
             nemesLeftEl.style.transform = `translateX(-${offsetVw}vw)`;
             nemesRightEl.style.transform = `scaleX(-1) translateX(-${offsetVw}vw)`; // mirror is static in CSS; reproduced here since inline transform replaces it
@@ -361,37 +459,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE5_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 6
 
         function applyScene5Exit() {
+            updateScrollDebug('scene5-exit', scene5ExitProgress, SCENE5_EXIT_THRESHOLD);
             const liftT = scene5ExitProgress / SCENE5_EXIT_THRESHOLD;
             trackEl.style.transition = liftT > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${400 + liftT * 100}vh)`; // 400vh = Scene 5's own resting position (sceneIndex 4 * 100vh)
             scene6TextEl.style.opacity = liftT; // fades in/out 1:1 with the drag itself, same "scroll is the animation" idea as the position above
         }
 
-        // Scene 6 (last scene, no forward transition of its own): scrolling
-        // continuously drives two independent things off one shared progress value —
-        // the orator statue's arm waves the whole time (sine oscillation, not phase-
-        // gated), while the second Liver of Piacenza instance rotates further
-        // clockwise ("right") the more the user scrolls, on top of its static
-        // rotate(-90deg) rest pose.
-        let scene6Progress = 0;
-        const SCENE6_THRESHOLD = 3000; // px of wheel delta for the full arm-wave + liver-rotate journey
-        const ARM_WAVE_FREQ = 3; // full wave cycles across the whole Scene 6 scroll range
+        // Scene 6 (last scene, no forward transition of its own): the orator
+        // statue's arm waves (sine oscillation) off the same progress as the
+        // Scene 6->7 lift below, instead of requiring a separate arm-wave
+        // stage to fully play out before the lift can even start. The Liver
+        // of Piacenza's own back-and-forth sway is a self-running CSS
+        // animation (see .layer-liver-2 / scene6-liver-sway) and isn't tied
+        // to scroll at all.
+        const ARM_WAVE_FREQ = 3; // full wave cycles across the whole lift
         const ARM_WAVE_AMPLITUDE_DEG = 18;
-        const LIVER_ROTATE_DEG = 15; // clockwise rotation added on top of the -90deg rest pose
 
         function applyScene6Transform(t) {
             scene6ArmEl.style.transform = `rotate(${Math.sin(t * ARM_WAVE_FREQ * Math.PI * 2) * ARM_WAVE_AMPLITUDE_DEG}deg)`;
-            scene6Liver2El.style.transform = `rotate(${-90 + t * LIVER_ROTATE_DEG}deg)`; // -90deg reproduced here since inline transform replaces the static CSS one
         }
 
-        // Once the arm-wave/liver-rotate progress above is fully played out,
-        // further forward scroll continuously lifts the track into Scene 7 —
+        // Further forward scroll continuously lifts the track into Scene 7 —
         // same idea as Scene 4<->5's applyScene4Exit / Scene 5<->6's
         // applyScene5Exit above — instead of an instant goToScene(6) snap.
         let scene6ExitProgress = 0;
         const SCENE6_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 7
 
         function applyScene6Exit() {
+            updateScrollDebug('scene6-exit', scene6ExitProgress, SCENE6_EXIT_THRESHOLD);
             const liftT = scene6ExitProgress / SCENE6_EXIT_THRESHOLD;
             trackEl.style.transition = liftT > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${500 + liftT * 100}vh)`; // 500vh = Scene 6's own resting position (sceneIndex 5 * 100vh)
@@ -410,8 +506,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const SCENE7_WORD2_TILT_DEG = 15;
 
         function applyScene7TitleTilt() {
+            updateScrollDebug('scene7-title-tick', scene7TitleScrollTicks, SCENE7_TITLE_TICK_THRESHOLD);
             const tilted = scene7TitleScrollTicks >= SCENE7_TITLE_TICK_THRESHOLD;
             scene7TitleWord2El.style.transform = tilted ? `rotate(${SCENE7_WORD2_TILT_DEG}deg)` : 'rotate(0deg)';
+        }
+
+        // Once the title has fully dropped (ticks maxed), further forward scroll
+        // continuously lifts the track into Scene 8 — same idea as Scene 5<->6's
+        // applyScene5Exit / Scene 6<->7's applyScene6Exit above — instead of the
+        // tick counter incrementing forever with no further effect.
+        let scene7ExitProgress = 0;
+        const SCENE7_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 8
+
+        function applyScene7Exit() {
+            updateScrollDebug('scene7-exit', scene7ExitProgress, SCENE7_EXIT_THRESHOLD);
+            const liftT = scene7ExitProgress / SCENE7_EXIT_THRESHOLD;
+            trackEl.style.transition = liftT > 0 ? 'none' : '';
+            trackEl.style.transform = `translateY(-${600 + liftT * 100}vh)`; // 600vh = Scene 7's own resting position (sceneIndex 6 * 100vh)
         }
 
         // scene7-text fades in as the user scrolls, same 1:1 opacity-tracks-delta
@@ -446,6 +557,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         function applyScene7TextReveal() {
+            updateScrollDebug('scene7-text', scene7TextProgress, SCENE7_TEXT_THRESHOLD);
             const wordLines = getScene7WordLines();
             if (!wordLines.length) return;
             const numLines = wordLines[wordLines.length - 1].lineIndex + 1;
@@ -454,6 +566,193 @@ document.addEventListener('DOMContentLoaded', async () => {
             wordLines.forEach(({ el, lineIndex }) => {
                 el.style.opacity = Math.max(0, Math.min(1, linesRevealed - lineIndex));
             });
+        }
+
+        // value, gating the Scene 9 transition until they are fully apart.
+        let scene8SphinxProgress = 0;
+        const SCENE8_SPHINX_THRESHOLD = 1000; // px of wheel delta for the full slide-apart
+        const SPHINX_EXIT_VW = 45; // vw each sphinx travels outward
+
+        function applyScene8SphinxSlide(t) {
+            updateScrollDebug('scene8-sphinx', scene8SphinxProgress, SCENE8_SPHINX_THRESHOLD);
+            const offsetVw = t * SPHINX_EXIT_VW;
+            scene8SphinxLeftEl.style.transform = `translateX(-${offsetVw}vw)`;
+            scene8SphinxRightEl.style.transform = `scaleX(-1) translateX(-${offsetVw}vw)`; // mirror is static in CSS; reproduced here since inline transform replaces it
+        }
+
+        // Once the sphinxes slide apart, further forward scroll continuously lifts the track
+        // into Scene 9.
+        let scene8ExitProgress = 0;
+        const SCENE8_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 9
+
+        function applyScene8Exit() {
+            updateScrollDebug('scene8-exit', scene8ExitProgress, SCENE8_EXIT_THRESHOLD);
+            const liftT = scene8ExitProgress / SCENE8_EXIT_THRESHOLD;
+            trackEl.style.transition = liftT > 0 ? 'none' : '';
+            trackEl.style.transform = `translateY(-${700 + liftT * 100}vh)`; // 700vh = Scene 8's own resting position (sceneIndex 7 * 100vh)
+        }
+
+        // Once resting on Scene 9, further forward scroll continuously lifts the track
+        // into Scene 10. No gated sub-stage first (unlike Scene 7/8's title-tilt/sphinx-slide)
+        // since Scene 10 has no scroll-driven content of its own.
+        let scene9ExitProgress = 0;
+        const SCENE9_EXIT_THRESHOLD = 1200; // px of wheel delta for the full continuous lift into Scene 10
+
+        function applyScene9Exit() {
+            updateScrollDebug('scene9-exit', scene9ExitProgress, SCENE9_EXIT_THRESHOLD);
+            const liftT = scene9ExitProgress / SCENE9_EXIT_THRESHOLD;
+            trackEl.style.transition = liftT > 0 ? 'none' : '';
+            trackEl.style.transform = `translateY(-${800 + liftT * 100}vh)`; // 800vh = Scene 9's own resting position (sceneIndex 8 * 100vh)
+            // The 7 disc coins are visible for the whole Scene9->10 lift (as soon as it
+            // starts, not gated behind reaching full arrival) and hide instantly again
+            // only once fully back at rest on Scene 9 (liftT back down to exactly 0).
+            // Runs every tick of this drag in both directions, so it needs no separate
+            // goToScene() hook.
+            scene10DiscEls.forEach(({ el }) => { el.style.opacity = liftT > 0 ? '1' : '0'; });
+        }
+
+        // Once resting on Scene 10, further forward scroll drives the 7 disc coins
+        // moving up/down together (each along its own direction, all sharing one
+        // progress value) — same "the scroll itself is the animation" idea as Scene
+        // 8's sphinxes (applyScene8SphinxSlide) — but only once handed off from the
+        // idle CSS bob loop (see .scene10-disc-wrap / scene10-disc-bob in
+        // chapter2.css): an active CSS animation on `transform` silently wins over an
+        // inline style.transform for the same property, same issue already solved for
+        // Scene 1's coins above. Reversing before this reaches the threshold unwinds
+        // it and hands control back to the CSS bob (see resetScene10DiscMove) instead
+        // of committing.
+        // Each disc travels a straight line from its CSS rest position until it fully
+        // exits the frame, then reappears at the OPPOSITE edge and keeps flowing the
+        // same direction — a true conveyor-belt loop. Clamped to exactly ONE loop (see
+        // SCENE10_DISC_LOOP_THRESHOLD below), not an infinite repeat. Reversing un-loops
+        // symmetrically back through that one crossing to exactly progress===0.
+        let scene10DiscProgress = 0;
+
+        // Disc's own rendered height in vh. width:8vw, aspect-ratio:578/577 => height ≈
+        // 7.986vw; vw-to-vh depends on live viewport aspect ratio (not measured live —
+        // no getBoundingClientRect() precedent for this in the file for this kind of
+        // value; Scene 7's getScene7WordLines() measures wrapped *text* geometry, which
+        // can't be derived any other way, a different problem). 15 comfortably covers
+        // the common 16:9/16:10 desktop range with margin; tune live if needed on very
+        // wide ultrawide monitors.
+        const DISC_H_VH = 15;
+        // Full cross-frame traversal length: 100vh of frame plus a full DISC_H_VH
+        // margin on both the exit side and the reappear side, so a disc is always
+        // comfortably (not just barely) invisible at the loop seam.
+        const CYCLE_VH = 100 + 2 * DISC_H_VH;
+        // px of wheel delta for one full CYCLE_VH loop of continuous disc travel
+        // (~12.3px per vh) — paced similarly to SCENE9_EXIT_THRESHOLD's ~12px/vh
+        // gearing for the Scene9->10 lift. This is also the hard cap on
+        // scene10DiscProgress (see the sceneIndex===9 wheel branch below) — the user
+        // wants exactly ONE loop, not an infinite repeat. Capping rawVh at exactly
+        // CYCLE_VH is not arbitrary: since Y is periodic with period CYCLE_VH once past
+        // exit0, and segment 0 (pre-exit) is just the same periodic function's first
+        // slice, traveling exactly one full CYCLE_VH from rest always lands back at
+        // y=restVh for every disc regardless of its own restVh/direction (re-derived
+        // algebraically, not guessed) — so "one loop" naturally means "exit, reappear
+        // from the opposite edge, and coast back to exactly its own rest position."
+        const SCENE10_DISC_LOOP_THRESHOLD = 1600;
+
+        // Gap of no wheel/touch ticks before a paused-mid-gesture disc starts idle-swaying
+        // in place instead of sitting frozen — see startScene10DiscIdleSway below.
+        const SCENE10_DISC_IDLE_DELAY_MS = 250;
+
+        // Pure geometry, shared by applyScene10DiscMove (every tick) and
+        // startScene10DiscIdleSway (once, to find the sway's center) — deliberately
+        // extracted rather than duplicated, since this modulo/wrap math was re-derived
+        // algebraically (not guessed) and a second, slightly-off copy would be very hard
+        // to notice visually.
+        function scene10DiscOffsetVh(rawVh, dir, restVh) {
+            let y;
+            if (dir > 0) {
+                // moving down: exit0 = rawVh needed until the top edge clears
+                // (100 + DISC_H_VH), i.e. the whole disc is comfortably below the frame
+                const exit0 = (100 + DISC_H_VH) - restVh;
+                if (rawVh <= exit0) {
+                    y = restVh + rawVh;
+                } else {
+                    // looped past the bottom — reappear just above the top edge
+                    // (opposite edge from where it exited) and keep flowing down
+                    const cyclePos = (rawVh - exit0) % CYCLE_VH;
+                    y = -DISC_H_VH + cyclePos;
+                }
+            } else {
+                // moving up: exit0 = rawVh needed until the top edge clears -DISC_H_VH,
+                // i.e. the whole disc is comfortably above the frame
+                const exit0 = restVh + DISC_H_VH;
+                if (rawVh <= exit0) {
+                    y = restVh - rawVh;
+                } else {
+                    // looped past the top — reappear just below the bottom edge
+                    // and keep flowing up
+                    const cyclePos = (rawVh - exit0) % CYCLE_VH;
+                    y = (100 + DISC_H_VH) - cyclePos;
+                }
+            }
+            // The wrap's own CSS top/bottom already positions it at restVh; the caller
+            // adds this as the additional transform offset on top of that rest position.
+            return y - restVh;
+        }
+
+        function applyScene10DiscMove() {
+            updateScrollDebug('scene10-disc', scene10DiscProgress, SCENE10_DISC_LOOP_THRESHOLD);
+            const rawVh = (scene10DiscProgress / SCENE10_DISC_LOOP_THRESHOLD) * CYCLE_VH;
+            scene10DiscEls.forEach(({ el, dir, restVh }) => {
+                el.style.animation = 'none'; // release from the idle CSS bob loop
+                el.style.transform = `translateY(${scene10DiscOffsetVh(rawVh, dir, restVh)}vh)`;
+            });
+            armScene10DiscIdleSway();
+        }
+
+        // Hands control back to the CSS idle-bob loop once the drag fully unwinds back
+        // to 0 — mirrors resetScene1CoinRotation's rest-state handoff above. No geometry
+        // changes needed here: at progress===0, every disc's y-restVh is 0 regardless of
+        // how many loop cycles it has been through, so clearing the inline style and
+        // letting CSS's own top/bottom rest position take back over is exactly correct.
+        function resetScene10DiscMove() {
+            stopScene10DiscIdleSway();
+            scene10DiscProgress = 0;
+            scene10DiscEls.forEach(({ el }) => {
+                el.style.animation = '';
+                el.style.transform = '';
+            });
+        }
+
+        // Once the discs stop receiving fresh wheel/touch ticks for
+        // SCENE10_DISC_IDLE_DELAY_MS, they resume a small continuous sway centered on
+        // wherever scene10DiscProgress last left them (NOT restVh) instead of sitting
+        // frozen — armed on every applyScene10DiscMove() tick, canceled the instant a
+        // new tick arrives or the drag fully unwinds back to the CSS bob. This is the
+        // first requestAnimationFrame/idle-timer use in this file — everything else here
+        // is purely event-driven off wheel ticks — because it's the only way to animate
+        // continuously starting from an arbitrary scroll-driven position without a jump.
+        let scene10DiscIdleTimer = null;
+        let scene10DiscIdleRafId = null;
+
+        function stopScene10DiscIdleSway() {
+            if (scene10DiscIdleTimer !== null) { clearTimeout(scene10DiscIdleTimer); scene10DiscIdleTimer = null; }
+            if (scene10DiscIdleRafId !== null) { cancelAnimationFrame(scene10DiscIdleRafId); scene10DiscIdleRafId = null; }
+        }
+
+        function armScene10DiscIdleSway() {
+            stopScene10DiscIdleSway();
+            scene10DiscIdleTimer = setTimeout(startScene10DiscIdleSway, SCENE10_DISC_IDLE_DELAY_MS);
+        }
+
+        function startScene10DiscIdleSway() {
+            scene10DiscIdleTimer = null;
+            const rawVh = (scene10DiscProgress / SCENE10_DISC_LOOP_THRESHOLD) * CYCLE_VH;
+            const baseOffsets = scene10DiscEls.map(({ dir, restVh }) => scene10DiscOffsetVh(rawVh, dir, restVh));
+            const startTime = performance.now();
+            function frame(now) {
+                const elapsed = now - startTime;
+                scene10DiscEls.forEach(({ el, idleAmplitudeVh, idlePeriodMs }, i) => {
+                    const wobble = Math.sin((elapsed / idlePeriodMs) * Math.PI * 2) * idleAmplitudeVh;
+                    el.style.transform = `translateY(${baseOffsets[i] + wobble}vh)`;
+                });
+                scene10DiscIdleRafId = requestAnimationFrame(frame);
+            }
+            scene10DiscIdleRafId = requestAnimationFrame(frame);
         }
 
         scene6HitboxSledgeEl.addEventListener('click', () => {
@@ -515,6 +814,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         function applyScene4FeatherTransform() {
+            updateScrollDebug('scene4-feather', scene4FeatherProgress, SCENE4_FEATHER_THRESHOLD);
             const wordEls = Array.from(scene4BodyEl.querySelectorAll('.scene4-word'));
             const fragments = getScene4LineFragmentsFrom(wordEls);
             if (!fragments.length) return;
@@ -578,6 +878,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             scene4ExitProgress = 0;
             scene5PharaohProgress = 0;
             applyScene5PharaohSlide(0); // nemes figures parked off-screen, ready for the post-arrival slide-in gesture
+        }
+
+        function enterScene11Forward() {
+            scene11TextEl.classList.remove('is-entering');
+            void scene11TextEl.offsetWidth; // force reflow so the fade-in replays every arrival, not just the first
+            scene11TextEl.classList.add('is-entering');
+        }
+
+        function enterScene11Backward() {
+            scene11TextEl.classList.remove('is-entering'); // reset to hidden, ready to fade in again next time
         }
 
         scene4ScrollEl.addEventListener('animationend', (e) => {
@@ -759,6 +1069,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (e.deltaY > 0) {
                     if (scene3SlideIndex === 0) {
                         subScrollProgress += e.deltaY;
+                        updateScrollDebug('scene3-sub', subScrollProgress, SUB_ADVANCE_DISTANCE);
                         if (subScrollProgress >= SUB_ADVANCE_DISTANCE) {
                             subScrollProgress = 0;
                             goToSubSlide(1);
@@ -775,6 +1086,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (e.deltaY < 0) {
                     if (scene3SlideIndex === 1) {
                         subScrollProgress += -e.deltaY;
+                        updateScrollDebug('scene3-sub', subScrollProgress, SUB_ADVANCE_DISTANCE);
                         if (subScrollProgress >= SUB_ADVANCE_DISTANCE) {
                             subScrollProgress = 0;
                             goToSubSlide(0);
@@ -858,12 +1170,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             if (sceneIndex === 5) {
-                // Forward scroll drives the arm-wave/liver-rotate progress and clamps
-                // at the end; once fully clamped, further forward scroll continuously
-                // lifts the track into Scene 7 (was an instant goToScene(6) snap). A
-                // return gesture from full rest (scene6Progress at 0) continuously
-                // drags the track back down into Scene 5 (was an instant goToScene(4)
-                // snap), same idea as the Scene 4/5 return-drag above.
+                // Forward scroll immediately starts the continuous lift into
+                // Scene 7 (was an instant goToScene(6) snap) — no separate
+                // arm-wave warm-up stage required first anymore. A return
+                // gesture from full rest continuously drags the track back
+                // down into Scene 5 (was an instant goToScene(4) snap), same
+                // idea as the Scene 4/5 return-drag above.
                 scene6PopupSledgeEl.classList.remove('show');
 
                 if (scene5ExitProgress !== SCENE5_EXIT_THRESHOLD) {
@@ -873,27 +1185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // A Scene-6-to-7 lift gesture is mid-flight whenever scene6ExitProgress
-                // isn't sitting at rest (0); it takes priority over the arm-wave/liver
-                // progress below, same idea as the Scene 4/5 and Scene 5/6 boundaries.
-                if (scene6ExitProgress > 0) {
+                if (scene6ExitProgress > 0 || e.deltaY > 0) {
                     scene6ExitProgress = Math.max(0, Math.min(SCENE6_EXIT_THRESHOLD, scene6ExitProgress + e.deltaY));
                     applyScene6Exit();
+                    applyScene6Transform(scene6ExitProgress / SCENE6_EXIT_THRESHOLD);
                     if (scene6ExitProgress >= SCENE6_EXIT_THRESHOLD) goToScene(6);
-                    return;
-                }
-
-                if (scene6Progress >= SCENE6_THRESHOLD && e.deltaY > 0) {
-                    // Fresh forward-lift start into Scene 7 (was an instant goToScene(6)).
-                    scene6ExitProgress = Math.min(SCENE6_EXIT_THRESHOLD, e.deltaY);
-                    applyScene6Exit();
-                    if (scene6ExitProgress >= SCENE6_EXIT_THRESHOLD) goToScene(6);
-                    return;
-                }
-
-                if (scene6Progress > 0 || e.deltaY > 0) {
-                    scene6Progress = Math.max(0, Math.min(SCENE6_THRESHOLD, scene6Progress + e.deltaY));
-                    applyScene6Transform(scene6Progress / SCENE6_THRESHOLD);
                     return;
                 }
 
@@ -905,13 +1201,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             if (sceneIndex === 6) {
-                // Scene 7 is the last scene — a return gesture continuously drags the
-                // track back down into Scene 6 (was an instant goToScene(5) snap),
-                // same idea as the Scene 5/6 return-drag above.
+                // A return gesture continuously drags the track back down into Scene 6
+                // (was an instant goToScene(5) snap), same idea as the Scene 5/6
+                // return-drag above.
                 if (scene6ExitProgress !== SCENE6_EXIT_THRESHOLD) {
                     scene6ExitProgress = Math.max(0, Math.min(SCENE6_EXIT_THRESHOLD, scene6ExitProgress + e.deltaY));
                     applyScene6Exit();
                     if (scene6ExitProgress <= 0) goToScene(5);
+                    return;
+                }
+
+                // A Scene-7-to-8 lift gesture is mid-flight whenever scene7ExitProgress
+                // isn't sitting at rest (0) — takes priority over the title-tilt/
+                // text-reveal phases below; reversing mid-gesture unwinds it first,
+                // same priority idea as the Scene 4/5 and Scene 5/6 boundaries above.
+                if (scene7ExitProgress > 0) {
+                    scene7ExitProgress = Math.max(0, Math.min(SCENE7_EXIT_THRESHOLD, scene7ExitProgress + e.deltaY));
+                    applyScene7Exit();
+                    if (scene7ExitProgress >= SCENE7_EXIT_THRESHOLD) goToScene(7);
                     return;
                 }
 
@@ -920,6 +1227,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // live), then un-reveals the text, then resumes the Scene 7->6 return-drag —
                 // same priority idea as the Scene 4/5 boundary above.
                 if (scene7TitleScrollTicks > 0 || (e.deltaY > 0 && scene7TextProgress >= SCENE7_TEXT_THRESHOLD)) {
+                    if (scene7TitleScrollTicks >= SCENE7_TITLE_TICK_THRESHOLD && e.deltaY > 0) {
+                        // Title has fully dropped — hand off further forward scroll into
+                        // the continuous lift toward Scene 8 (was an uncapped, do-nothing
+                        // tick counter past this point).
+                        scene7ExitProgress = Math.min(SCENE7_EXIT_THRESHOLD, e.deltaY);
+                        applyScene7Exit();
+                        if (scene7ExitProgress >= SCENE7_EXIT_THRESHOLD) goToScene(7);
+                        return;
+                    }
                     scene7TitleScrollTicks = Math.max(0, scene7TitleScrollTicks + (e.deltaY > 0 ? 1 : -1));
                     applyScene7TitleTilt();
                     return;
@@ -935,6 +1251,130 @@ document.addEventListener('DOMContentLoaded', async () => {
                     scene6ExitProgress = Math.max(0, SCENE6_EXIT_THRESHOLD + e.deltaY);
                     applyScene6Exit();
                     if (scene6ExitProgress <= 0) goToScene(5);
+                }
+                return;
+            }
+
+            if (sceneIndex === 7) {
+                // A Scene-7-to-8 lift gesture is mid-flight whenever scene7ExitProgress
+                // isn't sitting at its "fully arrived here" rest value — drag
+                // continuously instead of snapping instantly, same idea as the Scene
+                // 5/6 and Scene 6/7 boundaries above.
+                if (scene7ExitProgress !== SCENE7_EXIT_THRESHOLD) {
+                    scene7ExitProgress = Math.max(0, Math.min(SCENE7_EXIT_THRESHOLD, scene7ExitProgress + e.deltaY));
+                    applyScene7Exit();
+                    if (scene7ExitProgress <= 0) goToScene(6);
+                    return;
+                }
+
+                // A Scene-8-to-9 lift gesture is mid-flight whenever scene8ExitProgress
+                // isn't sitting at rest (0) — takes priority over the sphinx slide.
+                if (scene8ExitProgress > 0) {
+                    scene8ExitProgress = Math.max(0, Math.min(SCENE8_EXIT_THRESHOLD, scene8ExitProgress + e.deltaY));
+                    applyScene8Exit();
+                    if (scene8ExitProgress >= SCENE8_EXIT_THRESHOLD) goToScene(8);
+                    return;
+                }
+
+                // Forward scroll slides the two sphinx statues apart, and once fully
+                // apart, hands off to the continuous lift toward Scene 9.
+                if (scene8SphinxProgress > 0 || e.deltaY > 0) {
+                    scene8SphinxProgress = Math.max(0, Math.min(SCENE8_SPHINX_THRESHOLD, scene8SphinxProgress + e.deltaY));
+                    applyScene8SphinxSlide(scene8SphinxProgress / SCENE8_SPHINX_THRESHOLD);
+                    if (scene8SphinxProgress >= SCENE8_SPHINX_THRESHOLD && e.deltaY > 0) {
+                        scene8ExitProgress = Math.min(SCENE8_EXIT_THRESHOLD, e.deltaY);
+                        applyScene8Exit();
+                        if (scene8ExitProgress >= SCENE8_EXIT_THRESHOLD) goToScene(8);
+                    }
+                    return;
+                }
+                
+                if (e.deltaY < 0) {
+                    scene7ExitProgress = Math.max(0, SCENE7_EXIT_THRESHOLD + e.deltaY);
+                    applyScene7Exit();
+                    if (scene7ExitProgress <= 0) goToScene(6);
+                }
+                return;
+            }
+
+
+            if (sceneIndex === 8) {
+                // A return gesture continuously drags the track back down into Scene 8.
+                if (scene8ExitProgress !== SCENE8_EXIT_THRESHOLD) {
+                    scene8ExitProgress = Math.max(0, Math.min(SCENE8_EXIT_THRESHOLD, scene8ExitProgress + e.deltaY));
+                    applyScene8Exit();
+                    if (scene8ExitProgress <= 0) goToScene(7);
+                    return;
+                }
+
+                // A Scene-9-to-10 lift gesture is mid-flight whenever scene9ExitProgress
+                // isn't sitting at rest (0) — takes priority over a fresh gesture below,
+                // same idea as the Scene 7/8 and Scene 8/9 boundaries above.
+                if (scene9ExitProgress > 0) {
+                    scene9ExitProgress = Math.max(0, Math.min(SCENE9_EXIT_THRESHOLD, scene9ExitProgress + e.deltaY));
+                    applyScene9Exit();
+                    if (scene9ExitProgress >= SCENE9_EXIT_THRESHOLD) goToScene(9);
+                    return;
+                }
+
+                if (e.deltaY < 0) {
+                    scene8ExitProgress = Math.max(0, SCENE8_EXIT_THRESHOLD + e.deltaY);
+                    applyScene8Exit();
+                    if (scene8ExitProgress <= 0) goToScene(7);
+                } else if (e.deltaY > 0) {
+                    // Fresh forward-lift start into Scene 10 — was a true dead end before this
+                    // change. No gated sub-stage first (unlike Scene 7/8's title-tilt/sphinx-slide)
+                    // since Scene 10 has no scroll-driven content of its own.
+                    scene9ExitProgress = Math.min(SCENE9_EXIT_THRESHOLD, e.deltaY);
+                    applyScene9Exit();
+                    if (scene9ExitProgress >= SCENE9_EXIT_THRESHOLD) goToScene(9);
+                }
+                return;
+            }
+
+            if (sceneIndex === 9) {
+                // The 7 disc coins have their own scroll-driven move gesture once fully
+                // arrived here — see applyScene10DiscMove. Exactly one loop (clamped at
+                // SCENE10_DISC_LOOP_THRESHOLD, which lands the disc back at its own rest
+                // position — see the comment on that constant), not an infinite repeat. A
+                // live disc-move gesture takes top priority, same idea as
+                // scene5PharaohProgress in the sceneIndex===4 branch above: reversing
+                // mid-gesture unwinds the discs (through the one loop, if it got that far)
+                // first instead of fighting the return-to-Scene-9 drag below.
+                if (scene10DiscProgress > 0) {
+                    // The loop already finished and is sitting at rest — the next forward
+                    // scroll advances into Scene 11 instead of re-applying the same rest
+                    // position forever (was a true dead end before this change).
+                    if (scene10DiscProgress >= SCENE10_DISC_LOOP_THRESHOLD && e.deltaY > 0) {
+                        goToScene(10);
+                        return;
+                    }
+                    scene10DiscProgress = Math.max(0, Math.min(SCENE10_DISC_LOOP_THRESHOLD, scene10DiscProgress + e.deltaY));
+                    if (scene10DiscProgress <= 0) {
+                        resetScene10DiscMove();
+                    } else {
+                        applyScene10DiscMove();
+                    }
+                    return;
+                }
+
+                // A return gesture continuously drags the track back down into Scene 9.
+                if (scene9ExitProgress !== SCENE9_EXIT_THRESHOLD) {
+                    scene9ExitProgress = Math.max(0, Math.min(SCENE9_EXIT_THRESHOLD, scene9ExitProgress + e.deltaY));
+                    applyScene9Exit();
+                    if (scene9ExitProgress <= 0) goToScene(8);
+                    return;
+                }
+
+                if (e.deltaY < 0) {
+                    scene9ExitProgress = Math.max(0, SCENE9_EXIT_THRESHOLD + e.deltaY);
+                    applyScene9Exit();
+                    if (scene9ExitProgress <= 0) goToScene(8);
+                } else if (e.deltaY > 0) {
+                    // Fresh forward disc-move start — the *next* scroll after already
+                    // resting fully on Scene 10 (was a true dead end before this change).
+                    scene10DiscProgress = Math.min(SCENE10_DISC_LOOP_THRESHOLD, e.deltaY);
+                    applyScene10DiscMove();
                 }
                 return;
             }
