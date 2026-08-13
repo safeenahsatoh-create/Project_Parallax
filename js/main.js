@@ -13,7 +13,7 @@
     // Static Image URLs mapping
     const eraImages = [
         "assets/img/hero/Homo habilis.PNG", // 1
-        "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2000&auto=format&fit=crop", // 2
+        "assets/img/chapter2/mayan_pyramid.png", // 2
         "https://images.unsplash.com/photo-1505501861961-d6f78fcd4703?q=80&w=2000&auto=format&fit=crop", // 3
         "https://images.unsplash.com/photo-1599839619722-39751411ea63?q=80&w=2000&auto=format&fit=crop", // 4
         "https://images.unsplash.com/photo-1533230488583-36cb926cb17c?q=80&w=2000&auto=format&fit=crop", // 5
@@ -52,6 +52,7 @@
             const img = document.createElement('img');
             img.src = eraImages[index] || eraImages[0];
             img.alt = era[currentLang].title;
+            if (index === 1) img.classList.add('era-cover-contain');
 
             slide.appendChild(img);
             sliderTrack.appendChild(slide);

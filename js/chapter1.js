@@ -22,7 +22,6 @@
     const savannaTextContainer = document.getElementById('savanna-text-container');
     const savannaText = document.getElementById('savanna-text');
 
-    const langToggleBtn = document.getElementById('lang-toggle');
     const langTextSpan = document.getElementById('lang-text');
 
     // State
@@ -54,45 +53,11 @@
             console.error('Error loading chapter data:', error);
         }
 
-        // Language toggle listener
-        langToggleBtn.addEventListener('click', () => {
-            currentLang = currentLang === 'th' ? 'en' : 'th';
-            localStorage.setItem('lang', currentLang);
+        // Navbar (logo flash, back-to-eras flash, language toggle) is owned by js/navbar.js
+        window.addEventListener('langchange', (e) => {
+            currentLang = e.detail.lang;
             applyLang(currentLang);
         });
-
-        // Logo click to flash and return to index
-        const navLogo = document.getElementById('nav-logo');
-        if (navLogo) {
-            navLogo.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // Create Light layer to instantly flash bright
-                const lightImg = document.createElement('img');
-                lightImg.src = 'assets/img/hero/Light.png';
-                lightImg.style.position = 'fixed';
-                lightImg.style.top = '25%';
-                lightImg.style.right = '27%';
-                lightImg.style.width = '300px';
-                lightImg.style.height = '300px';
-                lightImg.style.objectFit = 'contain';
-                lightImg.style.mixBlendMode = 'screen';
-                lightImg.style.transform = 'translate(50%, -50%) scale(40)'; // Start massive!
-                lightImg.style.opacity = '0';
-                lightImg.style.zIndex = '9999';
-                lightImg.style.transition = 'opacity 0.3s ease'; // Only fade in
-                lightImg.style.pointerEvents = 'none';
-                document.body.appendChild(lightImg);
-                
-                void lightImg.offsetWidth;
-                lightImg.style.opacity = '1';
-                
-                // Wait for fade in (0.3s)
-                setTimeout(() => {
-                    window.location.href = 'index.html?return=true';
-                }, 350);
-            });
-        }
 
         // Click to reveal translated shadows
         const shadowHabilis = document.getElementById('layer-shadow-habilis');

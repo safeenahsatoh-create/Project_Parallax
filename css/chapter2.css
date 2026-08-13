@@ -1,0 +1,1865 @@
+/* Chapter 2 - Scene 1 */
+
+/* Chapter2's scenes page via JS-driven translateY on .chapter2-track instead
+   of native scroll, so a fast wheel flick can't cause the browser to resolve
+   scroll-snap instantly and skip the transition animation. */
+body.chapter2-page {
+    overflow: hidden;
+    height: 100vh;
+}
+
+.chapter2-track {
+    transition: transform 700ms ease-in-out;
+}
+
+.scene-1 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.layer {
+    position: absolute;
+}
+
+/* Layer 1: Background */
+.layer-background {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    animation: scene1-fade-in 800ms 0ms both ease-out;
+}
+
+/* Layer 2: Clouds */
+.layer-cloud-1 {
+    top: -25px;
+    right: -70px;
+    width: 65vw;
+    z-index: 2;
+    animation: scene1-cloud-1-enter 900ms 150ms both ease-out,
+        scene1-cloud-1-drift 11s 1050ms ease-in-out infinite alternate;
+}
+
+.layer-cloud-2 {
+    top: -40px;
+    left: -70px;
+    width: 72vw;
+    z-index: 2;
+    animation: scene1-cloud-2-enter 900ms 150ms both ease-out,
+        scene1-cloud-2-drift 13s 1050ms ease-in-out infinite alternate;
+}
+
+/* Layer 3: Foreground Artifacts */
+.layer-greek-statue {
+    bottom: 8%;
+    left: -13%;
+    height: 60vh;
+    transform: rotate(-22deg);
+    z-index: 3;
+    animation: scene1-greek-statue-enter 650ms 350ms both ease-out;
+}
+
+.layer-mayan-statue {
+    bottom: 10%;
+    right: 3%;
+    height: 50vh;
+    transform: rotate(13deg);
+    z-index: 3;
+    animation: scene1-mayan-statue-enter 650ms 350ms both ease-out;
+}
+
+/* Layer 4: Paper Notes */
+.layer-storyboard {
+    width: 50vw;
+    z-index: 4;
+}
+
+.layer-storyboard-1 {
+    bottom: 6%;
+    left: 12%;
+    transform: rotate(11deg);
+    animation: scene1-storyboard-1-enter 600ms 500ms both ease-out;
+}
+
+.layer-storyboard-2 {
+    bottom: 6%;
+    left: 40%;
+    transform: rotate(307deg);
+    animation: scene1-storyboard-2-enter 600ms 560ms both ease-out;
+}
+
+/* Layer 5: Coins */
+.layer-mayan-coin {
+    width: 10vw;
+    z-index: 5;
+}
+
+.layer-mayan-coin-1 {
+    bottom: 23%;
+    left: 32%;
+    transform: rotate(26deg);
+    animation: scene1-coin-1-enter 550ms 650ms both ease-out;
+}
+
+.layer-mayan-coin-2 {
+    bottom: 23%;
+    left: 60%;
+    transform: rotate(8deg);
+    animation: scene1-coin-2-enter 550ms 700ms both ease-out;
+}
+
+/* Scene Title */
+.scene-title {
+    position: absolute;
+    top: 21%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: right;
+    z-index: 10;
+    animation: scene1-title-enter 700ms 750ms both ease-out;
+}
+
+/* Scene 1 entrance + ambient drift keyframes (depth-staggered: background
+   settles first, title last, matching each layer's z-index order). Each
+   keyframe's final transform matches the layer's static resting transform
+   above so animation-fill-mode: both hands off cleanly. */
+@keyframes scene1-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-cloud-1-enter {
+    from {
+        transform: translateX(6vw);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-cloud-1-drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-1.2vw);
+    }
+}
+
+@keyframes scene1-cloud-2-enter {
+    from {
+        transform: translateX(-6vw);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-cloud-2-drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(1.2vw);
+    }
+}
+
+@keyframes scene1-greek-statue-enter {
+    from {
+        transform: translateY(40px) rotate(-22deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) rotate(-22deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-mayan-statue-enter {
+    from {
+        transform: translateY(40px) rotate(13deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) rotate(13deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-storyboard-1-enter {
+    from {
+        transform: scale(0.7) rotate(11deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(11deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-storyboard-2-enter {
+    from {
+        transform: scale(0.7) rotate(307deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(307deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-coin-1-enter {
+    from {
+        transform: scale(0) rotate(26deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15) rotate(36deg);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1) rotate(26deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-coin-2-enter {
+    from {
+        transform: scale(0) rotate(8deg);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15) rotate(18deg);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1) rotate(8deg);
+        opacity: 1;
+    }
+}
+
+@keyframes scene1-title-enter {
+    from {
+        transform: translateX(-50%) translateY(24px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+.scene-title-main {
+    font-family: var(--font-heading);
+    font-size: 7rem;
+    color: #443e38;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.scene-title[data-lang="en"] .scene-title-main {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Navbar (dark text/border for this chapter's light background) */
+.navbar .logo,
+.navbar .nav-links a,
+.navbar .control-btn {
+    color: #4a4a44;
+    border-color: #4a4a44;
+}
+
+/* ===================== Chapter 2 - Scene 2 ===================== */
+
+.scene-2 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+/* Layer 1: Watercolor sky */
+.layer-sky {
+    top: -8%;
+    left: -5%;
+    width: 110%;
+    z-index: 1;
+}
+
+/* Layer 2: Drifting dark mist clouds */
+.layer-mist {
+    z-index: 2;
+}
+
+.layer-mist-1 {
+    top: -2%;
+    left: -5%;
+    width: 85vw;
+    animation: scene2-mist-1-drift 1.5s ease-in-out infinite alternate;
+}
+
+.layer-mist-2 {
+    top: 6%;
+    right: -3%;
+    width: 78vw;
+    animation: scene2-mist-2-drift 2s ease-in-out infinite alternate;
+}
+
+.layer-mist-3 {
+    bottom: 4%;
+    right: 2%;
+    width: 73vw;
+    animation: scene2-mist-3-drift 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes scene2-mist-1-drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-1.5vw);
+    }
+}
+
+@keyframes scene2-mist-2-drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(1.5vw);
+    }
+}
+
+@keyframes scene2-mist-3-drift {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-1.5vw);
+    }
+}
+
+/* Text block */
+.scene2-text {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-width: 1100px;
+    text-align: center;
+    z-index: 10;
+}
+
+.scene2-title {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: #2b2b2b;
+    margin: 0;
+    white-space: nowrap;
+    transform: translateY(7rem);
+}
+
+.scene2-text[data-lang="en"] .scene2-title {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.scene2-subtitle {
+    font-family: var(--font-heading);
+    font-size: 35.6px;
+    font-weight: 700;
+    color: #a56a26;
+    margin: 3.4em 0 0.6em;
+}
+
+.scene2-body {
+    font-size: 1.6rem;
+    line-height: 1.9;
+    color: #2b2b2b;
+    margin: 0;
+}
+
+.scene2-body .highlight {
+    color: #a56a26;
+    font-weight: 700;
+}
+
+/* Layer 3: Bottom row of Mayan glyph discs */
+.layer-glyph {
+    bottom: -3%;
+    width: 36vw;
+    z-index: 3;
+    transform: translateX(-110vw);
+}
+
+.layer-glyph-1 {
+    left: 3%;
+}
+
+.layer-glyph-2 {
+    left: 19%;
+}
+
+.layer-glyph-3 {
+    left: 35%;
+}
+
+.layer-glyph-4 {
+    left: 51%;
+}
+
+/* ===================== Chapter 2 - Scene 3 ===================== */
+
+.scene-3 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.layer-paper-bg {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.scene3-frame-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82vw;
+    max-width: 1300px;
+    aspect-ratio: 16 / 9;
+    z-index: 10;
+}
+
+.scene3-carousel {
+    position: absolute;
+    top: 22%;
+    left: 8%;
+    width: 84%;
+    height: 65.4%;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.scene3-track {
+    display: flex;
+    width: 200%;
+    height: 100%;
+    transform: translateX(0%);
+    transition: transform 700ms ease-in-out;
+}
+
+.scene3-track.scene3-show-2 {
+    transform: translateX(-50%);
+}
+
+.scene3-slide {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.scene3-photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 50%;
+    transform: scale(1.16);
+    z-index: 1;
+}
+
+.scene3-caption {
+    position: absolute;
+    top: 42.8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26%;
+    z-index: 5;
+}
+
+.scene3-caption-bg {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: scale(2.5);
+}
+
+.scene3-caption-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 5% 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.scene3-caption-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2b2b2b;
+    margin: 0 0 0.4em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.scene3-caption-body {
+    font-size: 12.95px;
+    line-height: 1.5;
+    color: #2b2b2b;
+    margin: 0;
+    white-space: pre-line;
+    text-align: center;
+}
+
+.scene3-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* ===================== Chapter 2 - Scene 4 ===================== */
+
+.scene-4 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene4-title {
+    position: absolute;
+    top: 16%;
+    left: 9%;
+    font-family: var(--font-heading);
+    font-size: 5.5rem;
+    color: #443e38;
+    margin: 0;
+    line-height: 1;
+    z-index: 10;
+}
+
+.scene4-subtitle {
+    position: absolute;
+    top: 27%;
+    left: 24%;
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+    color: #a56a26;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene4-body {
+    position: absolute;
+    top: 39%;
+    left: 9%;
+    width: 40vw;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    color: #2b2b2b;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene4-body .highlight {
+    color: #a56a26;
+    font-weight: 700;
+}
+
+.scene4-word {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.scene4-word.is-revealed {
+    opacity: 1;
+}
+
+.layer-feather {
+    position: absolute;
+    top: 21%;
+    left: 38%;
+    width: 9vw;
+    transform: translate(-50%, -50%) scale(3.7) rotate(8deg);
+    z-index: 11;
+    transition: top 0.25s ease, left 0.25s ease;
+}
+
+.scene4-portrait-wrap {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    width: 30vw;
+    aspect-ratio: 520 / 590;
+    z-index: 5;
+}
+
+.scene4-portrait {
+    position: absolute;
+    top: 50%;
+    left: 47%;
+    width: 84%;
+    height: auto;
+    transform: translate(-50%, -50%) scale(3.7);
+}
+
+.scene4-scroll {
+    position: absolute;
+    top: 16%;
+    right: -18%;
+    width: 47%;
+    transform: rotate(-6deg);
+    z-index: 6;
+}
+
+@keyframes scene4-scroll-unfurl {
+    from {
+        transform: rotate(-6deg) scaleX(0.1);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotate(-6deg) scaleX(1);
+        opacity: 1;
+    }
+}
+
+.scene4-scroll.is-unfurling {
+    transform-origin: left center;
+    animation: scene4-scroll-unfurl 0.9s ease-out both;
+}
+
+.scene4-scroll-bg {
+    display: block;
+    width: 100%;
+    height: auto;
+    transform: scale(2.4);
+}
+
+.scene4-scroll-text {
+    position: absolute;
+    top: 51%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2rem;
+    color: #6b4a1e;
+    white-space: nowrap;
+}
+
+.layer-sphinx {
+    position: absolute;
+    top: 79%;
+    left: 42%;
+    width: 19vw;
+    transform: translate(calc(-50% - 60vw), -50%) scale(2.87);
+    z-index: 4;
+}
+
+/* ===================== Chapter 2 - Scene 5 ===================== */
+
+.scene-5 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene5-title {
+    position: absolute;
+    top: 10%;
+    left: 613.5px;
+    width: 58vw;
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    font-weight: 700;
+    color: #a56a26;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene5-title[data-lang="en"] {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.scene5-subtitle {
+    position: absolute;
+    top: 22%;
+    left: 40%;
+    width: 58vw;
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: #2b2b2b;
+    margin: 0;
+    z-index: 10;
+}
+
+.layer-pendant {
+    position: absolute;
+    top: 0;
+    height: 20vh;
+    overflow: hidden;
+    z-index: 11;
+}
+
+.layer-pendant img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+}
+
+.layer-pendant-1 {
+    left: 7%;
+    aspect-ratio: 281 / 554;
+    transform-origin: top center;
+    animation: scene5-pendant-1-swing 3s ease-in-out infinite;
+}
+
+.layer-pendant-1 img {
+    height: 38.99vh;
+    transform: translate(-41.67%, -24.72%);
+}
+
+.layer-pendant-2 {
+    left: 14%;
+    aspect-ratio: 333 / 657;
+    transform-origin: top center;
+    animation: scene5-pendant-2-swing 2.6s ease-in-out infinite 0.3s;
+}
+
+.layer-pendant-2 img {
+    height: 32.88vh;
+    transform: translate(-41.98%, -15.93%);
+}
+
+@keyframes scene5-pendant-1-swing {
+
+    0%,
+    100% {
+        transform: rotate(-9deg);
+    }
+
+    50% {
+        transform: rotate(9deg);
+    }
+}
+
+@keyframes scene5-pendant-2-swing {
+
+    0%,
+    100% {
+        transform: rotate(-7deg);
+    }
+
+    50% {
+        transform: rotate(7deg);
+    }
+}
+
+.layer-pharaoh-left-1 {
+    position: absolute;
+    bottom: 10%;
+    left: 23%;
+    height: 45vh;
+    aspect-ratio: 300 / 771;
+    overflow: hidden;
+    z-index: 3;
+}
+
+.layer-pharaoh-left-1 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 63.04vh;
+    transform: translate(-9.74%, -13.70%);
+}
+
+.layer-pharaoh-left-2 {
+    position: absolute;
+    bottom: 10%;
+    left: 9%;
+    height: 45vh;
+    aspect-ratio: 319 / 768;
+    overflow: hidden;
+    z-index: 3;
+}
+
+.layer-pharaoh-left-2 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 63.28vh;
+    transform: translate(-32.08%, -14.26%);
+}
+
+.layer-pharaoh-right-1 {
+    position: absolute;
+    bottom: 20%;
+    right: 25%;
+    height: 45vh;
+    aspect-ratio: 300 / 771;
+    overflow: hidden;
+    z-index: 3;
+    transform: scaleX(-1);
+}
+
+.layer-pharaoh-right-1 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 63.04vh;
+    transform: translate(-9.74%, -13.70%);
+}
+
+.layer-pharaoh-right-2 {
+    position: absolute;
+    bottom: 20%;
+    right: 10%;
+    height: 45vh;
+    aspect-ratio: 319 / 768;
+    overflow: hidden;
+    z-index: 3;
+    transform: scaleX(-1);
+}
+
+.layer-pharaoh-right-2 img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 63.28vh;
+    transform: translate(-32.08%, -14.26%);
+}
+
+.layer-rock-pile {
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
+    height: 35vh;
+    aspect-ratio: 700 / 431;
+    overflow: hidden;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.layer-rock-pile img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 73.7vh;
+    transform: translate(-31.15%, -30.37%);
+}
+
+/* ===================== Chapter 2 - Scene 6 ===================== */
+
+.scene-6 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene6-text {
+    position: absolute;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #2b2b2b;
+    margin: 0;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+}
+
+.scene6-text[data-lang="th"] {
+    top: 15%;
+    left: 5%;
+    width: 38vw;
+}
+
+.scene6-text[data-lang="en"] {
+    top: 15%;
+    left: 5%;
+    width: 40vw;
+}
+
+.layer-sphinx-photo {
+    position: absolute;
+    top: 5%;
+    right: -99px;
+    width: 76vw;
+    z-index: 1;
+}
+
+.layer-orator-statue {
+    position: absolute;
+    bottom: 1px;
+    right: 0%;
+    height: 78vh;
+    z-index: 2;
+}
+
+.layer-orator-arm {
+    position: absolute;
+    bottom: 1px;
+    right: 0%;
+    height: 78vh;
+    z-index: 3;
+    transform-origin: 80% 20%;
+}
+
+.layer-sledge {
+    position: absolute;
+    top: 28%;
+    left: 17%;
+    width: 46vw;
+    z-index: 2;
+    transition: filter 0.3s ease;
+}
+
+.hitbox-prop {
+    position: absolute;
+    z-index: 5;
+    cursor: pointer;
+}
+
+#hitbox-sledge {
+    top: calc(28% + 6.2vw);
+    left: calc(17% + 7.8vw);
+    width: 31.2vw;
+    height: 12.9vw;
+}
+
+#hitbox-sledge:hover~.layer-sledge {
+    filter: drop-shadow(0 0 12px rgba(255, 220, 120, 0.9)) drop-shadow(0 0 30px rgba(255, 180, 40, 0.6));
+}
+
+/* Wooden sledge popup */
+.scene6-popup {
+    position: absolute;
+    width: 30vw;
+    min-width: 240px;
+    max-width: 420px;
+    background: rgba(20, 10, 0, 0.82);
+    padding: 1.4rem 1.8rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 180, 60, 0.35);
+    backdrop-filter: blur(6px);
+    white-space: pre-line;
+    color: #f5deb3;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.1vw, 1.2rem);
+    line-height: 1.7;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 220;
+    text-align: left;
+}
+
+.scene6-popup.show {
+    opacity: 1;
+}
+
+#popup-sledge {
+    top: 26%;
+    right: 14%;
+    transform: translateY(15px);
+}
+
+#popup-sledge.show {
+    transform: translateY(0);
+}
+
+.layer-vase {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    width: 12vw;
+    z-index: 3;
+}
+
+.layer-liver {
+    position: absolute;
+    width: 12vw;
+    z-index: 4;
+}
+
+.layer-liver-1 {
+    bottom: 7%;
+    left: 12%;
+}
+
+.layer-liver-2 {
+    bottom: 12%;
+    left: 13%;
+    width: 11vw;
+    transform-origin: center;
+    z-index: 3;
+    animation: scene6-liver-sway 3s ease-in-out infinite;
+}
+
+@keyframes scene6-liver-sway {
+
+    0%,
+    100% {
+        transform: rotate(-90deg);
+    }
+
+    50% {
+        transform: rotate(-75deg);
+    }
+}
+
+/* ===================== Chapter 2 - Scene 7 ===================== */
+
+.scene-7 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene7-title {
+    position: absolute;
+    top: 12%;
+    left: 8%;
+    width: 50vw;
+    font-family: var(--font-heading);
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: #a56a26;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene7-title[data-lang="en"] {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scene7-title-word2 {
+    display: inline-block;
+    transform-origin: left center;
+    transform: rotate(0deg);
+    transition: transform 0.5s ease;
+}
+
+.layer-giza-wide {
+    position: absolute;
+    top: 10%;
+    right: -11%;
+    width: 85vw;
+    z-index: 1;
+}
+
+.layer-king-scribe-wrap {
+    position: absolute;
+    top: 15%;
+    right: 17%;
+    height: 50vh;
+    aspect-ratio: 647 / 771;
+    overflow: hidden;
+    z-index: 5;
+    perspective: 900px;
+}
+
+.layer-king-scribe-portrait,
+.layer-king-scribe-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 70.03vh;
+}
+
+.layer-king-scribe-portrait {
+    z-index: 1;
+    animation: scene7-portrait-flip 0.7s linear infinite;
+}
+
+.layer-king-scribe-frame {
+    z-index: 2;
+    transform: translate(-33.125%, -14.26%);
+}
+
+@keyframes scene7-portrait-flip {
+    0% {
+        transform: translate(-33.125%, -14.26%) rotateY(0deg);
+    }
+
+    50% {
+        transform: translate(-33.125%, -14.26%) rotateY(0deg);
+    }
+
+    50.01% {
+        transform: translate(-33.125%, -14.26%) rotateY(180deg);
+        animation-timing-function: steps(1, jump-end);
+    }
+
+    100% {
+        transform: translate(-33.125%, -14.26%) rotateY(0deg);
+        animation-timing-function: steps(1, jump-end);
+    }
+}
+
+.layer-worshippers-wrap {
+    position: absolute;
+    bottom: 12%;
+    left: 6%;
+    height: 55vh;
+    aspect-ratio: 498 / 727;
+    overflow: hidden;
+    z-index: 3;
+}
+
+.layer-worshippers-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 81.7vh;
+    transform: translate(-36.93%, -16.48%);
+}
+
+.scene7-statue-caption {
+    position: absolute;
+    bottom: 6%;
+    left: 4%;
+    width: 22vw;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #6b5842;
+    text-align: center;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene7-text {
+    position: absolute;
+    bottom: 12%;
+    left: 29%;
+    width: 61vw;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.6;
+    color: #2b2b2b;
+    text-align: center;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene7-word {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scene7-text .highlight {
+    color: #a56a26;
+    font-weight: 700;
+}
+
+/* ===================== Chapter 2 - Scene 8 ===================== */
+
+.scene-8 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene8-title {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    font-weight: 700;
+    color: #2b2b2b;
+    margin: 0;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 10;
+}
+
+.scene8-title[data-lang="en"] {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.scene8-text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 55vw;
+    max-width: 860px;
+    font-size: 1.6rem;
+    line-height: 1.75;
+    color: #2b2b2b;
+    text-align: center;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene8-text .highlight {
+    color: #a56a26;
+    font-weight: 700;
+}
+
+.scene8-portrait-wrap {
+    position: absolute;
+    top: 57%;
+    left: 53%;
+    transform: translate(-50%, -50%) scale(1.10);
+    height: 50vh;
+    aspect-ratio: 550 / 638;
+    overflow: hidden;
+    z-index: 5;
+}
+
+.scene8-portrait {
+    position: absolute;
+    top: 8%;
+    left: 0;
+    width: auto;
+    height: 63vh;
+    transform: translate(-35.68%, -20.46%);
+}
+
+.scene8-tablet-wrap {
+    position: absolute;
+    top: 40%;
+    left: 18%;
+    transform: translateY(-50%) rotate(-10deg) scale(1);
+    height: 20vh;
+    aspect-ratio: 549 / 628;
+    overflow: hidden;
+    z-index: 4;
+}
+
+.scene8-tablet-wrap-2 {
+    position: absolute;
+    top: 40%;
+    left: 23%;
+    transform: translateY(-50%) rotate(24deg) scale(0.9);
+    height: 20vh;
+    aspect-ratio: 549 / 628;
+    overflow: hidden;
+    z-index: 3;
+}
+
+.scene8-tablet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 34.39vh;
+    transform: translate(-36.04%, -21.39%);
+}
+
+.scene8-bronze-wrap {
+    position: absolute;
+    top: 55%;
+    right: 20%;
+    transform: translateY(-50%) rotate(6deg) scale(1);
+    height: 30vh;
+    aspect-ratio: 359 / 566;
+    overflow: hidden;
+    z-index: 4;
+}
+
+.scene8-bronze {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 55.33vh;
+    transform: translate(-40.73%, -23.89%);
+}
+
+.layer-sphinx-left {
+    position: absolute;
+    bottom: 0%;
+    left: 20%;
+    height: 35vh;
+    aspect-ratio: 716 / 576;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.layer-sphinx-left img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 187.5%;
+    transform: translate(-31.35%, -23.33%);
+}
+
+.layer-sphinx-right {
+    position: absolute;
+    bottom: 0%;
+    right: 20%;
+    height: 35vh;
+    aspect-ratio: 716 / 576;
+    overflow: hidden;
+    z-index: 2;
+    transform: scaleX(-1);
+}
+
+.layer-sphinx-right img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 187.5%;
+    transform: translate(-31.35%, -23.33%);
+}
+
+.scene8-sphinx-caption {
+    position: absolute;
+    bottom: -0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130%;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: #6b5842;
+    text-align: center;
+    margin: 0;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.scene8-scroll-tablet {
+    position: absolute;
+    top: 54%;
+    left: 3%;
+    width: 22vw;
+    transform: rotate(-8deg);
+    z-index: 6;
+}
+
+.scene8-scroll-tablet-bg {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+    top: -7vw;
+    left: 14vw;
+    transform: scale(1.5) rotate(6deg);
+    /* แก้ 0deg เป็นองศาที่ต้องการหมุนรูปพื้นหลัง */
+}
+
+.scene8-scroll-tablet-text {
+    position: absolute;
+    top: -7%;
+    left: 115%;
+    width: 70%;
+    transform: translate(-50%, -50%) rotate(354deg);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #6b4a1e;
+    text-align: center;
+}
+
+.scene8-scroll-bronze {
+    position: absolute;
+    top: 50%;
+    right: 2%;
+    width: 20vw;
+    transform: rotate(8deg);
+    z-index: 6;
+}
+
+.scene8-scroll-bronze-bg {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: auto;
+    top: -9vw;
+    left: -13vw;
+    transform: scale(1.5) rotate(0deg);
+    /* แก้ 0deg เป็นองศาที่ต้องการหมุนรูปพื้นหลัง */
+}
+
+.scene8-scroll-bronze-text {
+    position: absolute;
+    top: -29%;
+    left: -16%;
+    width: 70%;
+    transform: translate(-50%, -50%) rotate(350deg);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #6b4a1e;
+    text-align: center;
+}
+
+/* =========================================
+   SCENE 9
+   ========================================= */
+
+.scene-9 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene9-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+.scene9-content {
+    position: absolute;
+    z-index: 2;
+    top: 6%;
+    left: 8vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.scene9-title {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #8b5a2b;
+    margin-top: 3vh;
+    margin-bottom: 5vh;
+}
+
+.scene9-text {
+    font-family: var(--font-body);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: #333;
+    text-align: left;
+    margin-top: -3vh;
+}
+
+.scene9-gallery {
+    position: absolute;
+    bottom: 20vh;
+    left: 0;
+    width: 100vw;
+    height: 70vh;
+    z-index: 2;
+}
+
+.scene9-frame {
+    position: absolute;
+    height: auto;
+    filter: drop-shadow(4px 8px 15px rgba(0, 0, 0, 0.5));
+}
+
+/* กรอบที่ 1 (ซ้ายสุด) - แนวนอน เอียงซ้าย */
+.scene9-frame.frame-1 {
+    width: 42vw;
+    bottom: -8vh;
+    left: 6vw;
+    transform: rotate(-10deg);
+    z-index: 2;
+}
+
+/* กรอบที่ 2 (กลางซ้าย) - แนวตั้ง เอียงขวา อยู่หน้าสุด */
+.scene9-frame.frame-2 {
+    width: 48vw;
+    bottom: -14vh;
+    left: 15vw;
+    transform: rotate(5deg);
+    z-index: 5;
+}
+
+/* กรอบที่ 3 (กลางขวา) - แนวตั้ง เอียงซ้ายนิดๆ อยู่หลังสุด */
+.scene9-frame.frame-3 {
+    width: 48vw;
+    bottom: -8vh;
+    left: 28.5vw;
+    transform: rotate(-2deg);
+    z-index: 1;
+}
+
+/* กรอบที่ 4 (ขวาสุด) - แผนที่วงกลม เอียงขวา */
+.scene9-frame.frame-4 {
+    width: 42vw;
+    bottom: -10vh;
+    left: 45vw;
+    transform: rotate(-20deg);
+    z-index: 3;
+}
+
+.scene9-scroll-wrap {
+    position: absolute;
+    bottom: 6vh;
+    left: 48vw;
+    transform: translateX(-50%);
+    width: 28vw;
+    height: 8vh;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scene9-scroll-text {
+    position: absolute;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3a2210;
+    text-align: center;
+    top: 40%;
+    transform: translateY(-50%);
+}
+
+/* =========================================
+   SCENE 10
+   ========================================= */
+
+.scene-10 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene10-title {
+    position: absolute;
+    top: 23%;
+    left: 53%;
+    width: 40vw;
+    font-family: var(--font-heading);
+    font-size: 3.4rem;
+    font-weight: 700;
+    color: #a56a26;
+    margin: 0;
+    z-index: 10;
+}
+
+.scene10-title[data-lang="en"] {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scene10-text {
+    position: absolute;
+    top: 35%;
+    left: 53%;
+    width: 40vw;
+    font-family: var(--font-body);
+    font-size: 1.35rem;
+    line-height: 1.6;
+    color: #333;
+    text-align: left;
+    margin: 0;
+    z-index: 10;
+}
+
+/* Every wrapper below is sized to the SOURCE PNG's actual alpha-channel bounding
+   box (measured directly, not eyeballed — see [[chapter2_scene10_status]]), not
+   the padded 1920x1080 canvas, so `width` here is the true visible size and
+   edge-offsets (negative % = bleeding off-screen) land where they visually look. */
+
+.scene10-scroll-wrap {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 20vw;
+    aspect-ratio: 686 / 548;
+    overflow: hidden;
+    transform: rotate(-4deg);
+    z-index: 2;
+}
+
+.scene10-scroll-wrap-2 {
+    position: absolute;
+    top: 35%;
+    left: 33%;
+    width: 16vw;
+    aspect-ratio: 686 / 548;
+    overflow: hidden;
+    transform: rotate(3deg);
+    z-index: 3;
+}
+
+.scene10-scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 279.9%;
+    height: auto;
+    transform: translate(-31.77%, -24.63%);
+}
+
+.scene10-stack-closeup-wrap {
+    position: absolute;
+    top: 26%;
+    left: -5%;
+    width: 20vw;
+    aspect-ratio: 527 / 623;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.scene10-stack-closeup {
+    position: absolute;
+    top: 0;
+    left: 65px;
+    width: 210.3%;
+    height: auto;
+    transform: translate(-36.25%, -21.11%);
+}
+
+.scene10-stack-profile-wrap {
+    position: absolute;
+    bottom: -9%;
+    right: -5%;
+    width: 18vw;
+    aspect-ratio: 511 / 674;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.scene10-stack-profile {
+    position: absolute;
+    top: 2px;
+    left: 27px;
+    width: 239.7%;
+    height: auto;
+    transform: translate(-36.67%, -18.70%);
+}
+
+.scene10-disc-wrap {
+    position: absolute;
+    width: 8vw;
+    aspect-ratio: 578 / 577;
+    overflow: hidden;
+    z-index: 11; /* frontmost in the scene — above the title/text (z-index: 10) */
+    opacity: 0; /* default hidden — JS drives the real value every tick in applyScene9Exit */
+    /* animation lives on each .scene10-disc-wrap.disc-N below instead — own amplitude/period per disc */
+}
+
+.scene10-disc-1 {
+    position: absolute;
+    top: 0;
+    left: 0%;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-4 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-5 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-6 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-7 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 332.2%;
+    height: auto;
+    transform: translate(-34.95%, -23.24%);
+}
+
+.scene10-disc-wrap.disc-1 { top: -2%; left: 10%; animation: scene10-disc-bob-1 3.2s ease-in-out infinite 0s; }
+.scene10-disc-wrap.disc-2 { top: -1%; left: 59%; animation: scene10-disc-bob-2 2.6s ease-in-out infinite 0.4s; }
+.scene10-disc-wrap.disc-3 { top: 55%; right: 20%; animation: scene10-disc-bob-3 3.8s ease-in-out infinite 0.9s; }
+.scene10-disc-wrap.disc-4 { top: 30%; right: -1%; animation: scene10-disc-bob-4 2.4s ease-in-out infinite 1.3s; }
+.scene10-disc-wrap.disc-5 { bottom: -2%; left: 44%; animation: scene10-disc-bob-5 3.4s ease-in-out infinite 0.2s; }
+.scene10-disc-wrap.disc-6 { bottom: -3%; left: -1%; animation: scene10-disc-bob-6 3s ease-in-out infinite 1.7s; }
+.scene10-disc-wrap.disc-7 { top: 30%; left: 24%; animation: scene10-disc-bob-7 2.8s ease-in-out infinite 0.6s; }
+
+@keyframes scene10-disc-bob-1 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-18px); }
+}
+
+@keyframes scene10-disc-bob-2 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-32px); }
+}
+
+@keyframes scene10-disc-bob-3 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-22px); }
+}
+
+@keyframes scene10-disc-bob-4 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-36px); }
+}
+
+@keyframes scene10-disc-bob-5 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+}
+
+@keyframes scene10-disc-bob-6 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-28px); }
+}
+
+@keyframes scene10-disc-bob-7 {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-24px); }
+}
+
+.scene-11 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.scene11-text {
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    font-family: var(--font-body);
+    font-size: 1.8rem;
+    line-height: 1.8;
+    text-align: center;
+    color: #222;
+    margin: 0;
+    z-index: 2;
+    opacity: 0;
+}
+
+.scene11-text.is-entering {
+    animation: scene11-text-fade-in 1200ms ease-out forwards;
+}
+
+@keyframes scene11-text-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

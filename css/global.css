@@ -61,7 +61,7 @@ body {
 
 /* Global Thai Typography override to be thin */
 :lang(th) {
-    font-weight: 300;
+    font-weight: bold;
 }
 
 /* Minimal Navbar */

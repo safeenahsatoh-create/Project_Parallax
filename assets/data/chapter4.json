@@ -1,0 +1,81 @@
+{
+    "chapter_id": 4,
+    "scenes": [
+        {
+            "scene_id": "4.1",
+            "main_text": {
+                "th": "โลกไม่ได้หมุนด้วยความเร็วเท่าเดิมอีกต่อไป... ในอังกฤษช่วงปี 1760 ถึง 1850 ท้องฟ้าสีครามเริ่มถูกแทนที่ด้วยกลุ่มควันสีเทา",
+                "en": "The world no longer spun at the same speed... In England between 1760 and 1850, the blue sky began to be replaced by grey smoke clouds."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ฝูงชนอพยพ",
+                    "type": "popup",
+                    "text": {
+                        "th": "ผู้คนนับแสนตัดสินใจทิ้งเคียว ทิ้งทุ่งนาที่บรรพบุรุษทำมานับร้อยปี พวกเขาหอบหิ้วครอบครัวมุ่งหน้าสู่เมืองใหญ่ เพื่อเปลี่ยนตัวเองเป็นฟันเฟืองที่มีชีวิต... ในฐานะแรงงานโรงงาน",
+                        "en": "Hundreds of thousands decided to drop their sickles and leave the fields their ancestors had worked for centuries. They carried their families toward the big cities to become living cogs... as factory laborers."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "4.2",
+            "main_text": {
+                "th": "ทุกอย่างเริ่มต้นจากสิ่งเล็กๆ อย่างเส้นด้าย จนกระทั่ง \"เจมส์ ฮาร์กรีฟส์\" ประดิษฐ์เครื่องปั่นด้ายที่มีชื่อว่า \"สปินนิง เจนนี\" (Spinning Jenny) แค่คนงานหมุนกงล้อเพียงครั้งเดียว มันก็ดึงเส้นด้ายได้พร้อมกันหลายสิบเส้น",
+                "en": "Everything started with something as small as a thread, until \"James Hargreaves\" invented the spinning frame named the \"Spinning Jenny\". With just one spin of the wheel by a worker, it could pull dozens of threads simultaneously."
+            },
+            "additional_info": [
+                {
+                    "trigger": "เครื่องปั่นด้าย",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "ในอดีต ชาวบ้านต้องนั่งปั่นด้ายทีละเส้นด้วยมือ ซึ่งเชื่องช้าและได้ผลผลิตน้อย เสื้อผ้ากลายเป็นของที่ผลิตได้เร็วและราคาถูก... นี่คือจุดสตาร์ทที่ทำให้โรงงานผุดขึ้นเป็นดอกเห็ด",
+                        "en": "In the past, villagers had to sit and spin thread one by one by hand, which was slow and yielded little. Clothes became items that could be produced quickly and cheaply... This was the starting point that caused factories to spring up like mushrooms."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "4.3",
+            "main_text": {
+                "th": "แต่เครื่องจักรในโรงงานยุคแรกยังต้องตั้งอยู่ริมแม่น้ำเพื่อพึ่งพาแรงดันน้ำ... ซึ่งมีขีดจำกัด จนกระทั่ง \"เจมส์ วัตต์\" เข้ามาปลดล็อกขุมพลังที่หลับใหล เขาพัฒนา \"เครื่องจักรไอน้ำ\" ที่ทรงพลัง โดยใช้ความร้อนจากถ่านหินมาต้มน้ำให้กลายเป็นไอ",
+                "en": "But early factory machines still had to be located by rivers to rely on water pressure... which had limits. Until \"James Watt\" unlocked a dormant power. He developed a powerful \"steam engine\", using heat from coal to boil water into steam."
+            },
+            "additional_info": [
+                {
+                    "trigger": "เครื่องจักรไอน้ำ",
+                    "type": "popup",
+                    "text": {
+                        "th": "แรงดันมหาศาลนั้นผลักกระบอกสูบให้ขยับทำงานแทนกล้ามเนื้อของมนุษย์โดยไม่มีวันเหน็ดเหนื่อย จากนี้ไป โรงงานจะไปตั้งที่ไหนก็ได้... เครื่องจักรไอน้ำกลายเป็นหัวใจเหล็กกล้าที่สูบฉีดเลือดให้ยุคอุตสาหกรรม",
+                        "en": "That immense pressure pushed pistons to work instead of human muscles, without ever getting tired. From then on, factories could be located anywhere... The steam engine became the steel heart pumping blood into the industrial age."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "4.4",
+            "main_text": {
+                "th": "เมื่อโรงงานผลิตสินค้าได้มหาศาล คำถามคือ... เราจะขนส่งมันอย่างไรให้ทันใจ? \"จอร์จ สตีเฟนสัน\" จึงเอาเครื่องจักรไอน้ำมาวางลงบนล้อ เกิดเป็น \"รถไฟไอน้ำ\" ขบวนแรกๆ ของโลก",
+                "en": "When factories produced massive amounts of goods, the question was... how do we transport them in time? \"George Stephenson\" placed the steam engine on wheels, giving birth to some of the world's first \"steam trains\"."
+            },
+            "additional_info": [
+                {
+                    "trigger": "ขบวนรถไฟ",
+                    "type": "hotspot",
+                    "text": {
+                        "th": "สัตว์ประหลาดเหล็กที่พ่นควันและวิ่งฉิวบนรางด้วยความเร็วที่มนุษย์ยุคนั้นไม่เคยสัมผัส มันเชื่อมเมืองที่ห่างไกลเข้าด้วยกัน ขนส่งถ่านหิน สินค้า และผู้คนจำนวนมหาศาล รถไฟไอน้ำได้ย่อโลกใบนี้ให้เล็กลงกว่าที่เคยเป็นมา",
+                        "en": "Iron monsters puffing smoke and speeding on tracks at a pace humans of that era had never experienced. It connected distant cities, transporting massive amounts of coal, goods, and people. The steam train shrank the world smaller than ever before."
+                    }
+                }
+            ]
+        },
+        {
+            "scene_id": "4.5",
+            "main_text": {
+                "th": "แต่เครื่องจักรยักษ์ใหญ่เหล่านี้ยังคงเทอะทะ สกปรก โลกกำลังรอคอยเวทมนตร์สายพันธุ์ใหม่ ที่จะวิ่งผ่านเส้นลวด และส่องสว่างได้ในยามวิกาล",
+                "en": "But these giant machines were still bulky and dirty. The world was waiting for a new kind of magic, one that could run through wires and shine brightly in the night."
+            },
+            "additional_info": []
+        }
+    ]
+}
