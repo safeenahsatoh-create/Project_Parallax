@@ -179,15 +179,14 @@ BEHAVIOUR NOTES
   visitor. Use a fresh incognito window to see what they get.
 - A bed that fades to 0 keeps playing silently instead of pausing, so going back to the
   other view resumes it mid-loop rather than restarting the track.
-- The mute button sits in the navbar left of the language toggle, with a master volume
-  slider beside it. Neither is built here: both live in js/audio-settings.js and are
-  shared with Chapter 1 and Chapter 2, so muting this page now DOES mute the chapters.
-  State is one key each -- 'audioMuted' and 'audioVolume'. The old per-page keys
-  ('indexMuted', 'chapter1Muted', 'chapter2Muted') are read once as a fallback so an
+- The mute button sits in the navbar left of the language toggle. It is not built here:
+  it lives in js/audio-settings.js and is shared with Chapter 1 and Chapter 2, so muting
+  this page now DOES mute the chapters. State is one key, 'audioMuted'. The old per-page
+  keys ('indexMuted', 'chapter1Muted', 'chapter2Muted') are read once as a fallback so an
   existing visitor's choice is not reset, and are never written to again.
-- The slider is a master multiplier applied where each level is written to its audio
-  element, so both volumes in this file are what plays at full slider. It scales the
-  whole mix together and does not change the balance between slots -- that is still set
-  by the numbers here.
+- There is no in-page volume control: mute is the only audio setting, so both volumes in
+  this file are exactly what plays. Anyone who wants it louder or quieter uses their own
+  device, which scales the whole mix without touching the balance between slots -- that
+  is still set by the numbers here.
 - Every .play() is followed by .catch(() => {}), so a missing file leaves a console
   error but never breaks the page.

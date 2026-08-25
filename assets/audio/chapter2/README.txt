@@ -339,10 +339,9 @@ files counted:
     Scene 7      -8.0      Scene 11     -6.1
 
 That is not a quiet beat, it is a dropout, and it is worse than the number looks
-for two reasons the table does not show. Scene 10 is a REST scene, so the reader
+for a reason the table does not show. Scene 10 is a REST scene, so the reader
 sits in it for as long as they want to read -- unlike a drag, it does not pass.
-And every level here is scaled by the shared master slider, so anyone not at full
-volume loses it completely. It was reported as "a stretch where I hear nothing".
+It was reported as "a stretch where I hear nothing".
 
 FIX: mLaw's fade-out start moved 8.40 -> 8.80, so it settles at 0.28 rather than
 0.19 when Scene 10 lands. Scene 10 is now -11.1 dB: still the quietest scene in
@@ -611,15 +610,14 @@ NOTES
   first wheel, tap or click.
 - Muting is instant, and mute is now SHARED across the whole site rather than
   per-page. The dedicated pass this note used to ask for has happened: the mute
-  button, its icons and a new master volume slider all live in
-  js/audio-settings.js, used by the index page and both chapters, under one key
-  each -- 'audioMuted' and 'audioVolume'. The old per-page keys ('chapter2Muted',
-  'chapter1Muted', 'indexMuted') are read once as a fallback so an existing
-  visitor's choice is not reset, and are not written to any more.
-- The volume slider is a master multiplier applied where each level is written to
-  its audio element, so every number in this file is what plays at full slider.
-  It does NOT change the mix: the balance between slots is still set here, and the
-  slider scales all of them together.
+  button and its icons live in js/audio-settings.js, used by the index page and
+  both chapters, under one key -- 'audioMuted'. The old per-page keys
+  ('chapter2Muted', 'chapter1Muted', 'indexMuted') are read once as a fallback so
+  an existing visitor's choice is not reset, and are not written to any more.
+- Mute is the ONLY audio setting: there is no in-page volume control, so every
+  number in this file is exactly what plays. Anyone wanting it louder or quieter
+  uses their own device, which leaves the mix alone -- the balance between slots
+  is set here and nothing else scales it.
 - While muted nothing downloads, so unmuting part-way through the chapter may be
   briefly silent while the current bed loads. Chapter 1 behaves the same way.
 - Filenames deliberately keep their original author handles -- see below.

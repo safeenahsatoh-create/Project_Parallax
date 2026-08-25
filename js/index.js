@@ -110,7 +110,7 @@
         audioSfx[key] = el;
     });
 
-    // Mute and master volume live in js/audio-settings.js, shared with both chapters,
+    // Mute lives in js/audio-settings.js, shared with both chapters,
     // so muting here carries into a chapter instead of stopping at the page boundary.
     const isMuted = () => AudioSettings.muted;
     let audioUnlocked = false; // true once a real user gesture has let audio start playing
@@ -439,7 +439,7 @@
 
     // Ramps one bed toward `target` over `ms`. `target` is an ELEMENT volume, already
     // through AudioSettings.gain() — the ramp reads `from` off el.volume, so both ends
-    // have to be on the same scale or a master-volume change would bend the fade.
+    // are on the same scale.
     // A bed that reaches 0 keeps playing silently
     // instead of pausing, so sliding back to the other view resumes mid-loop rather than
     // restarting the track. The timer lives on the element so a new fade cancels the old
@@ -482,7 +482,7 @@
         if (!cfg || !audioEl || isMuted()) return;
 
         // Resolved once so the start level and the tail fade below agree even if the
-        // master volume moves while the clip is still playing.
+        // visitor mutes while the clip is still playing.
         const volume = AudioSettings.gain(cfg.volume);
 
         clearInterval(audioEl.indexFadeTimer);
@@ -517,19 +517,18 @@
         }, Math.max(0, cfg.maxDuration * 1000 - fadeMs));
     }
 
-    // The mute button, the speaker icons and the volume slider all live in
-    // js/audio-settings.js now — the same three controls were duplicated verbatim in
-    // all three page scripts. This just mounts them and wires the two things the
-    // shared module cannot know: that an unmute click is itself this page's unlocking
-    // gesture, and which mixer to re-run when either control changes.
+    // The mute button and its speaker icons live in js/audio-settings.js now — the
+    // same control was duplicated verbatim in all three page scripts. This just mounts
+    // it and wires the two things the shared module cannot know: that an unmute click
+    // is itself this page's unlocking gesture, and which mixer to re-run on a change.
     function createAudioControls() {
         AudioSettings.mountControls(langToggleBtn, () => {
             audioUnlocked = true; // this click itself counts as the unlocking gesture
             playSfx('uiClick');
         });
 
-        // Fires on mute, unmute and every step of the volume slider, so the beds
-        // follow the slider while it is being dragged rather than at the next view flip.
+        // Fires on mute and unmute, so the beds follow the click rather than waiting
+        // for the next view flip.
         AudioSettings.onChange(() => {
             crossfadeBedsTo(currentView, 400);
         });
@@ -540,7 +539,7 @@
         // Initialize Lang
         applyLang(currentLang);
 
-        // Audio mute toggle + volume slider
+        // Audio mute toggle
         createAudioControls();
 
         // Fallback unlock: covers anyone who clicks a nav control before ever scrolling.

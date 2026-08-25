@@ -263,11 +263,10 @@ for another frame whenever any bed has not landed yet (scheduleAudioSettle).
 
 NOTES
 -----
-- Mute and the master volume slider are NOT in this chapter's code. They live in
-  js/audio-settings.js and are shared with the index page and Chapter 2, under one
-  localStorage key each ('audioMuted' / 'audioVolume'), so muting anywhere carries
-  everywhere. Every level in this file is scaled by that slider at the point it is
-  written to the element; the numbers here are what plays at full slider.
+- Mute is NOT in this chapter's code. It lives in js/audio-settings.js and is shared
+  with the index page and Chapter 2, under one localStorage key ('audioMuted'), so
+  muting anywhere carries everywhere. Mute is the only audio setting there is -- no
+  in-page volume control -- so every number in this file is exactly what plays.
 - Files longer than the moment needs are trimmed in code (a short volume ramp,
   then pause), so nothing here needs editing in an audio editor.
 - Everything except the two opening beds and the four click sounds uses

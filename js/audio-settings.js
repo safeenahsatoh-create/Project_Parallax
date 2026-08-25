@@ -6,24 +6,22 @@
    they are driven by genuinely different things (a view flip, a scroll position,
    and a scene position plus motion energy). What they had no business keeping
    separate was the *settings* — mute lived under three localStorage keys, so
-   muting the index and then opening a chapter played it at full level, and there
-   was no volume control anywhere.
+   muting the index and then opening a chapter played it at full level.
 
    What lives here:
      - mute state, under ONE key shared by every page (like 'lang' already is)
-     - a master volume multiplier, 0..1
-     - the navbar controls for both
+     - the navbar mute button
      - gain(), which every engine runs its levels through
 
-   What does NOT live here: the levels themselves. Those stay in each page's own
-   AUDIO_CONFIG, which is still where the mix is balanced. This only scales them.
+   There is deliberately no in-page volume control: the levels in each page's
+   AUDIO_CONFIG are exactly what plays, and anyone who wants it louder or quieter
+   uses their own device. gain() therefore only ever answers the mute question.
    Each folder under assets/audio/ has a README.txt with the per-slot rationale.
    ========================================================================= */
 (function () {
     'use strict';
 
     const MUTE_KEY = 'audioMuted';
-    const VOLUME_KEY = 'audioVolume';
 
     // Read once, at load, before any page script builds its elements. Pages that
     // predate this module wrote their own key; carry that over so an existing
@@ -37,16 +35,7 @@
         return LEGACY_MUTE_KEYS.some(key => localStorage.getItem(key) === 'true');
     }
 
-    function readMaster() {
-        const stored = parseFloat(localStorage.getItem(VOLUME_KEY));
-        // Default 1, so adding the slider changes nothing for anyone who never
-        // touches it — every level stays exactly what its AUDIO_CONFIG says.
-        if (!isFinite(stored)) return 1;
-        return Math.max(0, Math.min(1, stored));
-    }
-
     let muted = readMuted();
-    let master = readMaster();
     const listeners = [];
 
     // Split out from setMuted so the button below can change the state, let the page
@@ -75,18 +64,18 @@
 
     const AudioSettings = {
         get muted() { return muted; },
-        get master() { return master; },
 
-        // Every engine's `el.volume = ...` goes through this. Muting is instant and
+        // Every engine's `el.volume = ...` goes through this. It is a pure mute gate:
+        // the number a page asks for is the number it gets. Muting is instant and
         // absolute rather than a ramp to zero, which is what the chapter mixers
         // already assumed when they short-circuited on isMuted.
         gain(volume) {
             if (muted) return 0;
-            return Math.max(0, Math.min(1, volume * master));
+            return Math.max(0, Math.min(1, volume));
         },
 
-        // Called whenever mute or master changes, so the page can re-run its mixer
-        // and have the slider take effect mid-drag instead of at the next scroll.
+        // Called whenever mute changes, so the page can re-run its mixer on the
+        // click instead of waiting for the next scroll.
         onChange(fn) {
             if (typeof fn === 'function') listeners.push(fn);
         },
@@ -96,17 +85,11 @@
             notify();
         },
 
-        setMaster(value) {
-            master = Math.max(0, Math.min(1, value));
-            localStorage.setItem(VOLUME_KEY, String(master));
-            notify();
-        },
-
-        /* Builds the mute button and volume slider into .nav-right, just left of the
-           language toggle, so the navbar's own flex layout positions them — no fixed
-           offsets to break at other widths. index.html has its navbar as static
-           markup; the chapters build theirs in js/navbar.js. Either way it is in the
-           DOM by the time a page script runs.
+        /* Builds the mute button into .nav-right, just left of the language toggle,
+           so the navbar's own flex layout positions it — no fixed offsets to break
+           at other widths. index.html has its navbar as static markup; the chapters
+           build theirs in js/navbar.js. Either way it is in the DOM by the time a
+           page script runs.
 
            `onUnmute` is the page's hook for the one thing that cannot live here: an
            unmute click is itself a user gesture, so it is the page's chance to mark
@@ -116,37 +99,20 @@
             btn.id = 'audio-toggle';
             btn.className = 'control-btn audio-toggle';
 
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = 'audio-volume';
-            slider.className = 'audio-volume';
-            slider.min = '0';
-            slider.max = '100';
-            slider.step = '1';
-            slider.value = String(Math.round(master * 100));
-            slider.setAttribute('aria-label', 'Volume');
-
             function paint() {
                 btn.innerHTML = muted ? ICON_SOUND_OFF : ICON_SOUND_ON;
                 btn.setAttribute('aria-label', muted ? 'Unmute sound' : 'Mute sound');
                 btn.setAttribute('aria-pressed', String(muted));
-                // The slider is meaningless while muted, and saying so out loud beats
-                // leaving a live-looking control that does nothing audible.
-                slider.disabled = muted;
-                slider.setAttribute('aria-valuetext', Math.round(master * 100) + '%');
             }
             paint();
 
             const navRight = document.querySelector('.nav-right');
             if (navRight && langToggleBtn) {
                 navRight.insertBefore(btn, langToggleBtn);
-                navRight.insertBefore(slider, langToggleBtn);
             } else {
-                // Navbar missing — fall back to the corner so the controls never vanish.
+                // Navbar missing — fall back to the corner so the button never vanishes.
                 document.body.appendChild(btn);
-                document.body.appendChild(slider);
                 btn.classList.add('audio-toggle-floating');
-                slider.classList.add('audio-volume-floating');
             }
 
             btn.addEventListener('click', () => {
@@ -158,11 +124,6 @@
                 // sound when muting is contradictory, and the hook plays one.
                 if (wasMuted && typeof onUnmute === 'function') onUnmute();
                 notify();
-            });
-
-            slider.addEventListener('input', () => {
-                AudioSettings.setMaster(parseInt(slider.value, 10) / 100);
-                slider.setAttribute('aria-valuetext', Math.round(master * 100) + '%');
             });
 
             return btn;
