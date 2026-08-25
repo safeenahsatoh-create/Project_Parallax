@@ -749,3 +749,28 @@ Responsive Design (iPad & Tablets)
         transform: scale(1.1) translateY(10%);
     }
 }
+
+/* =========================================
+Audio Toggle (Chapter 1 only)
+========================================= */
+
+/* Lives inside .nav-right, so the navbar's flex layout places it — this only needs to
+   match #lang-toggle's footprint so the two controls read as a pair. Icon sizing comes
+   from global.css (.control-btn svg). The negative margin pulls the pair closer than
+   .nav-right's 3rem link spacing, so they group as one cluster. */
+.audio-toggle {
+    min-width: 50px;
+    margin-right: -1.5rem;
+}
+
+/* Fallback only: used if the navbar isn't present, so the button never disappears.
+   Bottom-LEFT because #hitbox-fire occupies the bottom-right of the cave scene. */
+.audio-toggle-floating {
+    position: fixed;
+    left: 5%;
+    bottom: 4%;
+    z-index: 300;
+    margin-right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}

@@ -243,6 +243,756 @@ document.addEventListener('DOMContentLoaded', async () => {
     render(localStorage.getItem('lang') || 'th');
     window.addEventListener('langchange', (e) => render(e.detail.lang));
 
+    // ===== CHAPTER 2 AUDIO -- START (marker used by the Node test harness) =====
+
+    // Drop each file into assets/audio/chapter2/ and paste its name here. Keep the
+    // original download name: the author handle baked into it is what the credits list
+    // in that folder's README.txt is built from. An empty string means "not supplied
+    // yet" -- the entry is skipped entirely, so no element is built and no 404 is
+    // requested, which keeps the chapter fully playable while the library is still
+    // being assembled.
+    const AUDIO_DIR = 'assets/audio/chapter2/';
+    const AUDIO_FILES = {
+        // Music beds
+        mWonder: 'freesound_community-mystical-music-54294.mp3',            // Scenes 1-3
+        mEgypt: 'universfield-dramatic-flute-for-documentaries-165986.mp3', // Scenes 4-6
+        mChaos: 'starostin-documentary-sad-sorrowful-music-479773.mp3',     // Scene 7
+        // ---- TEMPORARY STAND-INS -- replace with real files, do not ship as-is ----
+        // Scene 10 had no bed at all, which read as "Scene 10 is too loud": its cue was
+        // playing with nothing under it. Pointing the empty slot at a file already here
+        // fills the gap without touching a single range, so the designed crossovers stay
+        // exactly as planned and swapping in the real file later is a one-line change.
+        // Stretching the neighbouring beds' ranges instead would have overlapped the slots
+        // these belong to, putting two ambience beds on a rest scene the moment the real
+        // files arrived.
+        mLaw: 'freesound_community-mystical-music-54294.mp3', // STAND-IN (mWonder's file)
+        mCollapse: 'maciejm1992-your-adventure-has-come-to-an-end-477982.mp3', // Scene 11
+        // Ambience beds
+        aDesert: '',      // open desert wind -- Scenes 2-6
+        // Was a stand-in on aHall's file, and has been emptied for exactly the reason
+        // aPaper below was never filled with it. Pointing both slots at the same pad
+        // meant one unbroken drone from Scene 6 through Scene 10, and worse, the
+        // 6.50-6.90 handover crossfaded the pad with ITSELF -- two elements, one file,
+        // at different playback positions -- which is not a scene change, it is the same
+        // sound not stopping. Leaving it empty lets the pad belong to Scenes 8-9, and
+        // drops Scene 7 to the level the rest of the chapter rests at. Fill this in when
+        // a real crowd ambience is sourced; no range needs to move when it lands.
+        aCrowd: '',       // market / crowd ambience -- Scenes 6-7
+        aHall: 'idoberg-ambient-pads-loop-296968.mp3',                      // Scenes 8-9
+        // ---- end temporary stand-ins ----
+        // Deliberately left empty even though a stand-in was available. That file is a
+        // dense pad -- median level -3dB, essentially no dynamics -- so it carries far more
+        // energy than the sparse parchment texture this slot is for, and reads as loud at
+        // any volume that is still audible. Borrowing it here also meant the same pad ran
+        // unbroken from Scene 7 through Scene 10. Leaving it silent makes Scene 10 the
+        // quiet beat it is meant to be, and the pad stopping is itself the sound of things
+        // settling. Fill this in when a real parchment ambience is sourced.
+        aPaper: '',       // parchment rustle -- Scene 10
+        aRuin: 'universfield-apocalypse-153277.mp3',                        // Scene 11
+        // Scene cues
+        scrollUnfurl: 'lenspulse-foley-paper-handling-amp-page-turning-sfx-584919.mp3',
+        stoneDrag: '',    // heavy stone dragged over sand -- Scene 6
+        chisel: '',       // chisel / hammer on stone -- Scene 8
+        lowGong: '',      // low ceremonial gong or horn -- Scene 9
+        // Emptied deliberately, not "not sourced yet". good_b_music-grand-final-
+        // orchestral-tutti was here and has been rejected by ear: the slot always wanted
+        // a deep collapse rumble (see README's SOURCING GUIDE) and an orchestral tutti is
+        // a different thing -- a triumphant finale on the scene where the empires fall.
+        // README had it flagged as a known compromise from the day it landed. The file
+        // (good_b_music-grand-final-orchestral-tutti-9927.mp3) was parked in candidates/
+        // for a while and has since been deleted. assets/audio/ is not tracked by git,
+        // so that filename is the only surviving record of which file this was.
+        collapse: '',     // building-collapse rumble / deep boom -- Scene 11
+        // Click sounds
+        sledgeClick: 'dragon-studio-button-press-382713.mp3',
+        slideChange: 'dragon-studio-simple-whoosh-382724.mp3',
+        // Motion sounds. Short seamless loops (3-15s is plenty -- they only ever play in
+        // 1-3 second bursts, so loop repetition is never heard). These four files cover
+        // eight set-pieces between them; see AUDIO_CONFIG.motion below for the sharing.
+        coinSpin: 'universfield-spinning-coin-on-table-352448.mp3',
+        glyphRoll: '',    // stone discs rolling -- Scene 2's glyph drag, Scene 10's discs
+        sphinxGrind: '',  // heavy stone sliding -- the sphinx and pharaoh figures
+        featherWrite: '', // quill on parchment -- Scene 4's trace, Scene 7's text reveal
+    };
+
+    // The mute button's own click sound deliberately points at Chapter 1's copy rather
+    // than duplicating a 33 KB file and a second licensing entry for the same sound.
+    const UI_CLICK_SRC = 'assets/audio/chapter1/universfield-mouse-click-351398.mp3';
+
+    function audioSrc(key) {
+        return AUDIO_FILES[key] ? AUDIO_DIR + AUDIO_FILES[key] : '';
+    }
+
+    // Positions below are on a *scene* scale, not Chapter 1's scroll scale: 0 is Scene 1
+    // at rest, 10 is Scene 11 at rest, and fractional values are the continuous
+    // wheel-driven drags in between (see readScenePos). Crossovers sit mid-drag rather
+    // than on a rest point, so the sound changes together with the picture.
+    // See assets/audio/chapter2/README.txt for the full mapping and attribution notes.
+    const AUDIO_CONFIG = {
+        // Looping beds. `in` omitted = already at full volume at position 0. `out`
+        // omitted = never fades out. A bed's volume is the max across its ranges.
+        layers: [
+            {
+                // Measured lead-in 745ms. 71.4s long.
+                id: 'mWonder',
+                src: audioSrc('mWonder'),
+                volume: 0.40,
+                startAt: 0.72,
+                ranges: [{ out: [2.40, 2.95] }]
+            },
+            {
+                // Measured lead-in 2694ms -- the worst of the set. Untrimmed this bed would
+                // go silent for 2.7s every 65s, right through the Imhotep scenes. Its last
+                // 1.7s is a fade-out, cut too so the cycle joins at a matched level.
+                id: 'mEgypt',
+                src: audioSrc('mEgypt'),
+                volume: 0.38,
+                startAt: 2.66,
+                loopEnd: 63.65,
+                ranges: [{ in: [2.40, 2.95], out: [5.40, 5.90] }]
+            },
+            {
+                // Measured lead-in 26ms, so no startAt: the track opens on its first frame.
+                // It runs at a flat level to 36.5s, then fades for its last 4s into 3s of
+                // silence, so loopEnd cuts the cycle before the fade starts. 36.50 was
+                // picked over the later candidates by matching levels across the loop
+                // point: the seam there is +1.5dB, where 41.10 (the last frame still within
+                // 6dB of the body's typical level, which is how the audit script suggests a
+                // loopEnd) reads -12.0dB and dips audibly every cycle.
+                //
+                // NOTE: audio-audit.js reports this file as "45086ms of silence at the
+                // head" and suggests startAt 45.06. That is an artefact, not a property of
+                // the file -- its last 27 frames all carry an identical global_gain of 210,
+                // which is the parser reading past the audio data. The script only drops 3
+                // trailing frames, so that value becomes the file's apparent peak and every
+                // real frame then sits more than 12dB under it. Real peak is 170.
+                id: 'mChaos',
+                src: audioSrc('mChaos'),
+                volume: 0.40,
+                loopEnd: 36.50,
+                ranges: [{ in: [5.40, 5.90], out: [6.40, 6.90] }]
+            },
+            {
+                // TEMPORARY trim: inherited from mWonder, whose file this currently borrows
+                // (lead-in 745ms). Drop it when a real mLaw arrives.
+                //
+                // The fade-out starts before Scene 10, so the music is already coming down
+                // by the time that scene lands. It used to be [9.05, 9.60], which sits
+                // entirely inside the one boundary the position JUMPS across -- so it
+                // never actually faded at all and Scene 10 inherited the full 0.36 of the
+                // law scenes. That made the chapter's calmest scene louder than Scenes
+                // 1-6, the opposite of the intent, and is what read as the background
+                // being too loud on the way in.
+                //
+                // The start then moved 8.40 -> 8.80, which is a correction of that fix
+                // rather than a reversal of it. At 8.40 this bed was down to 0.19 when
+                // Scene 10 landed, and since aPaper has no file and Scene 10 has no cue
+                // and no motion sound, 0.19 of a tapering stand-in was the ENTIRE scene:
+                // -14.3 dB, 7 dB under every other rest point, on a scene the reader can
+                // sit on indefinitely. It was not quiet, it was inaudible. At 8.80 the bed
+                // settles to 0.28 instead, which still puts Scene 10 nearly 4 dB below
+                // Scenes 8-9 and makes it the quietest scene in the chapter -- the intent
+                // -- without it dropping out from under the reader. Raise this again if
+                // aPaper is ever filled: the two together should land near -11 dB.
+                id: 'mLaw',
+                src: audioSrc('mLaw'),
+                volume: 0.36,
+                startAt: 0.72,
+                ranges: [{ in: [6.40, 6.90], out: [8.80, 9.70] }]
+            },
+            {
+                // Scenes 10 and 11 are the one boundary that really is a jump, so this
+                // pair of ranges spans positions the track never occupies continuously.
+                // Both targets flip at once and the rate limiter in updateAudio renders
+                // the crossfade -- see AUDIO_FADE_MS.
+                id: 'mCollapse',
+                src: audioSrc('mCollapse'),
+                volume: 0.42,
+                ranges: [{ in: [9.05, 9.60] }]
+            },
+            {
+                id: 'aDesert',
+                src: audioSrc('aDesert'),
+                volume: 0.26,
+                ranges: [{ in: [0.50, 1.20], out: [5.50, 6.00] }]
+            },
+            {
+                id: 'aCrowd',
+                src: audioSrc('aCrowd'),
+                volume: 0.28,
+                ranges: [{ in: [5.50, 6.00], out: [6.50, 6.90] }]
+            },
+            {
+                // Fades out over exactly aPaper's fade-in window below, so the handover
+                // completes during the Scene 9 -> 10 drag. Running it to 9.05 (to line up
+                // with the music crossover) instead left both ambience beds audible while
+                // resting on Scene 10.
+                // The window ends AT the arrival rather than 0.1 before it, so the ambience
+                // is still moving as Scene 10 lands. Finishing early left the last stretch
+                // of the drag completely flat, which is part of why the cue then felt like
+                // it came out of nowhere.
+                id: 'aHall',
+                src: audioSrc('aHall'),
+                volume: 0.24,
+                ranges: [{ in: [6.50, 6.90], out: [8.50, 9.00] }]
+            },
+            {
+                // Mirrors aHall's fade-out exactly, so the two cross cleanly and the pair
+                // is still rising right up to the moment Scene 10 arrives. 0.14 keeps it
+                // clearly under the tapering mLaw above rather than level with it -- this
+                // is texture under the papyrus, not the voice of the scene.
+                id: 'aPaper',
+                src: audioSrc('aPaper'),
+                volume: 0.14,
+                ranges: [{ in: [8.50, 9.00], out: [9.05, 9.50] }]
+            },
+            {
+                // Measured lead-in 1337ms, and a 1.8s fade-out at the tail.
+                id: 'aRuin',
+                src: audioSrc('aRuin'),
+                volume: 0.26,
+                startAt: 1.30,
+                loopEnd: 21.67,
+                ranges: [{ in: [9.05, 9.60] }]
+            }
+        ],
+        // One-shots fired once when moving forward past `at`, re-armed on going back.
+        // maxDuration (seconds) trims files that are longer than the moment needs.
+        cues: [
+            // The paper file is a foley PACK, not one sound: three separate takes at
+            // 0.00-0.46s, 2.72-3.50s and 5.00-5.95s, with the noise floor between them.
+            // An earlier window of 0.22s + 4s straddled takes 1 and 2, so Scene 4 played
+            // two paper sounds back to back. The window now sits wholly inside take 3, the
+            // loudest, since unfurling the scroll is the bigger moment. Take 2 fed Scene
+            // 10's cue until that was removed (see below); takes 1 and 2 are now unused.
+            { id: 'scrollUnfurl', src: audioSrc('scrollUnfurl'), volume: 0.40, at: 3.00, startAt: 5.00, maxDuration: 1.0 },
+            { id: 'stoneDrag', src: audioSrc('stoneDrag'), volume: 0.42, at: 5.00, maxDuration: 6 },
+            { id: 'chisel', src: audioSrc('chisel'), volume: 0.40, at: 7.00, maxDuration: 5 },
+            { id: 'lowGong', src: audioSrc('lowGong'), volume: 0.38, at: 8.00, maxDuration: 7 },
+            // Scene 10 has NO entry cue any more. It used to carry `paperUnroll` -- a
+            // second element on scrollUnfurl's file (take 2's tail, at 9.00) -- and it read
+            // as too loud through several rounds of tuning: retimed past the take's
+            // transient, trimmed to 0.55s, faded in, dropped to 0.36. It kept announcing
+            // itself because Scene 10 is the chapter's calmest beat and, with aPaper
+            // deliberately empty, the only thing under it is the tapering mLaw. Removed
+            // rather than lowered again: at a level quiet enough to belong there it would
+            // not have been audible anyway. Scene 10's sound is now the mLaw -> mCollapse
+            // handover alone. If a real parchment ambience is ever sourced for aPaper,
+            // reconsider a cue on top of it -- not before.
+            // No startAt: the 552ms it used to carry was measured off the rejected
+            // orchestral-tutti file and belongs to that file, not this slot -- re-measure
+            // when a real rumble lands. maxDuration is the slot's own intent (Scene 11 is
+            // the short closing scene) and stays.
+            { id: 'collapse', src: audioSrc('collapse'), volume: 0.45, at: 10.00, maxDuration: 8 }
+        ],
+        // startAt (seconds) skips lead-in silence baked into a file so a click sound
+        // lands on the same frame as the click. The two Chapter 2 sounds have no value
+        // yet because their files do not exist -- see README.txt for how to measure one.
+        sfx: {
+            // Both measured at 60ms of lead-in -- just over the ~50ms where a click starts
+            // reading as a delayed reaction, so both get the offset.
+            sledgeClick: { src: audioSrc('sledgeClick'), volume: 0.50, startAt: 0.04, maxDuration: 1.2 },
+            slideChange: { src: audioSrc('slideChange'), volume: 0.30, startAt: 0.04, maxDuration: 1.0 },
+            // Measured off this file's MP3 side-info gain envelope: silence through
+            // 24ms, low-level room tone to ~96ms, transient at 120ms. Starting at 100ms
+            // puts the click on the same frame as the press without clipping its attack.
+            uiClick: { src: UI_CLICK_SRC, volume: 0.35, startAt: 0.10 }
+        },
+        // Loops for the big scroll-driven set-pieces. These cannot be layers: during all
+        // three the track does not move at all (applyScene2GlyphTransform holds translateY
+        // at exactly -100vh for the first 70% of its drag), so readScenePos is blind to
+        // them and they need their own hooks -- see setMotion below.
+        //
+        // `span` is the gesture's own px threshold. Converting the 0..1 progress back into
+        // px means one wheel tick contributes the same energy in every gesture, so a single
+        // gain constant works for all three despite thresholds from 1000 to 4500.
+        // `warmAt` is the scene position to start downloading at, fed to the same
+        // AUDIO_PRELOAD_LEAD logic the beds use.
+        // Eight set-pieces, four files. Entries sharing a file still get their own id and
+        // their own element -- sphinxGrind serves three of them: they fire on different
+        // gestures with different spans and levels, so they cannot share playback state. Scene 10's calendar discs are literally the same Mayan stone
+        // discs as Scene 2's glyphs, and the pharaoh and sphinx figures are all heavy
+        // stone statues sliding, which is why so few files cover so much.
+        motion: {
+            coinSpin: { src: audioSrc('coinSpin'), volume: 0.28, span: 450, warmAt: 0.0 },
+            glyphRoll: { src: audioSrc('glyphRoll'), volume: 0.34, span: 4500, warmAt: 1.0 },
+            featherWrite: { src: audioSrc('featherWrite'), volume: 0.22, span: 2400, warmAt: 3.0 },
+            sphinxEnter: { src: audioSrc('sphinxGrind'), volume: 0.26, span: 900, warmAt: 3.0 },
+            pharaohEnter: { src: audioSrc('sphinxGrind'), volume: 0.24, span: 900, warmAt: 4.0 },
+            // Quietest thing in the chapter on purpose: text arriving should be felt more
+            // than heard, and it plays under mChaos at 0.40.
+            textReveal: { src: audioSrc('featherWrite'), volume: 0.14, span: 2400, warmAt: 6.0 },
+            sphinxGrind: { src: audioSrc('sphinxGrind'), volume: 0.30, span: 1000, warmAt: 7.0 },
+            // 0.24 rather than glyphRoll's 0.34: Scene 10 is the quiet papyrus scene, where
+            // even its ambience sits at 0.18.
+            discFlow: { src: audioSrc('glyphRoll'), volume: 0.24, span: 1600, warmAt: 9.0 }
+        }
+    };
+
+    const AUDIO_FADE_MS = 700;      // equals SCENE_TRANSITION_MS, so a jump-driven
+                                    // crossfade lands with the CSS track transition
+    const AUDIO_PRELOAD_LEAD = 1.5; // scenes of lead time before a bed/cue is needed
+    // How far back past `at` a cue must go before it can fire again. 0.15 was far too
+    // twitchy: every cue sits at a scene rest position reached by a 1200px drag, so 0.15
+    // scene units is about 180px -- under two wheel notches. Nudging back and scrolling
+    // forward again re-fired the cue, which read as the sound repeating itself. At 0.6 a
+    // re-arm means travelling most of the way back to the previous scene, which is what
+    // revisiting actually is; checked against every cue so a genuine return still re-arms.
+    const AUDIO_CUE_REARM = 0.6;
+    const AUDIO_IDLE_MS = 900;      // rAF keeps running this long after the last input
+
+    // Motion-sound tuning. Level follows how fast a set-piece is being dragged, not where
+    // it has got to, so a rolling-stone sound falls silent the moment scrolling stops even
+    // though the stone is still mid-screen.
+    const MOTION_DECAY = 0.85;     // energy retained per 16ms frame
+    const MOTION_FULL_PX = 420;    // accumulated px of movement that counts as full level
+    // Energy is capped at the saturation point. Without this a sustained drag banks far
+    // more than it can use (a steady scroll settles near 900), and the exponential tail
+    // then takes about a second to decay back to inaudible -- long after the thing on
+    // screen stopped moving. Capped, silence lands ~450ms after the last tick.
+    const MOTION_MAX_ENERGY = MOTION_FULL_PX;
+    // Two guards against programmatic resets -- applyScene5PharaohSlide(0) and
+    // applyScene8SphinxSlide(0) when leaving a scene -- being mistaken for real dragging
+    // and firing a blip when nothing on screen moved. Clamping such a jump instead of
+    // dropping it was tried first and was not enough; it still made a sound.
+    //
+    // The fractional rule is the one that actually characterises a reset: a reset always
+    // jumps the WHOLE gesture, and real input never covers 90% of one in a single event.
+    // It is what catches the 900px and 1000px resets, which sit under the absolute cap.
+    //
+    // The absolute cap is only a backstop for a wild delta, and is deliberately well clear
+    // of real input: a hard trackpad flick legitimately produces a deltaY around 1000, and
+    // on the 4500px glyph drag that is a perfectly valid 22% of the gesture. An earlier
+    // 600px cap discarded exactly that, so the rolling sound dropped out whenever the user
+    // scrolled hard -- the opposite of what these sounds are for.
+    const MOTION_MAX_PX = 1500;
+    const MOTION_RESET_T = 0.9;
+    // Motion levels ramp far faster than beds. AUDIO_FADE_MS is sized for a scene
+    // crossfade; reusing it here would fight the energy decay above and leave a
+    // rolling-stone sound audible for a second after the stone stopped. The decay is
+    // what shapes the tail -- this is only here to stop per-frame jitter.
+    const MOTION_RAMP_MS = 150;
+
+    // Entries with no file supplied yet are dropped here rather than at every use site.
+    const audioLayerDefs = AUDIO_CONFIG.layers.filter(l => l.src);
+    const audioCueDefs = AUDIO_CONFIG.cues.filter(c => c.src);
+    const audioMotionDefs = Object.keys(AUDIO_CONFIG.motion)
+        .filter(k => AUDIO_CONFIG.motion[k].src)
+        .map(k => Object.assign({ id: k }, AUDIO_CONFIG.motion[k]));
+
+    const audioTrackEl = document.querySelector('.chapter2-track');
+
+    // A bed whose file opens with silence or a fade-in cannot just use el.loop: the browser
+    // always restarts a loop at 0, so that lead-in comes back on every single cycle -- one
+    // sourced track is silent for its first 2.7 seconds, which would be a hole in the sound
+    // once a minute forever. Driving the loop by hand lets the bed cycle over a trimmed
+    // window instead. `startAt` is where each cycle begins, `loopEnd` where it restarts
+    // (used to cut a tail that fades out, which would otherwise dip at the seam).
+    //
+    // Trimming here rather than in an audio editor is deliberate and matches how cues are
+    // handled -- the source files stay exactly as downloaded, so the credits still line up
+    // with what was actually obtained.
+    function attachLoopWindow(el, startAt, loopEnd) {
+        const from = startAt || 0;
+        const rewind = () => {
+            try { el.currentTime = from; } catch (err) { /* metadata not in yet */ }
+            if (el.paused) el.play().catch(() => {});
+        };
+        // `ended` covers the untrimmed tail; the timeupdate watch covers an early loopEnd.
+        el.addEventListener('ended', rewind);
+        if (loopEnd) {
+            el.addEventListener('timeupdate', () => {
+                if (el.currentTime >= loopEnd) rewind();
+            });
+        }
+    }
+
+    const audioLayers = {};
+    const layerVolumes = {}; // volume actually applied to the element right now
+    const layerTargets = {}; // volume the current scene position is asking for
+    audioLayerDefs.forEach(layer => {
+        const el = new Audio(layer.src);
+        const trimmed = layer.startAt || layer.loopEnd;
+        el.loop = !trimmed;
+        if (trimmed) attachLoopWindow(el, layer.startAt, layer.loopEnd);
+        el.volume = 0;
+        // Beds with no fade-in on their first range are audible immediately, so preload
+        // those. Everything else is fetched by warmAudio shortly before it is needed.
+        el.preload = layer.ranges[0].in ? 'none' : 'auto';
+        audioLayers[layer.id] = el;
+        layerVolumes[layer.id] = 0;
+        layerTargets[layer.id] = 0;
+    });
+
+    const audioCues = {};
+    audioCueDefs.forEach(cue => {
+        const el = new Audio(cue.src);
+        el.preload = 'none';
+        audioCues[cue.id] = el;
+    });
+
+    const audioSfx = {};
+    Object.keys(AUDIO_CONFIG.sfx).forEach(key => {
+        const cfg = AUDIO_CONFIG.sfx[key];
+        if (!cfg.src) return;
+        const el = new Audio(cfg.src);
+        el.preload = 'auto'; // all small enough to fetch up front
+        audioSfx[key] = el;
+    });
+
+    const audioMotion = {};
+    const motionState = {}; // per set-piece: accumulated movement energy + last progress
+    audioMotionDefs.forEach(def => {
+        const el = new Audio(def.src);
+        el.loop = true;
+        el.volume = 0;
+        el.preload = 'none';
+        audioMotion[def.id] = el;
+        motionState[def.id] = { energy: 0, lastT: 0, level: 0 };
+    });
+
+    const firedCues = new Set();
+    const warmedAudio = new Set();
+
+    // Mute lives in js/audio-settings.js, shared with the index page
+    // and Chapter 1, so a visitor who muted before arriving here stays muted.
+    const isMuted = () => AudioSettings.muted;
+    let audioUnlocked = false; // set true once a real user gesture has let audio start
+
+    function mapRange(value, inMin, inMax, outMin, outMax) {
+        const clamped = Math.max(inMin, Math.min(value, inMax));
+        return outMin + (outMax - outMin) * ((clamped - inMin) / (inMax - inMin));
+    }
+
+    // Chapter 2 has no scrollY to read: the track is paged and body overflow is hidden.
+    // What it does have is nine applySceneNExit() functions plus goToScene(), all of
+    // which write .chapter2-track's inline transform in exactly this shape, and nothing
+    // else writes it. translateY in vh / 100 therefore *is* the continuous scene
+    // position -- 0 at Scene 1, 10 at Scene 11, fractional mid-drag. Reading the inline
+    // style rather than getComputedStyle is deliberate: it costs no style recalc, and
+    // the one boundary that really jumps (Scene 10 -> 11) is absorbed by the volume
+    // rate limiter instead. An empty string (page load) parses to 0, which is Scene 1.
+    const AUDIO_POS_RE = /translateY\(-?([\d.]+)vh\)/;
+
+    function readScenePos() {
+        if (!audioTrackEl) return 0;
+        const m = AUDIO_POS_RE.exec(audioTrackEl.style.transform);
+        return m ? parseFloat(m[1]) / 100 : 0;
+    }
+
+    // Browsers block non-muted playback until a real user gesture, so audio cannot start
+    // on page load. Called from the module's own gesture listeners (see
+    // initChapter2Audio), which are separate from handleWheel so the navigation state
+    // machine stays untouched.
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        if (isMuted()) {
+            // Nothing to play while muted, but stop trying on every later gesture.
+            audioUnlocked = true;
+            return;
+        }
+        const openingLayers = audioLayerDefs.filter(l => !l.ranges[0].in);
+        Promise.all(openingLayers.map(l => audioLayers[l.id].play()))
+            .then(() => {
+                audioUnlocked = true;
+                kickAudioLoop();
+            })
+            .catch(() => { /* rejected -- retry on the next qualifying gesture */ });
+    }
+
+    // Plays a one-shot, restarting it if already playing so repeated clicks give a clean
+    // repeated hit instead of stacking. maxDuration trims clips that run longer than the
+    // moment needs, ramping the volume down first so the cut does not pop. startAt seeks
+    // past a file's own lead-in so the sound is audible on the same frame as the click.
+    function playOneShot(audioEl, rawVolume, maxDuration, startAt, fadeIn) {
+        if (isMuted() || !audioEl) return;
+
+        // Resolved once so the rise, the plateau and the tail fade all agree even if the
+        // visitor mutes while the clip is still playing.
+        const volume = AudioSettings.gain(rawVolume);
+
+        clearInterval(audioEl.chapter2FadeTimer);
+        clearInterval(audioEl.chapter2RiseTimer);
+        clearTimeout(audioEl.chapter2StopTimer);
+
+        // Seeking throws if metadata is not loaded yet. Failing silently here would put
+        // the lead-in back, so fall back to a listener that applies it once it can.
+        const from = startAt || 0;
+        try {
+            audioEl.currentTime = from;
+        } catch (err) {
+            audioEl.addEventListener('loadedmetadata', () => { audioEl.currentTime = from; }, { once: true });
+        }
+        const stepMs = 25;
+
+        // fadeIn (seconds) swells a cue in instead of stepping to full on the frame it
+        // fires. A one-shot landing at full volume is right for a hit -- a chisel, a
+        // collapse -- but wrong where the moment is meant to arrive gently, and on a flat
+        // bed it reads as the sound being too loud even when its level is modest.
+        if (fadeIn) {
+            audioEl.volume = 0;
+            const riseSteps = Math.max(1, Math.round(fadeIn * 1000 / stepMs));
+            let riseStep = 0;
+            audioEl.chapter2RiseTimer = setInterval(() => {
+                riseStep++;
+                audioEl.volume = Math.min(volume, volume * (riseStep / riseSteps));
+                if (riseStep >= riseSteps) clearInterval(audioEl.chapter2RiseTimer);
+            }, stepMs);
+        } else {
+            audioEl.volume = volume;
+        }
+        audioEl.play().catch(() => {});
+
+        if (!maxDuration) return;
+
+        const fadeMs = 250;
+        const steps = fadeMs / stepMs;
+        audioEl.chapter2StopTimer = setTimeout(() => {
+            // Stop any still-running rise, or the two ramps fight over the same property.
+            clearInterval(audioEl.chapter2RiseTimer);
+            const from = audioEl.volume; // may be mid-rise, so ramp down from where it got to
+            let step = 0;
+            audioEl.chapter2FadeTimer = setInterval(() => {
+                step++;
+                audioEl.volume = Math.max(0, from * (1 - step / steps));
+                if (step >= steps) {
+                    clearInterval(audioEl.chapter2FadeTimer);
+                    audioEl.pause();
+                }
+            }, stepMs);
+        }, Math.max(0, maxDuration * 1000 - fadeMs));
+    }
+
+    // Plays a click sound by its AUDIO_CONFIG.sfx key.
+    function playSfx(key) {
+        const cfg = AUDIO_CONFIG.sfx[key];
+        if (!cfg || !cfg.src) return;
+        playOneShot(audioSfx[key], cfg.volume, cfg.maxDuration, cfg.startAt, cfg.fadeIn);
+    }
+
+    // Starts downloading a file shortly before it is needed. Skips anything already set
+    // to preload: load() resets a playing element, which would cut off the opening bed
+    // the moment updateAudio() first runs.
+    function warmAudio(id, audioEl) {
+        if (warmedAudio.has(id) || audioEl.preload !== 'none') return;
+        warmedAudio.add(id);
+        audioEl.preload = 'auto';
+        audioEl.load();
+    }
+
+    // Sets every bed's volume for the current scene position and fires any cues that
+    // have been passed. Beds that fade to 0 keep playing silently rather than pausing,
+    // so coming back into range resumes mid-loop without a restart artifact.
+    function updateAudio(pos, dtMs) {
+        if (isMuted() || !audioUnlocked) {
+            audioLayerDefs.forEach(layer => {
+                layerVolumes[layer.id] = 0;
+                layerTargets[layer.id] = 0;
+                audioLayers[layer.id].volume = 0; // muting is instant, never ramped
+            });
+            audioMotionDefs.forEach(def => {
+                const st = motionState[def.id];
+                st.energy = 0; // dump accumulated movement, so unmuting mid-drag is silent
+                st.level = 0;
+                const el = audioMotion[def.id];
+                el.volume = 0;
+                if (!el.paused) el.pause();
+            });
+            // Keep the cue list in sync while silent, so unmuting part-way through the
+            // chapter does not fire every already-passed cue at once.
+            audioCueDefs.forEach(cue => {
+                if (pos >= cue.at) firedCues.add(cue.id);
+                else if (pos < cue.at - AUDIO_CUE_REARM) firedCues.delete(cue.id);
+            });
+            return;
+        }
+
+        audioLayerDefs.forEach(layer => {
+            const el = audioLayers[layer.id];
+
+            // A bed can be active over several windows; the loudest one wins.
+            let target = 0;
+            layer.ranges.forEach(range => {
+                let rangeVolume = layer.volume;
+                if (range.in) {
+                    rangeVolume = Math.min(rangeVolume, mapRange(pos, range.in[0], range.in[1], 0, layer.volume));
+                }
+                if (range.out) {
+                    rangeVolume = Math.min(rangeVolume, mapRange(pos, range.out[0], range.out[1], layer.volume, 0));
+                }
+                target = Math.max(target, rangeVolume);
+            });
+            layerTargets[layer.id] = target;
+
+            const startsAt = layer.ranges[0].in ? layer.ranges[0].in[0] : 0;
+            if (pos >= startsAt - AUDIO_PRELOAD_LEAD) warmAudio(layer.id, el);
+
+            // Rate-limited instead of assigned outright. On a drag boundary `target`
+            // moves gradually and this cap barely binds, so the sound tracks the scroll
+            // 1:1; on the Scene 10 -> 11 jump `target` flips in one frame and the cap
+            // spreads it over AUDIO_FADE_MS, matching the CSS track transition.
+            const current = layerVolumes[layer.id];
+            const maxStep = layer.volume * (dtMs / AUDIO_FADE_MS);
+            const next = current + Math.max(-maxStep, Math.min(maxStep, target - current));
+            layerVolumes[layer.id] = next;
+            el.volume = AudioSettings.gain(next);
+
+            if (next > 0.0005 && el.paused) {
+                // First play of a trimmed bed has to enter its window too, not just the
+                // loops after it -- otherwise the very first pass replays the lead-in that
+                // attachLoopWindow exists to skip.
+                if (layer.startAt && el.currentTime < layer.startAt) {
+                    try {
+                        el.currentTime = layer.startAt;
+                    } catch (err) {
+                        el.addEventListener('loadedmetadata', () => { el.currentTime = layer.startAt; }, { once: true });
+                    }
+                }
+                el.play().catch(() => {});
+            }
+        });
+
+        audioCueDefs.forEach(cue => {
+            const el = audioCues[cue.id];
+            if (pos >= cue.at - AUDIO_PRELOAD_LEAD) warmAudio(cue.id, el);
+
+            if (pos >= cue.at && !firedCues.has(cue.id)) {
+                firedCues.add(cue.id);
+                playOneShot(el, cue.volume, cue.maxDuration, cue.startAt, cue.fadeIn);
+            } else if (pos < cue.at - AUDIO_CUE_REARM) {
+                // Re-arm once the user has gone back clear of the trigger point.
+                firedCues.delete(cue.id);
+            }
+        });
+
+        audioMotionDefs.forEach(def => {
+            const el = audioMotion[def.id];
+            const st = motionState[def.id];
+            if (pos >= def.warmAt - AUDIO_PRELOAD_LEAD) warmAudio(def.id, el);
+
+            // Energy is only ever added by setMotion; here it just drains. With no further
+            // movement this reaches silence in about 250ms, which is what makes the sound
+            // stop when the user stops scrolling rather than when the gesture completes.
+            st.energy *= Math.pow(MOTION_DECAY, dtMs / 16);
+            const target = Math.min(1, st.energy / MOTION_FULL_PX) * def.volume;
+
+            const maxStep = def.volume * (dtMs / MOTION_RAMP_MS);
+            st.level += Math.max(-maxStep, Math.min(maxStep, target - st.level));
+            // Snap relative to this sound's own peak: an exponential tail never quite
+            // reaches zero, and 1% of peak is already far below audible under a bed.
+            if (st.level < def.volume * 0.01) st.level = 0;
+            el.volume = AudioSettings.gain(st.level);
+
+            // Unlike a bed, a motion sound is idle most of the time, so it is paused when
+            // silent rather than left looping under a zero volume.
+            if (st.level > 0 && el.paused) el.play().catch(() => {});
+            else if (st.level === 0 && !el.paused) el.pause();
+        });
+    }
+
+    // Called from the three set-piece apply* functions with that gesture's own 0..1
+    // progress. It records movement, not position: the rAF loop above turns accumulated
+    // movement into level and drains it when the movement stops.
+    function setMotion(id, t) {
+        const st = motionState[id];
+        const def = AUDIO_CONFIG.motion[id];
+        if (!st || !def || !def.src) return;
+
+        // Converted back into px via span, so one wheel tick weighs the same in every
+        // gesture regardless of whether its threshold is 450px or 4500px.
+        const stepT = Math.abs(t - st.lastT);
+        const stepPx = stepT * def.span;
+        st.lastT = t; // tracked even while muted, so unmuting mid-drag sees a small delta
+        if (isMuted() || !audioUnlocked) return;
+        if (stepT >= MOTION_RESET_T || stepPx > MOTION_MAX_PX) return; // a reset -- see above
+        st.energy = Math.min(MOTION_MAX_ENERGY, st.energy + stepPx);
+        kickAudioLoop();
+    }
+
+    // The loop only runs while there is something to do: a gesture landed recently, or a
+    // bed is still ramping toward its target. Otherwise it stops, so a page sitting idle
+    // on one scene is not burning a frame callback forever.
+    let audioRafId = null;
+    let audioLastFrame = 0;
+    let audioLastKick = 0;
+
+    function audioNow() {
+        return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    }
+
+    function audioFrame(now) {
+        const dt = Math.min(now - audioLastFrame, 100); // clamp a tab-switch stall
+        audioLastFrame = now;
+        updateAudio(readScenePos(), dt);
+
+        const ramping = audioLayerDefs.some(
+            l => Math.abs(layerVolumes[l.id] - layerTargets[l.id]) > 0.0005
+        ) || audioMotionDefs.some(
+            // A motion sound still draining has to keep the loop alive, or it would be
+            // left stuck at whatever level it held when the last gesture stopped.
+            d => motionState[d.id].level > 0 || motionState[d.id].energy > 0.5
+        );
+        if (now - audioLastKick < AUDIO_IDLE_MS || ramping) {
+            audioRafId = requestAnimationFrame(audioFrame);
+        } else {
+            audioRafId = null;
+        }
+    }
+
+    function kickAudioLoop() {
+        audioLastKick = audioNow();
+        if (audioRafId === null) {
+            audioLastFrame = audioLastKick;
+            audioRafId = requestAnimationFrame(audioFrame);
+        }
+    }
+
+    // The mute button and its speaker icons live in js/audio-settings.js now -- the
+    // same control was duplicated verbatim in all three page scripts. This just mounts
+    // it and wires the two things the shared module cannot know: that an unmute click
+    // is itself this page's unlocking gesture, and which mixer to re-run on a change.
+    //
+    // The navbar is safe to query for: js/navbar.js is a synchronous IIFE that has
+    // already written its markup by the time this runs, and never rewrites it.
+    function createAudioControls() {
+        AudioSettings.mountControls(document.getElementById('lang-toggle'), () => {
+            audioUnlocked = true; // this click itself counts as the unlocking gesture
+            playSfx('uiClick');
+        });
+
+        // Fires on mute and unmute.
+        AudioSettings.onChange(() => {
+            // dt 0: muting silences instantly (the muted branch ignores dt), unmuting
+            // just sets targets and lets the loop ramp them up from zero.
+            updateAudio(readScenePos(), 0);
+            kickAudioLoop();
+        });
+    }
+
+    function initChapter2Audio() {
+        if (!audioTrackEl) return;
+        createAudioControls();
+
+        // The module's own listeners, deliberately separate from handleWheel: they are
+        // passive and do not call preventDefault, so the navigation state machine and
+        // its priority chains stay completely untouched. unlockAudio is idempotent and
+        // returns immediately once unlocked, so it is cheap to call on every gesture --
+        // and calling it repeatedly is what lets a rejected first attempt retry.
+        function onAudioGesture() {
+            unlockAudio();
+            kickAudioLoop();
+        }
+
+        window.addEventListener('wheel', onAudioGesture, { passive: true });
+        window.addEventListener('touchstart', onAudioGesture, { passive: true });
+        window.addEventListener('touchmove', onAudioGesture, { passive: true });
+        window.addEventListener('click', onAudioGesture);
+    }
+
+    initChapter2Audio();
+
+    // ===== CHAPTER 2 AUDIO -- END =====
+
     initChapter2Paging();
 
     function initChapter2Paging() {
@@ -297,8 +1047,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                             // Scene 2/3 boundary left it manually disabled
             if (newIndex === 3 && sceneIndex === 2) enterScene4Forward();
             if (newIndex === 3 && sceneIndex === 4) enterScene4Backward();
-            if (newIndex === 10 && sceneIndex === 9) enterScene11Forward();
-            if (newIndex === 9 && sceneIndex === 10) enterScene11Backward();
+            if (newIndex === 10 && sceneIndex === 9) resetScene11Text();
+            if (newIndex === 9 && sceneIndex === 10) resetScene11Text();
             sceneTransitioning = true;
             sceneIndex = newIndex;
             trackEl.style.transform = `translateY(-${sceneIndex * 100}vh)`;
@@ -322,6 +1072,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const t = scene1CoinProgress / SCENE1_COIN_THRESHOLD;
             coin1El.style.transform = `rotate(${COIN1_REST_DEG + t * 360 * SCENE1_COIN_TURNS}deg)`;
             coin2El.style.transform = `rotate(${COIN2_REST_DEG - t * 360 * SCENE1_COIN_TURNS}deg)`;
+            setMotion('coinSpin', t);
         }
 
         function resetScene1CoinRotation() {
@@ -375,6 +1126,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 1:1 by scroll instead of snapping up on its own once the boundary is crossed.
             trackEl.style.transition = t > 0 ? 'none' : '';
             trackEl.style.transform = `translateY(-${100 + liftT * 100}vh)`;
+            setMotion('glyphRoll', t); // track is parked for the first 70% here, so the
+                                       // audio position alone cannot see this gesture
         }
 
         // Scene 3 <-> Scene 4 boundary: same continuous track-drag idea as
@@ -414,6 +1167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const t = scene4SphinxProgress / SCENE4_SPHINX_THRESHOLD;
             const offsetVw = (1 - t) * SCENE4_SPHINX_HIDDEN_VW;
             scene4SphinxEl.style.transform = `translate(calc(-50% - ${offsetVw}vw), -50%) scale(2.87)`;
+            setMotion('sphinxEnter', t);
         }
 
         // Once the sphinx is fully in, further forward scroll continuously lifts the
@@ -449,6 +1203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const offsetVw = (1 - t) * NEMES_SLIDE_VW;
             nemesLeftEl.style.transform = `translateX(-${offsetVw}vw)`;
             nemesRightEl.style.transform = `scaleX(-1) translateX(-${offsetVw}vw)`; // mirror is static in CSS; reproduced here since inline transform replaces it
+            setMotion('pharaohEnter', t); // called with 0 to reset on leaving -- see MOTION_RESET_T
         }
 
         // Once the pharaoh slide-in is fully played out, further forward scroll
@@ -566,6 +1321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             wordLines.forEach(({ el, lineIndex }) => {
                 el.style.opacity = Math.max(0, Math.min(1, linesRevealed - lineIndex));
             });
+            setMotion('textReveal', t);
         }
 
         // value, gating the Scene 9 transition until they are fully apart.
@@ -578,6 +1334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const offsetVw = t * SPHINX_EXIT_VW;
             scene8SphinxLeftEl.style.transform = `translateX(-${offsetVw}vw)`;
             scene8SphinxRightEl.style.transform = `scaleX(-1) translateX(-${offsetVw}vw)`; // mirror is static in CSS; reproduced here since inline transform replaces it
+            setMotion('sphinxGrind', t);
         }
 
         // Once the sphinxes slide apart, further forward scroll continuously lifts the track
@@ -696,12 +1453,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         function applyScene10DiscMove() {
             updateScrollDebug('scene10-disc', scene10DiscProgress, SCENE10_DISC_LOOP_THRESHOLD);
-            const rawVh = (scene10DiscProgress / SCENE10_DISC_LOOP_THRESHOLD) * CYCLE_VH;
+            const discT = scene10DiscProgress / SCENE10_DISC_LOOP_THRESHOLD;
+            const rawVh = discT * CYCLE_VH;
             scene10DiscEls.forEach(({ el, dir, restVh }) => {
                 el.style.animation = 'none'; // release from the idle CSS bob loop
                 el.style.transform = `translateY(${scene10DiscOffsetVh(rawVh, dir, restVh)}vh)`;
             });
             armScene10DiscIdleSway();
+            setMotion('discFlow', discT);
         }
 
         // Hands control back to the CSS idle-bob loop once the drag fully unwinds back
@@ -756,6 +1515,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         scene6HitboxSledgeEl.addEventListener('click', () => {
+            playSfx('sledgeClick');
             scene6PopupSledgeEl.classList.toggle('show');
         });
 
@@ -834,6 +1594,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             wordEls.forEach((el, i) => {
                 el.classList.toggle('is-revealed', i <= currentWordIndex);
             });
+            setMotion('featherWrite', t);
         }
 
         function enterScene4Forward() {
@@ -880,14 +1641,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             applyScene5PharaohSlide(0); // nemes figures parked off-screen, ready for the post-arrival slide-in gesture
         }
 
-        function enterScene11Forward() {
-            scene11TextEl.classList.remove('is-entering');
-            void scene11TextEl.offsetWidth; // force reflow so the fade-in replays every arrival, not just the first
-            scene11TextEl.classList.add('is-entering');
+        // Scene 11's closing sentence rises into place under the scroll itself instead of
+        // fading in on a timer — the same "the scroll IS the animation" idea as every other
+        // gesture in this chapter, and started as a direct mirror of Chapter 1's ending (see
+        // "Scene 1.5 Ending Text floats up" in js/chapter1.js, which drives a 50 -> -100px
+        // travel off its scroll progress). The end point was pulled down to -50px on request
+        // — Chapter 1's -100px sat too high here — so the two chapters no longer share the
+        // exact travel, only the mechanism.
+        let scene11TextProgress = 0;
+        const SCENE11_TEXT_THRESHOLD = 1200; // px of wheel delta for the full rise -- matches the SCENE7/8/9 exit thresholds
+
+        function applyScene11Text() {
+            updateScrollDebug('scene11-text', scene11TextProgress, SCENE11_TEXT_THRESHOLD);
+            const t = scene11TextProgress / SCENE11_TEXT_THRESHOLD;
+            // Fade completes at 80% of the travel, so the last stretch is pure movement
+            // and the sentence is fully readable before it stops.
+            scene11TextEl.style.opacity = mapRange(t, 0, 0.8, 0, 1);
+            const y = mapRange(t, 0, 1, 50, -50);
+            // The CSS resting transform is translate(-50%, -50%) and an inline transform
+            // REPLACES it outright, so the centring has to be reproduced here rather than
+            // just the offset -- same trap as Scene 8's mirrored sphinx.
+            scene11TextEl.style.transform = `translate(-50%, calc(-50% + ${y}px))`;
         }
 
-        function enterScene11Backward() {
-            scene11TextEl.classList.remove('is-entering'); // reset to hidden, ready to fade in again next time
+        // Both arrival directions do the same thing: park the sentence hidden and low,
+        // ready for the gesture to run again. Arriving forward is not special any more --
+        // it used to replay a CSS fade-in and needed a forced reflow to do so.
+        function resetScene11Text() {
+            scene11TextProgress = 0;
+            applyScene11Text();
         }
 
         scene4ScrollEl.addEventListener('animationend', (e) => {
@@ -1020,6 +1802,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         function goToSubSlide(newIndex) {
             if (subTransitioning || newIndex === scene3SlideIndex) return;
+            playSfx('slideChange'); // the carousel is the one place a scene changes without moving the track
             subTransitioning = true;
             scene3SlideIndex = newIndex;
             scene3TrackEl.classList.toggle('scene3-show-2', scene3SlideIndex === 1);
@@ -1375,6 +2158,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // resting fully on Scene 10 (was a true dead end before this change).
                     scene10DiscProgress = Math.min(SCENE10_DISC_LOOP_THRESHOLD, e.deltaY);
                     applyScene10DiscMove();
+                }
+                return;
+            }
+
+            if (sceneIndex === 10) {
+                // The closing sentence rises under the scroll -- see applyScene11Text. A live
+                // gesture takes top priority and unwinds on reversal before the return to
+                // Scene 10 is allowed, exactly as scene10DiscProgress guards the
+                // sceneIndex===9 branch above.
+                if (scene11TextProgress > 0) {
+                    // Clamped at both ends. Forward at the cap deliberately does nothing more:
+                    // this is the last scene of the chapter, so the sentence rises, stops, and
+                    // stays there. It is the one gesture in the file that is not a handoff.
+                    scene11TextProgress = Math.max(0, Math.min(SCENE11_TEXT_THRESHOLD, scene11TextProgress + e.deltaY));
+                    applyScene11Text();
+                    return;
+                }
+
+                if (e.deltaY > 0) {
+                    scene11TextProgress = Math.min(SCENE11_TEXT_THRESHOLD, e.deltaY);
+                    applyScene11Text();
+                } else if (e.deltaY < 0) {
+                    goToScene(9);
                 }
                 return;
             }

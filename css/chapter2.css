@@ -297,6 +297,31 @@ body.chapter2-page {
     border-color: #4a4a44;
 }
 
+/* This chapter runs on white, where the era gold (#d4af37) drops to 2.1:1 contrast --
+   hovering would make a control *harder* to see than its resting #4a4a44 (8.9:1). A
+   darker gold keeps the era identity and reads on paper (4.9:1). Scoped to this page's
+   body, so it retints only this chapter's navbar: --accent-color is read in global.css's
+   two hover rules and the nav-link underline, and nowhere else chapter2.html loads. */
+body.chapter2-page {
+    --accent-color: #8a6d1f;
+}
+
+/* The three rules above darken the navbar for this chapter's background, but they tie
+   with global.css's :hover rules on specificity (0,2,0) and win only because this file
+   loads second -- which silently killed hover feedback on every navbar control. These
+   restate the hover at (0,3,0) so it wins back.
+   .logo is deliberately absent: global.css gives it no :hover rule at all, so it does
+   not change colour in Chapter 1 either, and adding one here would break the parity
+   this fix exists to restore. */
+.navbar .control-btn:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.navbar .nav-links a:hover {
+    color: var(--accent-color);
+}
+
 /* ===================== Chapter 2 - Scene 2 ===================== */
 
 .scene-2 {
@@ -1839,9 +1864,18 @@ body.chapter2-page {
     background-color: #fff;
 }
 
+/* opacity and transform are BOTH driven from JS (applyScene11Text in js/chapter2.js) --
+   the closing sentence rises into place under the scroll itself, mirroring Chapter 1's
+   ending. The values here are only the resting state it starts from and returns to.
+
+   There is deliberately no CSS animation on this element. It used to carry
+   .is-entering / @keyframes scene11-text-fade-in, an automatic 1200ms fade on arrival;
+   both were removed with the gesture. Do not add one back: an active CSS animation on a
+   property silently beats an inline style for that same property, which is the trap
+   already documented for Scene 1's coins and Scene 10's discs. */
 .scene11-text {
     position: absolute;
-    top: 38%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 60vw;
@@ -1853,13 +1887,43 @@ body.chapter2-page {
     margin: 0;
     z-index: 2;
     opacity: 0;
+    will-change: opacity, transform;
 }
 
-.scene11-text.is-entering {
-    animation: scene11-text-fade-in 1200ms ease-out forwards;
+/* =========================================
+Audio Toggle (Chapter 2)
+========================================= */
+
+/* IF THE MUTE BUTTON EVER DISAPPEARS, CHECK THIS BLOCK FIRST. The button is created
+   from JS (createMuteButton in js/chapter2.js), so losing these rules to an undo or a
+   save-over leaves a button that still exists and still works but is invisible, with
+   nothing in the console to point at it.
+
+   Duplicated from chapter1.css rather than shared: .audio-toggle is only used by the
+   two chapters that have audio, and global.css is out of scope for this change. Lives
+   inside .nav-right, so the navbar's own flex layout places it -- no fixed offsets.
+   This only needs to match #lang-toggle's footprint so the two read as a pair; icon
+   sizing comes from global.css (.control-btn svg). The negative margin pulls the pair
+   closer than .nav-right's 3rem link spacing so they group as one cluster.
+
+   Note: .navbar .control-btn above (dark text for this chapter's light background) has
+   the same specificity as global.css's .control-btn:hover and loads later, so hover
+   colour is already suppressed for #lang-toggle here. This button inherits that -- it
+   stays #4a4a44 on hover, unlike Chapter 1's. */
+.audio-toggle {
+    min-width: 50px;
+    margin-right: -1.5rem;
 }
 
-@keyframes scene11-text-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Fallback only: used if the navbar isn't present, so the button never disappears.
+   Bottom-RIGHT because Chapter 2's bottom-left is occupied by .layer-vase /
+   .layer-liver-2 (Scene 6) and .scene10-disc-wrap.disc-6. */
+.audio-toggle-floating {
+    position: fixed;
+    right: 5%;
+    bottom: 4%;
+    z-index: 300;
+    margin-right: 0;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
 }
