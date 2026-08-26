@@ -144,6 +144,9 @@
     </div>
 
     <!-- JS -->
+    <!-- Shared mute state. Must load before the page script, which reads
+         AudioSettings while building its audio elements. -->
+    <script src="js/audio-settings.js"></script>
     <script src="js/chapter1.js"></script>
 </body>
 

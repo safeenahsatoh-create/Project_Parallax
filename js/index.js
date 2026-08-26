@@ -42,6 +42,79 @@
     let isScrolling = false; // Throttle flag to prevent rapid jumping
     let currentView = 'hero'; // 'hero' or 'main'
 
+    // Audio Configuration
+    // Two music beds crossfade with the view: bgmHero on the landing screen, bgmEras on
+    // the era picker. Volumes and file paths are one-line edits here; see
+    // assets/audio/index/README.txt for what each slot wants.
+    //
+    // Real files go in assets/audio/index/ under their ORIGINAL download name (same rule
+    // as the chapter folders — the name is the attribution). Entries marked STAND-IN
+    // borrow a chapter file so the page has sound before the real tracks land; swap the
+    // path for 'assets/audio/index/<your-file>.mp3' as each one arrives.
+    const AUDIO_DIR = 'assets/audio/index/';
+
+    const AUDIO_CONFIG = {
+        beds: {
+            // The volumes are set by the view's needs, not the file's: bgmEras sits lower
+            // because the slide whoosh plays over it constantly. See the README for the
+            // loop-seam measurements on both of these files.
+            bgmHero: {
+                src: AUDIO_DIR + 'mfcc-ambient-ambient-music-479762.mp3', // 51.7s
+                volume: 0.40
+            },
+            bgmEras: {
+                // Higher than bgmHero despite sitting under the slide whoosh, because this
+                // file is intrinsically much quieter: mean global_gain 142 against mfcc's
+                // 163. Matching numbers here would not have matched loudness.
+                src: AUDIO_DIR + 'samuelfjohanns-ancient-99556.mp3', // 27.5s
+                volume: 0.55
+            }
+        },
+        sfx: {
+            // Shared with both chapters rather than duplicated — same click, same folder.
+            uiClick: { src: 'assets/audio/chapter1/universfield-mouse-click-351398.mp3', volume: 0.35, startAt: 0.10 },
+            // 0.30, not 0.40: this is the same file in the same role as Chapter 2's
+            // slideChange, which sits at 0.30, and it fires on every era change over a
+            // bed running at 0.55. Two pages, one whoosh, one level.
+            slideChange: { src: 'assets/audio/chapter2/dragon-studio-simple-whoosh-382724.mp3', volume: 0.30 }, // STAND-IN
+            viewTransition: { src: AUDIO_DIR + 'lordsonny-whoosh-cinematic-161021.mp3', volume: 0.45 },
+            // startAt measured, not guessed: the file rises 110->146 (global_gain) over its
+            // first 0.78s and plateaus after. Only ~350ms is audible before the page
+            // navigates, so starting at 0.50 puts that window on the body of the sound
+            // instead of its attack.
+            enterChapter: { src: 'assets/audio/chapter1/universfield-mystic-reveal-567294.mp3', volume: 0.40, maxDuration: 1.2, startAt: 0.50 } // STAND-IN
+        }
+    };
+
+    // How long the hero <-> eras crossfade takes. Matches the 1.5s white flash in
+    // scrollToMain/scrollToHero, so the swap finishes exactly as the screen clears.
+    const BED_CROSSFADE_MS = 1500;
+
+    // Delay before the Enter Chapter link navigates, so its sound is audible first.
+    // Same 350ms the navbar's light flash uses in js/navbar.js.
+    const ENTER_CHAPTER_DELAY_MS = 350;
+
+    const audioBeds = {};
+    Object.keys(AUDIO_CONFIG.beds).forEach(key => {
+        const el = new Audio(AUDIO_CONFIG.beds[key].src);
+        el.loop = true;
+        el.volume = 0;
+        el.preload = 'auto'; // only two beds on this page, both wanted within a few seconds
+        audioBeds[key] = el;
+    });
+
+    const audioSfx = {};
+    Object.keys(AUDIO_CONFIG.sfx).forEach(key => {
+        const el = new Audio(AUDIO_CONFIG.sfx[key].src);
+        el.preload = 'auto'; // all short one-shots
+        audioSfx[key] = el;
+    });
+
+    // Mute lives in js/audio-settings.js, shared with both chapters,
+    // so muting here carries into a chapter instead of stopping at the page boundary.
+    const isMuted = () => AudioSettings.muted;
+    let audioUnlocked = false; // true once a real user gesture has let audio start playing
+
     // 2. Initialize Slider Images dynamically
     function initSlider() {
         erasData.forEach((era, index) => {
@@ -132,6 +205,11 @@
     function scrollToMain() {
         isScrolling = true;
 
+        // Audio rides the flash: the whoosh hits as the white starts, and the beds swap
+        // over the same 1.5s so the new track is fully in when the screen clears.
+        playSfx('viewTransition');
+        crossfadeBedsTo('main', BED_CROSSFADE_MS);
+
         // Trigger Light Effect (White out)
         document.getElementById('hero').classList.add('light-transition');
 
@@ -167,7 +245,10 @@
 
     function scrollToHero() {
         isScrolling = true;
-        
+
+        playSfx('viewTransition');
+        crossfadeBedsTo('hero', BED_CROSSFADE_MS);
+
         const hero = document.getElementById('hero');
         const splitLayout = document.querySelector('.split-layout');
         
@@ -210,6 +291,7 @@
     // Desktop: Mouse Wheel (Global)
     function handleWheel(e) {
         e.preventDefault(); // Stop default vertical page scrolling
+        unlockAudio(); // first wheel is usually the page's first user gesture
         const delta = Math.sign(e.deltaY);
         processScroll(delta);
     }
@@ -218,6 +300,8 @@
     document.getElementById('nav-logo').addEventListener('click', (e) => {
         e.preventDefault();
         if (isScrolling || currentView === 'hero') return;
+
+        playSfx('uiClick');
 
         // Reset to first slide automatically when returning to hero
         currentIndex = 0;
@@ -230,7 +314,19 @@
     document.getElementById('nav-eras').addEventListener('click', (e) => {
         e.preventDefault();
         if (isScrolling || currentView === 'main') return;
+        playSfx('uiClick');
         scrollToMain();
+    });
+
+    // Enter Chapter: hold the navigation back briefly so its sound is actually heard —
+    // leaving the page mid-play would cut it off. Same 350ms as the navbar's light flash.
+    eraLink.addEventListener('click', (e) => {
+        const href = eraLink.getAttribute('href');
+        if (!href || href === '#') return;
+
+        e.preventDefault();
+        playSfx('enterChapter');
+        setTimeout(() => { window.location.href = href; }, ENTER_CHAPTER_DELAY_MS);
     });
 
     // Tablet/iPad: Touch Swipe
@@ -238,6 +334,7 @@
     const touchSensitivity = 40; // Minimum distance to register as a swipe
 
     function handleTouchStart(e) {
+        unlockAudio(); // touch equivalent of the wheel gesture above
         startY = e.touches[0].clientY;
     }
 
@@ -261,6 +358,8 @@
 
     function triggerUpdate() {
         isScrolling = true;
+
+        playSfx('slideChange');
 
         // Sync both visuals and text
         updateSliderPosition();
@@ -301,15 +400,151 @@
     }
 
     langToggleBtn.addEventListener('click', () => {
+        playSfx('uiClick');
         currentLang = currentLang === 'th' ? 'en' : 'th';
         localStorage.setItem('lang', currentLang);
         applyLang(currentLang);
     });
 
+    // 7. Audio System
+    // Starts the bed that matches the view we're actually on — landing on ?era=N opens
+    // straight into the era picker, so it must be bgmEras there, not bgmHero.
+    //
+    // Called twice over: once at the end of initApp on the chance the browser allows
+    // autoplay, and again from the first wheel/touch/click. Browsers block non-muted
+    // playback until a real user gesture, but the bar is per-origin rather than absolute
+    // (Chrome's Media Engagement Index lets a frequently visited site through), so the
+    // load-time attempt is worth making. When it is refused the catch below leaves
+    // audioUnlocked false and the gesture listeners retry, which is the old behaviour
+    // exactly — a blocked autoplay costs nothing.
+    //
+    // NOTE FOR TESTING: on localhost the load-time attempt nearly always succeeds, because
+    // we visit it constantly. That says nothing about a first-time visitor. Check that case
+    // in a fresh incognito window.
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        if (isMuted()) {
+            // Nothing to play while muted, but stop trying on every later gesture.
+            audioUnlocked = true;
+            return;
+        }
+        const bed = currentView === 'hero' ? audioBeds.bgmHero : audioBeds.bgmEras;
+        bed.play()
+            .then(() => {
+                audioUnlocked = true;
+                crossfadeBedsTo(currentView, 600);
+            })
+            .catch(() => { /* rejected — retry on the next qualifying gesture */ });
+    }
+
+    // Ramps one bed toward `target` over `ms`. `target` is an ELEMENT volume, already
+    // through AudioSettings.gain() — the ramp reads `from` off el.volume, so both ends
+    // are on the same scale.
+    // A bed that reaches 0 keeps playing silently
+    // instead of pausing, so sliding back to the other view resumes mid-loop rather than
+    // restarting the track. The timer lives on the element so a new fade cancels the old
+    // one — otherwise a fast hero/eras flip leaves two fades fighting over the volume.
+    function fadeBed(el, target, ms) {
+        clearInterval(el.indexFadeTimer);
+
+        if (isMuted() || !audioUnlocked) {
+            el.volume = 0;
+            return;
+        }
+        if (target > 0 && el.paused) el.play().catch(() => {});
+
+        const stepMs = 25;
+        const steps = Math.max(1, Math.round(ms / stepMs));
+        const from = el.volume;
+        let step = 0;
+        el.indexFadeTimer = setInterval(() => {
+            step++;
+            el.volume = Math.max(0, Math.min(1, from + (target - from) * (step / steps)));
+            if (step >= steps) clearInterval(el.indexFadeTimer);
+        }, stepMs);
+    }
+
+    // Takes the view to fade *towards* rather than reading currentView, because the
+    // transitions start the crossfade while the white flash is still covering the screen —
+    // currentView doesn't flip until 1.5s later, halfway through the fade.
+    function crossfadeBedsTo(view, ms) {
+        fadeBed(audioBeds.bgmHero, view === 'hero' ? AudioSettings.gain(AUDIO_CONFIG.beds.bgmHero.volume) : 0, ms);
+        fadeBed(audioBeds.bgmEras, view === 'hero' ? 0 : AudioSettings.gain(AUDIO_CONFIG.beds.bgmEras.volume), ms);
+    }
+
+    // Plays a one-shot, restarting it if it's already playing so repeated clicks give a
+    // clean repeated hit instead of stacking. maxDuration trims clips that run longer than
+    // the moment needs, ramping the volume down first so the cut doesn't pop. startAt seeks
+    // past a file's own lead-in so the sound lands on the same frame as the click.
+    function playSfx(key) {
+        const cfg = AUDIO_CONFIG.sfx[key];
+        const audioEl = audioSfx[key];
+        if (!cfg || !audioEl || isMuted()) return;
+
+        // Resolved once so the start level and the tail fade below agree even if the
+        // visitor mutes while the clip is still playing.
+        const volume = AudioSettings.gain(cfg.volume);
+
+        clearInterval(audioEl.indexFadeTimer);
+        clearTimeout(audioEl.indexStopTimer);
+
+        // Seeking throws if metadata isn't loaded yet. Failing silently here would put the
+        // lead-in back, so fall back to a listener that applies the offset once it can.
+        const from = cfg.startAt || 0;
+        try {
+            audioEl.currentTime = from;
+        } catch (err) {
+            audioEl.addEventListener('loadedmetadata', () => { audioEl.currentTime = from; }, { once: true });
+        }
+        audioEl.volume = volume;
+        audioEl.play().catch(() => {});
+
+        if (!cfg.maxDuration) return;
+
+        const fadeMs = 250;
+        const stepMs = 25;
+        const steps = fadeMs / stepMs;
+        audioEl.indexStopTimer = setTimeout(() => {
+            let step = 0;
+            audioEl.indexFadeTimer = setInterval(() => {
+                step++;
+                audioEl.volume = Math.max(0, volume * (1 - step / steps));
+                if (step >= steps) {
+                    clearInterval(audioEl.indexFadeTimer);
+                    audioEl.pause();
+                }
+            }, stepMs);
+        }, Math.max(0, cfg.maxDuration * 1000 - fadeMs));
+    }
+
+    // The mute button and its speaker icons live in js/audio-settings.js now — the
+    // same control was duplicated verbatim in all three page scripts. This just mounts
+    // it and wires the two things the shared module cannot know: that an unmute click
+    // is itself this page's unlocking gesture, and which mixer to re-run on a change.
+    function createAudioControls() {
+        AudioSettings.mountControls(langToggleBtn, () => {
+            audioUnlocked = true; // this click itself counts as the unlocking gesture
+            playSfx('uiClick');
+        });
+
+        // Fires on mute and unmute, so the beds follow the click rather than waiting
+        // for the next view flip.
+        AudioSettings.onChange(() => {
+            crossfadeBedsTo(currentView, 400);
+        });
+    }
+
     // Startup Initialization
     async function initApp() {
         // Initialize Lang
         applyLang(currentLang);
+
+        // Audio mute toggle
+        createAudioControls();
+
+        // Fallback unlock: covers anyone who clicks a nav control before ever scrolling.
+        // Runs after the button handlers, so a click on "mute" is already reflected.
+        document.addEventListener('click', unlockAudio, { once: true });
 
         // Ensure we start at hero section
         document.getElementById('nav-eras').classList.remove('active');
@@ -349,6 +584,11 @@
             console.error('Error loading data:', error);
             // Fallback gracefully or show error UI if necessary
         }
+
+        // Try to start the music without waiting for a gesture. Must run after the block
+        // above: ?era=N is what sets currentView to 'main', and unlockAudio picks its bed
+        // from that. If the browser refuses, this is a no-op and the gesture path takes over.
+        unlockAudio();
     }
 
     initApp();

@@ -365,3 +365,28 @@ html.returning.loaded .light-layer {
     /* Removed vignette shadow */
     pointer-events: none;
 }
+/* =========================================
+   AUDIO MUTE BUTTON
+   Duplicated from chapter1.css rather than shared: the chapters each keep their own copy
+   (see the same note in chapter2.css), so a page's stylesheet stays self-contained.
+   ========================================= */
+
+/* Lives inside .nav-right, so the navbar's flex layout places it — this only needs to
+   match #lang-toggle's footprint so the two controls read as a pair. Icon sizing comes
+   from global.css (.control-btn svg). The negative margin pulls the pair closer than
+   .nav-right's 3rem gap, so they group as one cluster. */
+.audio-toggle {
+    min-width: 50px;
+    margin-right: -1.5rem;
+}
+
+/* Fallback only: used if the navbar isn't present, so the button never disappears. */
+.audio-toggle-floating {
+    position: fixed;
+    left: 5%;
+    bottom: 4%;
+    z-index: 300;
+    margin-right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
