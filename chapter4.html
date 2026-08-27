@@ -1,1 +1,75 @@
-﻿# หน้าเนื้อหา Chapter 4: ยุคปฏิวัติอุตสาหกรรม
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONOS - Chapter 4: Industrial Revolution</title>
+
+    <!-- CSS (global.css @imports the fonts) -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/chapter4.css">
+</head>
+
+<body class="chapter4-page">
+    <!-- Navbar. data-era is the 0-based era index the picker uses: chapter 4 = 3. -->
+    <div id="navbar-root" data-era="3"></div>
+    <script src="js/navbar.js"></script>
+    <!-- Dev scroll readout. Required: the apply* functions call updateScrollDebug() unguarded. -->
+    <script src="js/debug-overlay.js"></script>
+
+    <div class="chapter4-track">
+
+        <!-- ===================== Scene 1 ===================== -->
+        <div class="scene-1">
+            <img src="assets/img/chapter4/grunge_texture_overlay.png" class="layer layer-grunge-bg" alt="">
+
+            <img src="assets/img/chapter4/factory_tower.png" class="layer layer-factory" alt="Factory Tower">
+
+            <!-- Wrapper holds the static placement, the inner img carries the drift loop,
+                 so the two transforms never fight. -->
+            <div class="layer scene1-smoke-wrap">
+                <img src="assets/img/chapter4/smoke_plume.png" alt="Smoke Plume">
+            </div>
+
+            <img src="assets/img/chapter4/steam_train.png" class="layer layer-train" id="layer-train" alt="Steam Train">
+
+            <div class="scene-title">
+                <h1 class="scene-title-main" data-th="ยุคปฏิวัติอุตสาหกรรม" data-en="The Industrial Revolution"></h1>
+            </div>
+        </div>
+
+        <!-- ===================== Scene 2 ===================== -->
+        <div class="scene-2">
+            <img src="assets/img/chapter4/factory_skyline_bg.png" class="layer layer-skyline-bg" alt="">
+
+            <img src="assets/img/chapter4/smog_ground_silhouette.png" class="layer layer-smog-ground" alt="">
+
+            <!-- Sits at a lower z-index than the clouds on purpose: the parting gesture is what
+                 reveals it, so it needs no fade of its own. -->
+            <div class="scene2-text">
+                <h2 class="scene2-title" data-th="การอพยพครั้งใหญ่สู่เมืองควันดำ"
+                    data-en="The Great Migration to the City of Black Smoke"></h2>
+                <p class="scene2-body"
+                    data-th="โลกไม่ได้หมุนด้วยความเร็วเท่าเดิมอีกต่อไป... ในอังกฤษช่วงปี 1760 ถึง 1850 ท้องฟ้าสีครามเริ่มถูกแทนที่ด้วยกลุ่มควันสีเทา"
+                    data-en="The world no longer spun at the same speed... In England between 1760 and 1850, the blue sky began to be replaced by grey smoke clouds."></p>
+            </div>
+
+            <!-- Same wrapper/child split as .scene1-smoke-wrap: the wrapper carries the placement
+                 plus the JS-driven parting, the inner img carries the idle drift loop, so the two
+                 transforms never fight. -->
+            <div class="layer scene2-cloud-wrap cloud-left" id="cloud-left">
+                <img src="assets/img/chapter4/cloud_2.png" alt="">
+            </div>
+            <div class="layer scene2-cloud-wrap cloud-right" id="cloud-right">
+                <img src="assets/img/chapter4/cloud_1.png" alt="">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="js/chapter4.js"></script>
+</body>
+
+</html>

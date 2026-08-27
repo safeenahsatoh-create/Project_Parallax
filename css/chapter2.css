@@ -17,7 +17,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .layer {
@@ -329,7 +329,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 /* Layer 1: Watercolor sky */
@@ -473,7 +473,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .layer-paper-bg {
@@ -604,7 +604,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene4-title {
@@ -749,7 +749,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene5-title {
@@ -950,7 +950,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene6-text {
@@ -1112,7 +1112,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene7-title {
@@ -1262,7 +1262,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene8-title {
@@ -1505,7 +1505,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene9-bg {
@@ -1631,7 +1631,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 .scene10-title {
@@ -1861,7 +1861,7 @@ body.chapter2-page {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #fff;
+    background-color: #FAF0E6;
 }
 
 /* opacity and transform are BOTH driven from JS (applyScene11Text in js/chapter2.js) --
