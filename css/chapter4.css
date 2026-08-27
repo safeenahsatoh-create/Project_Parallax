@@ -1,0 +1,333 @@
+/* ===================== Chapter 4 - Page shell ===================== */
+
+body.chapter4-page {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Scenes stack as 100vh siblings inside one translated track, so the next scene is a
+   drop-in. Keep this duration in sync with SCENE_TRANSITION_MS in js/chapter4.js when
+   a snapping commit lands. */
+.chapter4-track {
+    transition: transform 700ms ease-in-out;
+}
+
+.scene-1 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #e9e7e3;
+}
+
+.layer {
+    position: absolute;
+}
+
+/* Navbar (dark text/border for this chapter's light background). The smoke plume rises
+   through the top-right corner, right under "Back to Eras", so the controls also get a
+   white halo to keep contrast when dark smoke drifts behind them. */
+.navbar .logo,
+.navbar .nav-links a,
+.navbar .control-btn {
+    color: #4a4a44;
+    border-color: #4a4a44;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.9), 0 0 12px rgba(255, 255, 255, 0.7);
+}
+
+/* Same reasoning as Chapter 2: this chapter runs on a near-white wall, where the era gold
+   (#d4af37) drops to 2.1:1 contrast -- hovering would make a control *harder* to see than
+   its resting #4a4a44. A darker gold keeps the era identity and still reads. */
+body.chapter4-page {
+    --accent-color: #8a6d1f;
+}
+
+/* The three rules above tie with global.css's :hover rules on specificity (0,2,0) and win
+   only because this file loads second, which would otherwise kill hover feedback. These
+   restate the hover at (0,3,0) so it wins back. .logo is deliberately absent -- global.css
+   gives it no :hover rule at all. */
+.navbar .control-btn:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.navbar .nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Scene 1 is a light wall but Scene 2 is a dark smoky sky, and the navbar is fixed outside
+   .chapter4-track so it can't be scene-scoped by CSS alone -- goToScene() toggles this class on
+   <body> instead. Everything above inverts: light text, dark halo, and the era gold goes back up
+   to a bright tint because #8a6d1f only exists to survive a *light* background. */
+body.chapter4-page.ch4-dark-scene {
+    --accent-color: #e8c46a;
+}
+
+/* One step more specific than the light rules above, which are themselves restated at (0,3,0) to
+   beat global.css -- so these have to reach (0,4,0) to win in turn. */
+body.chapter4-page.ch4-dark-scene .navbar .logo,
+body.chapter4-page.ch4-dark-scene .navbar .nav-links a,
+body.chapter4-page.ch4-dark-scene .navbar .control-btn {
+    color: #ded8cd;
+    border-color: #ded8cd;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.9), 0 0 14px rgba(0, 0, 0, 0.7);
+}
+
+body.chapter4-page.ch4-dark-scene .navbar .control-btn:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+body.chapter4-page.ch4-dark-scene .navbar .nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* ===================== Chapter 4 - Scene 1 ===================== */
+
+.layer-grunge-bg,
+.layer-skyline-bg {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Every cut-out PNG in this chapter is a 1920x1080 canvas with transparent padding, so each is
+   placed as one 16:9 "cover box" and nudged with a percentage transform. Percentages resolve
+   against the element's own box, so the composition holds on non-16:9 windows. */
+.layer-factory,
+.scene1-smoke-wrap,
+.layer-train,
+.layer-smog-ground,
+.scene2-cloud-wrap {
+    top: 50%;
+    left: 50%;
+    width: max(100vw, 177.78vh);
+    aspect-ratio: 16 / 9;
+}
+
+/* Storyboard board 1: the factory canvas sits +610px / +160px off centre (1920x1080
+   reference) = +31.8% / +14.8% of its own box, on top of the -50%/-50% centring. */
+.layer-factory {
+    transform: translate(-18.2%, -35.2%);
+    z-index: 3;
+}
+
+/* Plume at 0.76x with its canvas at +902px / -388px, i.e. mostly above the top edge so only
+   the lower plume shows over the chimney. The two terms are the position knobs: on X more
+   negative moves it left (1% ~= 19px on a 1920-wide window), on Y more negative moves it up
+   (1% ~= 11px on a 1080-tall one). */
+.scene1-smoke-wrap {
+    transform: translate(-15%, -98%) scale(0.76);
+    z-index: 4;
+    pointer-events: none;
+}
+
+.scene1-smoke-wrap img {
+    width: 100%;
+    height: 100%;
+    animation: scene1-smoke-rise 18s linear infinite;
+}
+
+/* The train is the only art JS transforms -- an inline transform replaces this resting one
+   outright, so applyScene1Train() reproduces the -50%/-50% centring itself.
+   Commit-fired, not scroll-linked: JS writes the end transform once per scroll and CSS
+   animates it. Keep this duration in sync with SCENE1_TRAIN_MS in js/chapter4.js.
+   The 0.9 is the resting pose only, and must match TRAIN_START_SCALE there: it is what shows
+   for the first frame, before applyScene1Train() pins the inline transform on load. */
+.layer-train {
+    transform: translate(-50%, -50%) scale(0.9);
+    transform-origin: center center;
+    transition: transform 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    z-index: 5;
+}
+
+.scene-title {
+    position: absolute;
+    top: 11vh;
+    left: 5.5vw;
+    z-index: 10;
+}
+
+.scene-title-main {
+    font-family: var(--font-heading);
+    font-size: 7.5vw;
+    line-height: 1.1;
+    color: #463f38;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* "The Industrial Revolution" is far wider than the Thai line, so it gets its own size. That
+   smaller size is also why it needs the margin: .scene-title is anchored from its top edge, so the
+   shorter line box hangs the English glyph tops higher than the Thai ones. The 0.6vw closes that
+   gap -- in vw, not vh, because it is compensating for a font-size difference in vw and has to
+   track it at every window width. */
+.scene-title-main[data-lang="en"] {
+    font-size: 5.6vw;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 0.6vw;
+}
+
+/* ===================== Chapter 4 - Scene 1 keyframes ===================== */
+
+/* Idle: factory smoke drifting slowly upward. Fading to 0 at both ends makes the loop
+   seamless, so it reads as a continuous rise rather than a bob. */
+@keyframes scene1-smoke-rise {
+    0% {
+        transform: translateY(6%) scale(0.96);
+        opacity: 0;
+    }
+
+    22% {
+        opacity: 0.9;
+    }
+
+    78% {
+        opacity: 0.9;
+    }
+
+    100% {
+        transform: translateY(-8%) scale(1.08);
+        opacity: 0;
+    }
+}
+
+/* ===================== Chapter 4 - Scene 2 ===================== */
+
+/* Dark to match the smoky photo, so nothing flashes light before the 3.5MB background decodes.
+   This colour is also what the skyline blends into -- see .layer-skyline-bg below. */
+.scene-2 {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #2a2724;
+}
+
+/* Own rule, deliberately not folded into the .layer-grunge-bg group above: that group is shared
+   with Scene 1's backdrop, which must stay at full strength.
+   The PNG already carries a uniform 54% alpha of its own, so this multiplies down from there and
+   the refinery lands at ~0.32 effective over .scene-2's #2a2724. Because that backing colour is
+   *darker* than the photo (luminance 40 vs 97), lowering this makes the scene darker rather than
+   paler, and the result asymptotes to 40 -- so below about 0.5 the refinery just erases itself
+   without the scene changing much. Useful range is 0.5-0.8. .scene2-body is white to suit it. */
+.layer-skyline-bg {
+    opacity: 0.6;
+}
+
+/* The asset is a band floating in its canvas, not a solid bottom half: transparent above row ~42%,
+   densest (alpha ~215) at rows 75-85%, then transparent again below row 88%. So the placement has
+   to thread a needle -- far enough down that the transparent bottom edge clears the fold, not so
+   far that the dense rows go with it. At -36% on a 16:9 window the band fades in around 59% of
+   viewport height, peaks at 89%, and its cutoff lands just below the bottom edge. No opacity here
+   on purpose: the asset's own alpha tops out at 84% already, and dimming it a second time is what
+   made it read as vague haze rather than ground smog. */
+.layer-smog-ground {
+    transform: translate(-50%, -36%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* z-index 3 puts this *below* the clouds (z 5) on purpose: the parting gesture is the reveal, so
+   the text needs no fade of its own. */
+.scene2-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82vw;
+    text-align: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* No text-shadow, deliberately -- this heading carries on colour alone. It used to wear a white
+   halo, which stopped earning its place once .layer-skyline-bg was faded to 0.6: the sky behind it
+   is now uniformly dark, so the gold has plenty of contrast without a glow. The caption below is
+   the opposite case and does still need its halo.
+   Also deliberately no white-space: nowrap, unlike .scene-title-main. That heading is three Thai
+   words; this one is a full clause whose English form runs to 46 characters, and .scene-2 clips
+   overflow, so nowrap would silently shear the ends off on a narrow window rather than wrap. */
+.scene2-title {
+    font-family: var(--font-heading);
+    font-size: 4.6vw;
+    line-height: 1.15;
+    color: #edb045;
+    margin: 0 0 2.2vh;
+}
+
+/* Sized to wrap to two lines on purpose. The English clause is 46 characters, so on one line it
+   maxes out at 2.85vw -- far too small next to the Thai, which says the same thing in half the
+   width. Two lines at 4.8vw give the English glyphs a cap height close to the Thai's, at ~89% of
+   the container. Everything is in vw, so that ratio holds at every window width; the break point
+   itself shifts with the container, which is why the sizes above and below this one land at 95%
+   and 91% rather than scaling smoothly. */
+.scene2-title[data-lang="en"] {
+    font-size: 4.8vw;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* White, with the halo inverted to match: the two go together, since a white glow behind white
+   glyphs does nothing but bloom them. The dark halo is what carries this over the pale clouds while
+   they are still closed -- against the sky at full part the colour alone is enough.
+   #f2efe9 rather than pure #fff so it sits with the gold heading and the sepia photo. */
+.scene2-body {
+    font-family: var(--font-body);
+    font-size: 1.9vw;
+    line-height: 1.7;
+    color: #f2efe9;
+    margin: 0 auto;
+    max-width: 62vw;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Resting placement only: applyScene2Clouds() replaces these inline from the first frame, since an
+   inline transform wipes the CSS one out -- same trap as .layer-train. The numbers on the two
+   rules below are mirrored in CLOUD_REST in js/chapter4.js; keep the two in sync. */
+.scene2-cloud-wrap {
+    z-index: 5;
+    pointer-events: none;
+}
+
+.cloud-left {
+    transform: translate(-63.3%, -58.1%) scale(1.4);
+}
+
+.cloud-right {
+    transform: translate(-25.8%, -57.5%) scale(1.4);
+}
+
+.scene2-cloud-wrap img {
+    width: 100%;
+    height: 100%;
+}
+
+/* Different durations so the two banks never visibly re-sync. */
+.cloud-left img {
+    animation: scene2-cloud-drift 26s ease-in-out infinite;
+}
+
+.cloud-right img {
+    animation: scene2-cloud-drift 31s ease-in-out infinite reverse;
+}
+
+/* ===================== Chapter 4 - Scene 2 keyframes ===================== */
+
+/* Idle: the bank breathes in place. Deliberately not a rise-and-fade like scene1-smoke-rise --
+   this is a standing cloud wall, not a chimney plume, so it must never drift off its mark. */
+@keyframes scene2-cloud-drift {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(1.4%, -1.6%) scale(1.035);
+    }
+}
